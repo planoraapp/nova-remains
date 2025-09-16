@@ -4137,76 +4137,104 @@ npm
                     <!-- Mapa Principal -->
                     <div class="map-container">
                         <div class="world-map map-background">
-                            <div class="map-location" data-location="sanctuary" style="top: 60%; left: 30%;">
-                                <div class="location-icon">🏛️</div>
-                                <div class="location-name">Santuário das Estrelas</div>
+                        <div class="map-location location-3d" data-location="sanctuary" style="top: 60%; left: 30%;">
+                            <div class="location-icon location-icon-3d">🏛️</div>
+                            <div class="location-name location-name-3d">Santuário das Estrelas</div>
+                            <div class="location-level" style="background: linear-gradient(135deg, #32CD32, #00FF7F); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 4px;">Nível 1-5</div>
+                        </div>
+                            <div class="map-location location-3d" data-location="void" style="top: 40%; left: 50%;">
+                                <div class="location-icon location-icon-3d">🌌</div>
+                                <div class="location-name location-name-3d">Vazio Cósmico</div>
+                                <div class="location-level" style="background: linear-gradient(135deg, #DC143C, #FF6347); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 4px;">Nível 6-10</div>
                             </div>
-                            <div class="map-location" data-location="void" style="top: 40%; left: 50%;">
-                                <div class="location-icon">🌌</div>
-                                <div class="location-name">Vazio Cósmico</div>
+                            <div class="map-location location-3d" data-location="ruins" style="top: 70%; left: 60%;">
+                                <div class="location-icon location-icon-3d">🏚️</div>
+                                <div class="location-name location-name-3d">Ruínas Celestiais</div>
+                                <div class="location-level" style="background: linear-gradient(135deg, #8A2BE2, #4169E1); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 4px;">Nível 11-15</div>
                             </div>
-                            <div class="map-location" data-location="ruins" style="top: 70%; left: 60%;">
-                                <div class="location-icon">🏚️</div>
-                                <div class="location-name">Ruínas Celestiais</div>
+                            <div class="map-location location-3d" data-location="temple" style="top: 20%; left: 70%;">
+                                <div class="location-icon location-icon-3d">⛩️</div>
+                                <div class="location-name location-name-3d">Templo dos Fragmentos</div>
+                                <div class="location-level" style="background: linear-gradient(135deg, #FFD700, #FFA500); color: #1a1a2e; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 4px;">Nível 16-20</div>
                             </div>
-                            <div class="map-location" data-location="temple" style="top: 20%; left: 70%;">
-                                <div class="location-icon">⛩️</div>
-                                <div class="location-name">Templo dos Fragmentos</div>
-                            </div>
-                            <div class="map-location" data-location="comet" style="top: 50%; left: 80%;">
-                                <div class="location-icon">☄️</div>
-                                <div class="location-name">Núcleo do Cometa</div>
+                            <div class="map-location location-3d" data-location="comet" style="top: 50%; left: 80%;">
+                                <div class="location-icon location-icon-3d">☄️</div>
+                                <div class="location-name location-name-3d">Núcleo do Cometa</div>
+                                <div class="location-level" style="background: linear-gradient(135deg, #FF1493, #FF69B4); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 4px;">Nível 21+</div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Painel Lateral com Inventário e Loja -->
                     <div class="map-sidebar">
-                        <!-- Inventário Compacto -->
-                        <div class="sidebar-section">
-                            <h3>🎒 Inventário</h3>
-                            <div class="inventory-compact">
-                                <div class="inventory-grid">
-                                    <div class="inventory-slot">⚔️</div>
-                                    <div class="inventory-slot">🛡️</div>
-                                    <div class="inventory-slot">💊</div>
-                                    <div class="inventory-slot">🔮</div>
-                                    <div class="inventory-slot">💎</div>
-                                    <div class="inventory-slot">🗝️</div>
-                                    <div class="inventory-slot">📜</div>
-                                    <div class="inventory-slot">⚡</div>
+                        <!-- Player Stats -->
+                        <div class="sidebar-section panel-3d">
+                            <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">📊 Estatísticas</h3>
+                            <div class="player-stats" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9)); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #444444;">
+                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                    <span style="color: #FF6B6B;">❤️ Vida:</span>
+                                    <span style="color: #FFD700;">120/120</span>
                                 </div>
-                                <button class="btn-modern" onclick="showSubmenu('inventoryMenu')">Ver Inventário Completo</button>
+                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                    <span style="color: #4ECDC4;">⚡ Mana:</span>
+                                    <span style="color: #FFD700;">100/100</span>
+                                </div>
+                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                    <span style="color: #45B7D1;">⭐ Nível:</span>
+                                    <span style="color: #FFD700;">1</span>
+                                </div>
+                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                    <span style="color: #96CEB4;">💰 Ouro:</span>
+                                    <span style="color: #FFD700;">500</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Inventário Compacto -->
+                        <div class="sidebar-section panel-3d">
+                            <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">🎒 Inventário</h3>
+                            <div class="inventory-compact">
+                                <div class="inventory-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 10px 0;">
+                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">⚔️</div>
+                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">🛡️</div>
+                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">💊</div>
+                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">🔮</div>
+                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">💎</div>
+                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">🗝️</div>
+                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">📜</div>
+                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">⚡</div>
+                                </div>
+                                <button class="btn-3d" onclick="showSubmenu('inventoryMenu')">Ver Inventário Completo</button>
                             </div>
                         </div>
                         
                         <!-- Loja Compacta -->
-                        <div class="sidebar-section">
-                            <h3>🏪 Loja</h3>
+                        <div class="sidebar-section panel-3d">
+                            <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">🏪 Loja</h3>
                             <div class="shop-compact">
-                                <div class="shop-categories">
-                                    <button class="category-btn active" data-category="weapons">⚔️ Armas</button>
-                                    <button class="category-btn" data-category="armor">🛡️ Armaduras</button>
-                                    <button class="category-btn" data-category="potions">💊 Poções</button>
+                                <div class="shop-categories" style="display: flex; gap: 5px; margin: 10px 0;">
+                                    <button class="btn-3d" style="padding: 5px 10px; font-size: 10px;" data-category="weapons">⚔️ Armas</button>
+                                    <button class="btn-3d" style="padding: 5px 10px; font-size: 10px;" data-category="armor">🛡️ Armaduras</button>
+                                    <button class="btn-3d" style="padding: 5px 10px; font-size: 10px;" data-category="potions">💊 Poções</button>
                                 </div>
-                                <div class="shop-items">
-                                    <div class="shop-item">
+                                <div class="shop-items" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); padding: 10px; border-radius: 8px; margin: 10px 0;">
+                                    <div class="shop-item" style="display: flex; justify-content: space-between; align-items: center; margin: 5px 0; padding: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px;">
                                         <span class="item-icon">⚔️</span>
-                                        <span class="item-name">Espada Básica</span>
-                                        <span class="item-price">200💰</span>
+                                        <span class="item-name" style="color: #87CEEB; font-size: 12px;">Espada Básica</span>
+                                        <span class="item-price" style="color: #FFD700; font-size: 12px;">200💰</span>
                                     </div>
-                                    <div class="shop-item">
+                                    <div class="shop-item" style="display: flex; justify-content: space-between; align-items: center; margin: 5px 0; padding: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px;">
                                         <span class="item-icon">🛡️</span>
-                                        <span class="item-name">Escudo</span>
-                                        <span class="item-price">150💰</span>
+                                        <span class="item-name" style="color: #87CEEB; font-size: 12px;">Escudo</span>
+                                        <span class="item-price" style="color: #FFD700; font-size: 12px;">150💰</span>
                                     </div>
-                                    <div class="shop-item">
+                                    <div class="shop-item" style="display: flex; justify-content: space-between; align-items: center; margin: 5px 0; padding: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px;">
                                         <span class="item-icon">💊</span>
-                                        <span class="item-name">Poção de Vida</span>
-                                        <span class="item-price">50💰</span>
+                                        <span class="item-name" style="color: #87CEEB; font-size: 12px;">Poção de Vida</span>
+                                        <span class="item-price" style="color: #FFD700; font-size: 12px;">50💰</span>
                                     </div>
                                 </div>
-                                <button class="btn-modern" onclick="showSubmenu('shopMenu')">Ver Loja Completa</button>
+                                <button class="btn-3d" onclick="showSubmenu('shopMenu')">Ver Loja Completa</button>
                             </div>
                         </div>
                         
@@ -4246,61 +4274,77 @@ npm
             </div>
             <div class="submenu-content">
                 <div class="character-grid">
-                <div class="character-card">
-                    <div class="character-preview" id="character1" style="background: linear-gradient(135deg, #FFD700, #FFA500, #FF8C00);">
+                <div class="character-card hero-card-3d">
+                    <div class="character-preview hero-preview-3d" id="character1" style="background: linear-gradient(135deg, #FFD700, #FFA500, #FF8C00);">
                         <div class="character-sprite-fallback" style="display: flex; align-items: center; justify-content: center; font-size: 48px; width: 100%; height: 100%;">⚔️</div>
                     </div>
-                    <h3>Juno</h3>
-                    <p class="character-description">Nobre cavaleira cuja armadura reflete a luz das estrelas. Protetora do grupo com coragem inabalável.</p>
-                    <div class="character-stats">
-                        <div class="stat">❤️ Vida: 120</div>
-                        <div class="stat">⚡ Mana: 60</div>
-                        <div class="stat">⚔️ Dano: 30</div>
-                        <div class="stat">🏃 Velocidade: 4</div>
+                    <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">Juno</h3>
+                    <p class="character-description" style="color: #FFA500;">Nobre cavaleira cuja armadura reflete a luz das estrelas. Protetora do grupo com coragem inabalável.</p>
+                    <div class="character-stats" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); padding: 10px; border-radius: 8px; margin: 10px 0;">
+                        <div class="stat" style="color: #FF6B6B;">❤️ Vida: 120</div>
+                        <div class="stat" style="color: #4ECDC4;">⚡ Mana: 60</div>
+                        <div class="stat" style="color: #45B7D1;">⚔️ Dano: 30</div>
+                        <div class="stat" style="color: #96CEB4;">🏃 Velocidade: 4</div>
                     </div>
-                    <button class="select-character" data-character="juno">Selecionar</button>
+                    <div class="character-skills" style="margin: 10px 0;">
+                        <span class="skill-tag" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; margin: 2px; display: inline-block;">Corte Devastador</span>
+                        <span class="skill-tag" style="background: linear-gradient(135deg, #4ECDC4, #6EDDD6); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; margin: 2px; display: inline-block;">Escudo Protetor</span>
+                    </div>
+                    <button class="select-character btn-3d" data-character="juno">Selecionar</button>
                 </div>
-                <div class="character-card">
-                    <div class="character-preview" id="character2" style="background: linear-gradient(135deg, #87CEEB, #4682B4, #1E90FF);">
+                <div class="character-card hero-card-3d">
+                    <div class="character-preview hero-preview-3d" id="character2" style="background: linear-gradient(135deg, #87CEEB, #4682B4, #1E90FF);">
                         <div class="character-sprite-fallback" style="display: flex; align-items: center; justify-content: center; font-size: 48px; width: 100%; height: 100%;">🏹</div>
                     </div>
-                    <h3>Atlas</h3>
-                    <p class="character-description">Arqueiro cuja mira é tão precisa quanto a trajetória de um planeta. Flechas que rasgam o céu.</p>
-                    <div class="character-stats">
-                        <div class="stat">❤️ Vida: 80</div>
-                        <div class="stat">⚡ Mana: 100</div>
-                        <div class="stat">⚔️ Dano: 25</div>
-                        <div class="stat">🏃 Velocidade: 8</div>
+                    <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">Atlas</h3>
+                    <p class="character-description" style="color: #87CEEB;">Arqueiro cuja mira é tão precisa quanto a trajetória de um planeta. Flechas que rasgam o céu.</p>
+                    <div class="character-stats" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); padding: 10px; border-radius: 8px; margin: 10px 0;">
+                        <div class="stat" style="color: #FF6B6B;">❤️ Vida: 80</div>
+                        <div class="stat" style="color: #4ECDC4;">⚡ Mana: 100</div>
+                        <div class="stat" style="color: #45B7D1;">⚔️ Dano: 25</div>
+                        <div class="stat" style="color: #96CEB4;">🏃 Velocidade: 8</div>
                     </div>
-                    <button class="select-character" data-character="atlas">Selecionar</button>
+                    <div class="character-skills" style="margin: 10px 0;">
+                        <span class="skill-tag" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; margin: 2px; display: inline-block;">Flecha Perfurante</span>
+                        <span class="skill-tag" style="background: linear-gradient(135deg, #4ECDC4, #6EDDD6); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; margin: 2px; display: inline-block;">Chuva de Flechas</span>
+                    </div>
+                    <button class="select-character btn-3d" data-character="atlas">Selecionar</button>
                 </div>
-                <div class="character-card">
-                    <div class="character-preview" id="character3" style="background: linear-gradient(135deg, #9370DB, #8A2BE2, #4B0082);">
+                <div class="character-card hero-card-3d">
+                    <div class="character-preview hero-preview-3d" id="character3" style="background: linear-gradient(135deg, #9370DB, #8A2BE2, #4B0082);">
                         <div class="character-sprite-fallback" style="display: flex; align-items: center; justify-content: center; font-size: 48px; width: 100%; height: 100%;">🔮</div>
                     </div>
-                    <h3>Vega</h3>
-                    <p class="character-description">Mago sábio e enigmático que manipula a magia cósmica para destruir inimigos e desvendar segredos.</p>
-                    <div class="character-stats">
-                        <div class="stat">❤️ Vida: 70</div>
-                        <div class="stat">⚡ Mana: 150</div>
-                        <div class="stat">⚔️ Dano: 35</div>
-                        <div class="stat">🏃 Velocidade: 3</div>
+                    <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">Vega</h3>
+                    <p class="character-description" style="color: #9370DB;">Mago sábio e enigmático que manipula a magia cósmica para destruir inimigos e desvendar segredos.</p>
+                    <div class="character-stats" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); padding: 10px; border-radius: 8px; margin: 10px 0;">
+                        <div class="stat" style="color: #FF6B6B;">❤️ Vida: 70</div>
+                        <div class="stat" style="color: #4ECDC4;">⚡ Mana: 150</div>
+                        <div class="stat" style="color: #45B7D1;">⚔️ Dano: 35</div>
+                        <div class="stat" style="color: #96CEB4;">🏃 Velocidade: 3</div>
                     </div>
-                    <button class="select-character" data-character="vega">Selecionar</button>
+                    <div class="character-skills" style="margin: 10px 0;">
+                        <span class="skill-tag" style="background: linear-gradient(135deg, #9370DB, #8A2BE2); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; margin: 2px; display: inline-block;">Bola de Fogo</span>
+                        <span class="skill-tag" style="background: linear-gradient(135deg, #4ECDC4, #6EDDD6); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; margin: 2px; display: inline-block;">Escudo Mágico</span>
+                    </div>
+                    <button class="select-character btn-3d" data-character="vega">Selecionar</button>
                 </div>
-                <div class="character-card">
-                    <div class="character-preview" id="character4" style="background: linear-gradient(135deg, #2F4F4F, #708090, #A9A9A9);">
+                <div class="character-card hero-card-3d">
+                    <div class="character-preview hero-preview-3d" id="character4" style="background: linear-gradient(135deg, #2F4F4F, #708090, #A9A9A9);">
                         <div class="character-sprite-fallback" style="display: flex; align-items: center; justify-content: center; font-size: 48px; width: 100%; height: 100%;">🥷</div>
                     </div>
-                    <h3>Kai</h3>
-                    <p class="character-description">Ágil ninja caçador furtivo que se move como uma sombra, atacando com a velocidade de um cometa.</p>
-                    <div class="character-stats">
-                        <div class="stat">❤️ Vida: 90</div>
-                        <div class="stat">⚡ Mana: 80</div>
-                        <div class="stat">⚔️ Dano: 28</div>
-                        <div class="stat">🏃 Velocidade: 9</div>
+                    <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">Kai</h3>
+                    <p class="character-description" style="color: #708090;">Ágil ninja caçador furtivo que se move como uma sombra, atacando com a velocidade de um cometa.</p>
+                    <div class="character-stats" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); padding: 10px; border-radius: 8px; margin: 10px 0;">
+                        <div class="stat" style="color: #FF6B6B;">❤️ Vida: 90</div>
+                        <div class="stat" style="color: #4ECDC4;">⚡ Mana: 80</div>
+                        <div class="stat" style="color: #45B7D1;">⚔️ Dano: 28</div>
+                        <div class="stat" style="color: #96CEB4;">🏃 Velocidade: 9</div>
                     </div>
-                    <button class="select-character" data-character="kai">Selecionar</button>
+                    <div class="character-skills" style="margin: 10px 0;">
+                        <span class="skill-tag" style="background: linear-gradient(135deg, #2F4F4F, #708090); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; margin: 2px; display: inline-block;">Ataque Furtivo</span>
+                        <span class="skill-tag" style="background: linear-gradient(135deg, #4ECDC4, #6EDDD6); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; margin: 2px; display: inline-block;">Teletransporte</span>
+                    </div>
+                    <button class="select-character btn-3d" data-character="kai">Selecionar</button>
                 </div>
                 </div>
             </div>
