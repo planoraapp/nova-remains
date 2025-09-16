@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Remains - Jogo de Ação 2D</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: #1a1a1a;
+            color: white;
+            overflow: hidden;
+        }
+        
+        #gameCanvas {
+            display: block;
+            margin: 0 auto;
+            border: 2px solid #333;
+            background: #222;
+        }
+        
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 24px;
+        }
+        
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading" class="loading">
+        <h2>🎮 Nova Remains</h2>
+        <p>Carregando jogo...</p>
+    </div>
+    
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    
+    <!-- Carregar scripts na ordem correta -->
+    <script src="js/sprite-manager.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/combat.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // Verificar se todas as classes foram carregadas
+        function checkGameReady() {
+            const requiredClasses = ['Game', 'Player', 'Enemy', 'Particle', 'Projectile', 'SpriteManager', 'CombatSystem', 'UIManager'];
+            const missing = requiredClasses.filter(className => typeof window[className] === 'undefined');
+            
+            if (missing.length === 0) {
+                return true;
+            } else {
+                console.error('Classes faltando:', missing);
+                return false;
+            }
+        }
+        
+        // Inicializar o jogo
+        function initGame() {
+            try {
+                if (checkGameReady()) {
+                    window.game = new Game();
+                    document.getElementById('loading').style.display = 'none';
+                    console.log('✅ Nova Remains inicializado com sucesso!');
+                } else {
+                    throw new Error('Classes necessárias não foram carregadas');
+                }
+            } catch (error) {
+                console.error('Erro ao inicializar:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div class="error">
+                        <h2>❌ Erro ao carregar o jogo</h2>
+                        <p>${error.message}</p>
+                        <p>Verifique o console para mais detalhes.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Aguardar carregamento completo
+        window.addEventListener('load', () => {
+            setTimeout(initGame, 1000);
+        });
+    </script>
+</body>
+</html>
