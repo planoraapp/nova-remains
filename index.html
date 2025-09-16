@@ -4603,6 +4603,53 @@ npm
                         </div>
                     </div>
                 </div>
+                <!-- Sistema de Combate de Missão -->
+                <div id="missionGameContainer" style="display: none;">
+                    <div class="mission-game-header" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9)); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #444444;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="color: #FFD700; margin-bottom: 10px;">🎮 Missão em Andamento</h3>
+                                <div style="display: flex; gap: 20px;">
+                                    <div class="bar-container" style="width: 150px; height: 15px; background-color: #4a5568; border: 2px solid #a0aec0; border-radius: 5px;">
+                                        <div id="player-health-bar" class="health-bar" style="height: 100%; background-color: #48bb78; transition: width 0.2s linear;"></div>
+                                    </div>
+                                    <div class="bar-container" style="width: 150px; height: 15px; background-color: #4a5568; border: 2px solid #a0aec0; border-radius: 5px;">
+                                        <div id="player-mana-bar" class="mana-bar" style="height: 100%; background-color: #63b3ed; transition: width 0.2s linear;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="mission-status" style="color: #FFD700; font-size: 18px; font-weight: bold;">
+                                Pressione "Iniciar" para começar
+                            </div>
+                            <div style="text-align: right;">
+                                <h4 style="color: #87CEEB; margin-bottom: 5px;">Controles</h4>
+                                <p style="font-size: 12px; color: #87CEEB;">← →: Mover | ↑: Pular | Z: Atacar</p>
+                                <p style="font-size: 12px; color: #87CEEB;">Shift: Dash | A: Golpe Poderoso</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mundo do Jogo -->
+                    <div id="game-world" style="background: linear-gradient(135deg, #2d3748, #4a5568); width: 100%; height: 400px; border: 4px solid #718096; position: relative; overflow: hidden; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);">
+                        <div id="player" class="player" style="background-color: #4299e1; position: absolute; border: 2px solid #2b6cb0; border-radius: 4px; box-shadow: 0 0 10px #4299e1; transition: opacity 0.2s;"></div>
+                    </div>
+                    
+                    <!-- Tela de Fim de Jogo/Vitória -->
+                    <div id="game-over-screen" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.75); flex-direction: column; align-items: center; justify-content: center; z-index: 1000;">
+                        <h1 id="end-game-title" style="font-size: 3rem; font-weight: bold; margin-bottom: 1rem; color: #FFD700;">Game Over</h1>
+                        <p id="end-game-subtitle" style="font-size: 1.25rem; margin-bottom: 2rem; color: #87CEEB;">Tente novamente!</p>
+                        <button id="restart-button" class="btn-3d" style="padding: 1rem 2rem; font-size: 1.25rem;">Reiniciar Missão</button>
+                    </div>
+                    
+                    <!-- Tela Inicial da Missão -->
+                    <div id="start-screen" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.75); flex-direction: column; align-items: center; justify-content: center; z-index: 1000;">
+                        <h1 style="font-size: 3rem; font-weight: bold; margin-bottom: 1rem; color: #FFD700;">Missão Selecionada</h1>
+                        <p id="mission-description" style="font-size: 1.25rem; margin-bottom: 2rem; color: #87CEEB;">Derrote todos os inimigos para vencer!</p>
+                        <button id="start-button" class="btn-3d" style="padding: 1rem 2rem; font-size: 1.25rem;">Iniciar Missão</button>
+                        <button id="back-to-missions" class="btn-3d" style="padding: 0.5rem 1rem; font-size: 1rem; margin-top: 1rem;">Voltar às Missões</button>
+                    </div>
+                </div>
+                
                 <div id="roomsContainer" style="display: none;">
                     <!-- Lista de salas será gerada dinamicamente -->
                 </div>
@@ -6210,6 +6257,481 @@ npm
         // Sistema de Combate
         function startCombat() {
             alert('Starting Combat Mode...');
+        }
+        
+        // ========================================
+        // SISTEMA DE MISSÕES - JAVASCRIPT
+        // ========================================
+        
+        let missionGameState = {
+            player: {
+                x: 50, y: 350,
+                vx: 0, vy: 0,
+                width: 40, height: 50,
+                hp: 100, maxHp: 100,
+                mp: 100, maxMp: 100,
+                speed: 5, jumpPower: 15,
+                lastMoveDirection: 'right',
+                isJumping: false,
+                isAttacking: false,
+                attackCooldown: false,
+                isDashing: false,
+                dashCooldown: false,
+                skillCooldown: false,
+                isInvincible: false,
+            },
+            enemies: [],
+            keys: {},
+            gravity: 0.8,
+            mission: {
+                currentWave: 0,
+                totalWaves: 2,
+                isBossWave: false,
+                status: 'pending',
+                currentMission: null
+            },
+            gameLoopId: null,
+        };
+        
+        // Configurações de missões
+        const missionConfigs = {
+            tutorial: {
+                name: "Tutorial Inicial",
+                description: "Aprenda os controles básicos do jogo",
+                waves: 1,
+                enemiesPerWave: 2,
+                hasBoss: false,
+                rewards: { gold: 100, exp: 50 }
+            },
+            first_quest: {
+                name: "Primeira Busca",
+                description: "Encontre Fragmentos de Estrela perdidos",
+                waves: 2,
+                enemiesPerWave: 3,
+                hasBoss: false,
+                rewards: { gold: 200, exp: 100 }
+            },
+            void_exploration: {
+                name: "Exploração do Vazio",
+                description: "Derrote Filhos do Vazio e colete fragmentos",
+                waves: 3,
+                enemiesPerWave: 4,
+                hasBoss: false,
+                rewards: { gold: 500, exp: 250 }
+            },
+            void_boss: {
+                name: "Chefe do Vazio",
+                description: "Enfrente o Guardião das Sombras",
+                waves: 2,
+                enemiesPerWave: 3,
+                hasBoss: true,
+                rewards: { gold: 1000, exp: 500, item: "Item Raro" }
+            }
+        };
+        
+        // Event listeners para missões
+        document.addEventListener('DOMContentLoaded', () => {
+            // Botões de missão
+            document.querySelectorAll('.mission-select-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const missionId = e.target.getAttribute('data-mission');
+                    startMission(missionId);
+                });
+            });
+            
+            // Botões do jogo de missão
+            const startButton = document.getElementById('start-button');
+            const restartButton = document.getElementById('restart-button');
+            const backToMissions = document.getElementById('back-to-missions');
+            
+            if (startButton) startButton.addEventListener('click', startMissionGame);
+            if (restartButton) restartButton.addEventListener('click', startMissionGame);
+            if (backToMissions) backToMissions.addEventListener('click', backToMissionsList);
+            
+            // Controles do jogo
+            document.addEventListener('keydown', (e) => {
+                if (missionGameState.mission.status !== 'playing') return;
+                
+                missionGameState.keys[e.key.toLowerCase()] = true;
+                
+                if (e.key === 'ArrowUp' && !missionGameState.player.isJumping) {
+                    missionGameState.player.vy = -missionGameState.player.jumpPower;
+                    missionGameState.player.isJumping = true;
+                }
+                if (e.key.toLowerCase() === 'z' && !missionGameState.player.attackCooldown) {
+                    playerAttack();
+                }
+                if (e.key.toLowerCase() === 'a' && !missionGameState.player.skillCooldown) {
+                    playerSpecialAttack();
+                }
+                if (e.key === 'Shift' && !missionGameState.player.dashCooldown) {
+                    playerDash();
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                missionGameState.keys[e.key.toLowerCase()] = false;
+            });
+        });
+        
+        function startMission(missionId) {
+            const config = missionConfigs[missionId];
+            if (!config) return;
+            
+            missionGameState.mission.currentMission = missionId;
+            missionGameState.mission.totalWaves = config.waves;
+            missionGameState.mission.isBossWave = config.hasBoss;
+            
+            // Mostrar tela de missão
+            document.getElementById('missionsMenu').style.display = 'none';
+            document.getElementById('missionGameContainer').style.display = 'block';
+            
+            // Atualizar descrição
+            const description = document.getElementById('mission-description');
+            if (description) {
+                description.textContent = config.description;
+            }
+        }
+        
+        function startMissionGame() {
+            const config = missionConfigs[missionGameState.mission.currentMission];
+            if (!config) return;
+            
+            // Reset do jogador
+            missionGameState.player.hp = missionGameState.player.maxHp;
+            missionGameState.player.mp = missionGameState.player.maxMp;
+            missionGameState.player.x = 50;
+            missionGameState.player.y = 350;
+            missionGameState.mission.currentWave = 0;
+            missionGameState.mission.isBossWave = config.hasBoss;
+            
+            // Limpar inimigos
+            missionGameState.enemies.forEach(e => {
+                const element = document.getElementById('game-world');
+                if (element && element.contains(e.element)) {
+                    element.removeChild(e.element);
+                }
+            });
+            missionGameState.enemies = [];
+            
+            // Esconder telas
+            document.getElementById('game-over-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'none';
+            
+            // Iniciar jogo
+            missionGameState.mission.status = 'playing';
+            startNextWave();
+            if (missionGameState.gameLoopId) cancelAnimationFrame(missionGameState.gameLoopId);
+            updateMissionGame();
+        }
+        
+        function backToMissionsList() {
+            document.getElementById('missionGameContainer').style.display = 'none';
+            document.getElementById('missionsMenu').style.display = 'block';
+            missionGameState.mission.status = 'pending';
+            if (missionGameState.gameLoopId) cancelAnimationFrame(missionGameState.gameLoopId);
+        }
+        
+        function startNextWave() {
+            const config = missionConfigs[missionGameState.mission.currentMission];
+            missionGameState.mission.currentWave++;
+            
+            if (missionGameState.mission.currentWave > missionGameState.mission.totalWaves) {
+                if (config.hasBoss) {
+                    document.getElementById('mission-status').innerText = "CHEFE FINAL!";
+                    spawnEnemy('boss');
+                } else {
+                    winMission();
+                }
+            } else {
+                document.getElementById('mission-status').innerText = `Onda ${missionGameState.mission.currentWave}/${missionGameState.mission.totalWaves}`;
+                for(let i = 0; i < config.enemiesPerWave; i++) {
+                    spawnEnemy();
+                }
+            }
+        }
+        
+        function spawnEnemy(type = 'normal') {
+            const enemy = {
+                x: Math.random() > 0.5 ? 950 : 0,
+                y: 360,
+                vx: 2,
+                element: document.createElement('div'),
+            };
+
+            if (type === 'boss') {
+                enemy.hp = 300;
+                enemy.maxHp = 300;
+                enemy.width = 80;
+                enemy.height = 80;
+                enemy.className = 'boss';
+                enemy.y = 320;
+            } else {
+                enemy.hp = 50;
+                enemy.maxHp = 50;
+                enemy.width = 40;
+                enemy.height = 40;
+                enemy.className = 'enemy';
+            }
+
+            enemy.element.className = enemy.className;
+            enemy.element.style.width = `${enemy.width}px`;
+            enemy.element.style.height = `${enemy.height}px`;
+
+            const enemyHealthBar = document.createElement('div');
+            enemyHealthBar.className = 'enemy-health-bar';
+            enemyHealthBar.style.width = '100%';
+            enemyHealthBar.style.top = '-10px';
+            enemy.element.appendChild(enemyHealthBar);
+            
+            document.getElementById('game-world').appendChild(enemy.element);
+            missionGameState.enemies.push(enemy);
+        }
+        
+        function playerAttack() {
+            if(missionGameState.mission.status !== 'playing') return;
+            
+            missionGameState.player.isAttacking = true;
+            missionGameState.player.attackCooldown = true;
+            
+            const hitbox = document.createElement('div');
+            hitbox.className = 'attack-hitbox';
+            const hitboxWidth = 60;
+            const hitboxHeight = missionGameState.player.height;
+            
+            const direction = missionGameState.player.lastMoveDirection === 'right' ? 1 : -1;
+            const hitboxX = direction === 1 
+                ? missionGameState.player.x + missionGameState.player.width 
+                : missionGameState.player.x - hitboxWidth;
+            const hitboxY = missionGameState.player.y;
+
+            hitbox.style.width = `${hitboxWidth}px`;
+            hitbox.style.height = `${hitboxHeight}px`;
+            hitbox.style.left = `${hitboxX}px`;
+            hitbox.style.top = `${hitboxY}px`;
+            
+            document.getElementById('game-world').appendChild(hitbox);
+
+            missionGameState.enemies.forEach(enemy => {
+                if (checkCollision({x: hitboxX, y: hitboxY, width: hitboxWidth, height: hitboxHeight}, enemy)) {
+                    takeDamage(enemy, 25);
+                }
+            });
+
+            setTimeout(() => {
+                const gameWorld = document.getElementById('game-world');
+                if(gameWorld && gameWorld.contains(hitbox)) gameWorld.removeChild(hitbox);
+                missionGameState.player.isAttacking = false;
+            }, 150);
+
+            setTimeout(() => {
+                missionGameState.player.attackCooldown = false;
+            }, 500);
+        }
+        
+        function playerSpecialAttack() {
+            if (missionGameState.mission.status !== 'playing') return;
+            const skillCost = 30;
+
+            if (missionGameState.player.mp < skillCost) return;
+            
+            missionGameState.player.mp -= skillCost;
+            missionGameState.player.skillCooldown = true;
+
+            const hitbox = document.createElement('div');
+            hitbox.className = 'special-attack-hitbox';
+            const hitboxWidth = 120;
+            const hitboxHeight = 70;
+            
+            const direction = missionGameState.player.lastMoveDirection === 'right' ? 1 : -1;
+            const hitboxX = direction === 1 
+                ? missionGameState.player.x + missionGameState.player.width 
+                : missionGameState.player.x - hitboxWidth;
+            const hitboxY = missionGameState.player.y + (missionGameState.player.height - hitboxHeight) / 2;
+
+            hitbox.style.width = `${hitboxWidth}px`;
+            hitbox.style.height = `${hitboxHeight}px`;
+            hitbox.style.left = `${hitboxX}px`;
+            hitbox.style.top = `${hitboxY}px`;
+            
+            document.getElementById('game-world').appendChild(hitbox);
+
+            missionGameState.enemies.forEach(enemy => {
+                if (checkCollision({x: hitboxX, y: hitboxY, width: hitboxWidth, height: hitboxHeight}, enemy)) {
+                    takeDamage(enemy, 75);
+                }
+            });
+
+            setTimeout(() => {
+                const gameWorld = document.getElementById('game-world');
+                if(gameWorld && gameWorld.contains(hitbox)) gameWorld.removeChild(hitbox);
+            }, 300);
+
+            setTimeout(() => {
+                missionGameState.player.skillCooldown = false;
+            }, 1500);
+        }
+        
+        function playerDash() {
+            if (missionGameState.mission.status !== 'playing' || missionGameState.player.isDashing) return;
+
+            missionGameState.player.isDashing = true;
+            missionGameState.player.dashCooldown = true;
+            document.getElementById('player').style.opacity = '0.5';
+
+            const dashSpeed = 200;
+            const dashDirection = missionGameState.player.lastMoveDirection === 'right' ? 1 : -1;
+            
+            missionGameState.player.x += dashSpeed * dashDirection;
+
+            setTimeout(() => {
+                missionGameState.player.isDashing = false;
+                document.getElementById('player').style.opacity = '1';
+            }, 150);
+
+            setTimeout(() => {
+                missionGameState.player.dashCooldown = false;
+            }, 800);
+        }
+        
+        function takeDamage(target, amount) {
+            target.hp -= amount;
+            if (target.element.querySelector('.enemy-health-bar')) {
+                const healthPercentage = Math.max(0, (target.hp / target.maxHp) * 100);
+                target.element.querySelector('.enemy-health-bar').style.width = `${healthPercentage}%`;
+            }
+        }
+        
+        function damagePlayer(amount) {
+            if (missionGameState.player.isInvincible || missionGameState.player.isDashing) return;
+            
+            missionGameState.player.hp -= amount;
+            missionGameState.player.isInvincible = true;
+            document.getElementById('player').style.opacity = '0.5';
+            
+            setTimeout(() => {
+                missionGameState.player.isInvincible = false;
+                document.getElementById('player').style.opacity = '1';
+            }, 1000);
+        }
+        
+        function checkCollision(rect1, rect2) {
+            return (
+                rect1.x < rect2.x + rect2.width &&
+                rect1.x + rect1.width > rect2.x &&
+                rect1.y < rect2.y + rect2.height &&
+                rect1.y + rect1.height > rect2.y
+            );
+        }
+        
+        function updateMissionGame() {
+            if (missionGameState.mission.status !== 'playing') return;
+
+            // Lógica do Jogador
+            if (!missionGameState.player.isDashing) {
+                if (missionGameState.keys['arrowleft']) {
+                    missionGameState.player.x -= missionGameState.player.speed;
+                    missionGameState.player.lastMoveDirection = 'left';
+                }
+                if (missionGameState.keys['arrowright']) {
+                    missionGameState.player.x += missionGameState.player.speed;
+                    missionGameState.player.lastMoveDirection = 'right';
+                }
+            }
+            
+            // Regeneração de Mana
+            if (missionGameState.player.mp < missionGameState.player.maxMp) {
+                missionGameState.player.mp += 0.1;
+            }
+
+            missionGameState.player.vy += missionGameState.gravity;
+            missionGameState.player.y += missionGameState.player.vy;
+            
+            const groundLevel = 400 - missionGameState.player.height;
+            if (missionGameState.player.y >= groundLevel) {
+                missionGameState.player.y = groundLevel;
+                missionGameState.player.vy = 0;
+                missionGameState.player.isJumping = false;
+            }
+            
+            if (missionGameState.player.x < 0) missionGameState.player.x = 0;
+            if (missionGameState.player.x > 1000 - missionGameState.player.width) missionGameState.player.x = 1000 - missionGameState.player.width;
+
+            // Lógica dos Inimigos
+            missionGameState.enemies.forEach(enemy => {
+                if(enemy.x < missionGameState.player.x) {
+                    enemy.x += enemy.vx;
+                } else {
+                    enemy.x -= enemy.vx;
+                }
+                if (checkCollision(missionGameState.player, enemy)) {
+                    damagePlayer(10);
+                }
+            });
+
+            const aliveEnemies = [];
+            missionGameState.enemies.forEach(enemy => {
+                if (enemy.hp > 0) {
+                    aliveEnemies.push(enemy);
+                } else {
+                    const gameWorld = document.getElementById('game-world');
+                    if(gameWorld && gameWorld.contains(enemy.element)) gameWorld.removeChild(enemy.element);
+                }
+            });
+            missionGameState.enemies = aliveEnemies;
+
+            if (missionGameState.enemies.length === 0) {
+                const config = missionConfigs[missionGameState.mission.currentMission];
+                if (missionGameState.mission.isBossWave || !config.hasBoss) {
+                    winMission();
+                } else {
+                    startNextWave();
+                }
+            }
+
+            if(missionGameState.player.hp <= 0) {
+                gameOverMission();
+            }
+
+            // Atualizações Visuais
+            document.getElementById('player').style.left = `${missionGameState.player.x}px`;
+            document.getElementById('player').style.top = `${missionGameState.player.y}px`;
+            missionGameState.enemies.forEach(enemy => {
+                enemy.element.style.left = `${enemy.x}px`;
+                enemy.element.style.top = `${enemy.y}px`;
+            });
+            
+            const healthPercentage = Math.max(0, (missionGameState.player.hp / missionGameState.player.maxHp) * 100);
+            document.getElementById('player-health-bar').style.width = `${healthPercentage}%`;
+            
+            const manaPercentage = Math.max(0, (missionGameState.player.mp / missionGameState.player.maxMp) * 100);
+            document.getElementById('player-mana-bar').style.width = `${manaPercentage}%`;
+
+            missionGameState.gameLoopId = requestAnimationFrame(updateMissionGame);
+        }
+        
+        function gameOverMission() {
+            missionGameState.mission.status = 'gameover';
+            cancelAnimationFrame(missionGameState.gameLoopId);
+            document.getElementById('end-game-title').innerText = "Game Over";
+            document.getElementById('end-game-subtitle').innerText = "Os monstros venceram desta vez...";
+            document.getElementById('game-over-screen').style.display = 'flex';
+        }
+        
+        function winMission() {
+            missionGameState.mission.status = 'win';
+            cancelAnimationFrame(missionGameState.gameLoopId);
+            document.getElementById('end-game-title').innerText = "Vitória!";
+            document.getElementById('end-game-subtitle').innerText = "Você completou a missão!";
+            document.getElementById('game-over-screen').style.display = 'flex';
+            
+            // Dar recompensas
+            const config = missionConfigs[missionGameState.mission.currentMission];
+            if (config && config.rewards) {
+                setTimeout(() => {
+                    alert(`Recompensas recebidas:\n💰 ${config.rewards.gold} Ouro\n⭐ ${config.rewards.exp} EXP${config.rewards.item ? '\n🏆 ' + config.rewards.item : ''}`);
+                }, 1000);
+            }
         }
         
         // Alternar entre interfaces
