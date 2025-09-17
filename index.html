@@ -5619,8 +5619,8 @@ npm
                             </div>
                             <div style="text-align: right;">
                                 <h4 style="color: #87CEEB; margin-bottom: 5px;">Controles</h4>
-                                <p style="font-size: 12px; color: #87CEEB;">← →: Mover | ↑: Pular | Z: Atacar</p>
-                                <p style="font-size: 12px; color: #87CEEB;">Shift: Dash | A: Golpe Poderoso</p>
+                                <p style="font-size: 12px; color: #87CEEB;">← →: Mover | ↑: Pular | ↓: Descer Plataforma</p>
+                                <p style="font-size: 12px; color: #87CEEB;">Z: Atacar | Z (Segurar): Carregar Habilidade</p>
                             </div>
                         </div>
                     </div>
@@ -8220,31 +8220,31 @@ npm
                     <div class="controls-grid">
                         <div class="control-item">
                             <span>Movimento:</span>
-                            <span class="control-key">← → ↑ ↓</span>
+                            <span class="control-key">← →</span>
                         </div>
                         <div class="control-item">
-                            <span>Pulo Duplo:</span>
-                            <span class="control-key">↑ ↑</span>
+                            <span>Pulo:</span>
+                            <span class="control-key">↑</span>
+                        </div>
+                        <div class="control-item">
+                            <span>Descer Plataforma:</span>
+                            <span class="control-key">↓</span>
                         </div>
                         <div class="control-item">
                             <span>Ataque:</span>
                             <span class="control-key">Z</span>
                         </div>
                         <div class="control-item">
-                            <span>Defender:</span>
-                            <span class="control-key">X</span>
+                            <span>Carregar Habilidade:</span>
+                            <span class="control-key">Z (Segurar)</span>
                         </div>
                         <div class="control-item">
-                            <span>Agarrar:</span>
-                            <span class="control-key">C</span>
+                            <span>Pulo Duplo:</span>
+                            <span class="control-key">↑ ↑</span>
                         </div>
                         <div class="control-item">
-                            <span>Bola de Fogo:</span>
-                            <span class="control-key">K</span>
-                        </div>
-                        <div class="control-item">
-                            <span>Curar:</span>
-                            <span class="control-key">L</span>
+                            <span>Pausar:</span>
+                            <span class="control-key">ESC</span>
                         </div>
                     </div>
                 </div>
@@ -8433,8 +8433,48 @@ npm
             }
             
             const keys = {};
-            document.addEventListener('keydown', (e) => { keys[e.key] = true; });
-            document.addEventListener('keyup', (e) => { keys[e.key] = false; });
+            const keyStates = {
+                z: { pressed: false, holdTime: 0, charging: false },
+                arrowUp: { pressed: false, justPressed: false },
+                arrowDown: { pressed: false, justPressed: false },
+                arrowLeft: { pressed: false },
+                arrowRight: { pressed: false }
+            };
+            
+            document.addEventListener('keydown', (e) => { 
+                keys[e.key] = true;
+                
+                // Detectar teclas específicas
+                if (e.key === 'z' || e.key === 'Z') {
+                    keyStates.z.pressed = true;
+                    keyStates.z.charging = true;
+                }
+                if (e.key === 'ArrowUp') {
+                    keyStates.arrowUp.justPressed = !keyStates.arrowUp.pressed;
+                    keyStates.arrowUp.pressed = true;
+                }
+                if (e.key === 'ArrowDown') {
+                    keyStates.arrowDown.justPressed = !keyStates.arrowDown.pressed;
+                    keyStates.arrowDown.pressed = true;
+                }
+                if (e.key === 'ArrowLeft') keyStates.arrowLeft.pressed = true;
+                if (e.key === 'ArrowRight') keyStates.arrowRight.pressed = true;
+            });
+            
+            document.addEventListener('keyup', (e) => { 
+                keys[e.key] = false;
+                
+                // Liberar teclas específicas
+                if (e.key === 'z' || e.key === 'Z') {
+                    keyStates.z.pressed = false;
+                    keyStates.z.charging = false;
+                    keyStates.z.holdTime = 0;
+                }
+                if (e.key === 'ArrowUp') keyStates.arrowUp.pressed = false;
+                if (e.key === 'ArrowDown') keyStates.arrowDown.pressed = false;
+                if (e.key === 'ArrowLeft') keyStates.arrowLeft.pressed = false;
+                if (e.key === 'ArrowRight') keyStates.arrowRight.pressed = false;
+            });
             
             function gameLoop() {
                 if (!missionState.gameRunning) return;
@@ -8460,14 +8500,33 @@ npm
                 if (state.player.grabCooldown > 0) state.player.grabCooldown -= 16;
                 if (state.player.invulnerabilityTime > 0) state.player.invulnerabilityTime -= 16;
                 
-                // Controles de movimento do jogador
-                if (keys['ArrowLeft']) {
+                // Atualizar sistema de carregamento de habilidades
+                if (keyStates.z.charging) {
+                    keyStates.z.holdTime += 16;
+                    
+                    // Carregar habilidades progressivamente (3 níveis)
+                    if (keyStates.z.holdTime >= 1000 && !state.player.skillLevel1) {
+                        state.player.skillLevel1 = true;
+                        state.player.mana = Math.min(state.player.maxMana, state.player.mana + 10);
+                    }
+                    if (keyStates.z.holdTime >= 2000 && !state.player.skillLevel2) {
+                        state.player.skillLevel2 = true;
+                        state.player.mana = Math.min(state.player.maxMana, state.player.mana + 10);
+                    }
+                    if (keyStates.z.holdTime >= 3000 && !state.player.skillLevel3) {
+                        state.player.skillLevel3 = true;
+                        state.player.mana = Math.min(state.player.maxMana, state.player.mana + 10);
+                    }
+                }
+                
+                // Controles de movimento do jogador (setas direcionais)
+                if (keyStates.arrowLeft.pressed) {
                     state.player.vx = -state.player.speed;
                     state.player.facingRight = false;
                     if (state.player.onGround && !state.player.attacking && !state.player.defending) {
                         state.player.animationState = 'walk';
                     }
-                } else if (keys['ArrowRight']) {
+                } else if (keyStates.arrowRight.pressed) {
                     state.player.vx = state.player.speed;
                     state.player.facingRight = true;
                     if (state.player.onGround && !state.player.attacking && !state.player.defending) {
@@ -8480,8 +8539,8 @@ npm
                     }
                 }
                 
-                // Sistema de pulo melhorado
-                if (keys['ArrowUp']) {
+                // Sistema de pulo (seta para cima) - pode ser usado duas vezes
+                if (keyStates.arrowUp.justPressed) {
                     // Pulo normal (primeiro pulo)
                     if (state.player.onGround && !state.player.grabbing) {
                         state.player.vy = -state.player.jumpPower;
@@ -8503,7 +8562,7 @@ npm
                             });
                         }
                     }
-                    // Pulo duplo (segundo pulo)
+                    // Pulo duplo (segundo pulo) - apenas para personagens que têm
                     else if (state.player.canDoubleJump && 
                              !state.player.hasDoubleJumped && 
                              state.player.jumpCount < state.player.maxJumps && 
@@ -8528,37 +8587,34 @@ npm
                     }
                 }
                 
-                // Agachamento
-                if (keys['ArrowDown'] && state.player.onGround) {
-                    state.player.height = 30;
-                } else {
-                    state.player.height = 60;
+                // Descer de plataforma (seta para baixo)
+                if (keyStates.arrowDown.justPressed && state.player.onGround && state.player.platformStanding) {
+                    // Permitir descer através da plataforma
+                    state.player.y += 5; // Pequeno movimento para baixo
+                    state.player.onGround = false;
+                    state.player.platformStanding = null;
                 }
                 
-                // Controles de combate
-                if (keys['KeyZ'] && state.player.attackCooldown <= 0 && !state.player.grabbing) {
-                    attack(state);
+                // Controles de combate - Z para ataque e habilidades
+                if (keyStates.z.pressed && state.player.attackCooldown <= 0 && !state.player.grabbing) {
+                    // Ataque básico se não estiver carregando
+                    if (keyStates.z.holdTime < 500) {
+                        attack(state);
+                    }
                 }
                 
-                if (keys['KeyX'] && state.player.defendCooldown <= 0 && !state.player.grabbing) {
-                    defend(state);
+                // Liberar habilidade carregada
+                if (!keyStates.z.pressed && (state.player.skillLevel1 || state.player.skillLevel2 || state.player.skillLevel3)) {
+                    castSpecialSkill(state);
+                    // Reset dos níveis de habilidade
+                    state.player.skillLevel1 = false;
+                    state.player.skillLevel2 = false;
+                    state.player.skillLevel3 = false;
                 }
                 
-                if (keys['KeyC'] && state.player.grabCooldown <= 0 && !state.player.grabbing) {
-                    grab(state);
-                }
-                
-                if (state.player.grabbing && !keys['KeyC']) {
-                    throwEnemy(state);
-                }
-                
-                if (keys['KeyK'] && state.player.mana >= 10) {
-                    castFireball(state);
-                }
-                
-                if (keys['KeyL'] && state.player.mana >= 20) {
-                    castHeal(state);
-                }
+                // Reset do justPressed para evitar múltiplos pulos
+                keyStates.arrowUp.justPressed = false;
+                keyStates.arrowDown.justPressed = false;
                 
                 // Atualizar animações do jogador
                 updatePlayerAnimation(state.player);
@@ -8987,6 +9043,140 @@ npm
                         vy: (Math.random() - 0.5) * 4,
                         life: 20,
                         color: '#ff6b35',
+                        size: Math.random() * 2 + 1
+                    });
+                }
+            }
+            
+            function castSpecialSkill(state) {
+                const skillLevel = state.player.skillLevel3 ? 3 : state.player.skillLevel2 ? 2 : 1;
+                const manaCost = skillLevel * 15;
+                
+                if (state.player.mana >= manaCost) {
+                    state.player.mana -= manaCost;
+                    state.player.attacking = true;
+                    state.player.animationState = 'attack';
+                    state.player.attackCooldown = 800;
+                    
+                    // Habilidades especiais baseadas no personagem e nível
+                    switch (state.player.character) {
+                        case 'juno':
+                            castJunoSkill(state, skillLevel);
+                            break;
+                        case 'atlas':
+                            castAtlasSkill(state, skillLevel);
+                            break;
+                        case 'vega':
+                            castVegaSkill(state, skillLevel);
+                            break;
+                        case 'kai':
+                            castKaiSkill(state, skillLevel);
+                            break;
+                    }
+                }
+            }
+            
+            function castJunoSkill(state, level) {
+                // Juno - Cavaleiro: Ataques de espada poderosos
+                const damage = 40 + (level * 20);
+                const range = 80 + (level * 20);
+                
+                state.enemies.forEach(enemy => {
+                    const distance = Math.abs(enemy.x - state.player.x);
+                    if (distance < range) {
+                        enemy.health -= damage;
+                        createHitEffect(state, enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                        
+                        // Efeito especial baseado no nível
+                        for (let i = 0; i < 8 + (level * 4); i++) {
+                            state.particles.push({
+                                x: enemy.x + Math.random() * enemy.width,
+                                y: enemy.y + Math.random() * enemy.height,
+                                vx: (Math.random() - 0.5) * 6,
+                                vy: (Math.random() - 0.5) * 6,
+                                life: 25,
+                                color: level === 3 ? '#ffd700' : level === 2 ? '#ff6b35' : '#3b82f6',
+                                size: Math.random() * 3 + 2
+                            });
+                        }
+                    }
+                });
+            }
+            
+            function castAtlasSkill(state, level) {
+                // Atlas - Caçador: Tiros múltiplos
+                const projectileCount = 1 + level;
+                const damage = 25 + (level * 15);
+                
+                for (let i = 0; i < projectileCount; i++) {
+                    const angle = (i - (projectileCount - 1) / 2) * 0.3;
+                    state.projectiles.push({
+                        x: state.player.x + (state.player.facingRight ? 40 : -10),
+                        y: state.player.y + 20,
+                        vx: state.player.facingRight ? 10 * Math.cos(angle) : -10 * Math.cos(angle),
+                        vy: 10 * Math.sin(angle),
+                        life: 100,
+                        damage: damage,
+                        color: level === 3 ? '#00ff00' : level === 2 ? '#ffff00' : '#ff6b35',
+                        size: 6 + level
+                    });
+                }
+            }
+            
+            function castVegaSkill(state, level) {
+                // Vega - Mago: Magia elemental
+                const radius = 60 + (level * 20);
+                const damage = 35 + (level * 25);
+                
+                // Criar área de efeito
+                state.effects.push({
+                    x: state.player.x - radius/2,
+                    y: state.player.y - radius/2,
+                    width: radius,
+                    height: radius,
+                    life: 30,
+                    color: level === 3 ? '#ff00ff' : level === 2 ? '#00ffff' : '#ff6b35',
+                    type: 'magic_circle'
+                });
+                
+                state.enemies.forEach(enemy => {
+                    const dx = enemy.x - state.player.x;
+                    const dy = enemy.y - state.player.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < radius) {
+                        enemy.health -= damage;
+                        createHitEffect(state, enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                    }
+                });
+            }
+            
+            function castKaiSkill(state, level) {
+                // Kai - Assassino: Ataque rápido e furtivo
+                const speed = 12 + (level * 3);
+                const damage = 30 + (level * 20);
+                
+                // Dash rápido
+                state.player.x += state.player.facingRight ? speed * 3 : -speed * 3;
+                
+                // Ataque em área durante o dash
+                state.enemies.forEach(enemy => {
+                    const distance = Math.abs(enemy.x - state.player.x);
+                    if (distance < 50) {
+                        enemy.health -= damage;
+                        createHitEffect(state, enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                    }
+                });
+                
+                // Efeito de dash
+                for (let i = 0; i < 10; i++) {
+                    state.particles.push({
+                        x: state.player.x + Math.random() * state.player.width,
+                        y: state.player.y + Math.random() * state.player.height,
+                        vx: (Math.random() - 0.5) * 8,
+                        vy: (Math.random() - 0.5) * 8,
+                        life: 20,
+                        color: level === 3 ? '#ff0000' : level === 2 ? '#ff6600' : '#6600ff',
                         size: Math.random() * 2 + 1
                     });
                 }
@@ -9530,6 +9720,39 @@ npm
                 ctx.lineWidth = 2;
                 ctx.strokeRect(20, 20, 200, 12);
                 ctx.strokeRect(20, 37, 200, 12);
+                
+                // Barras de habilidade (3 níveis)
+                const skillBarY = 54;
+                const skillBarWidth = 60;
+                const skillBarHeight = 8;
+                const skillBarSpacing = 5;
+                
+                for (let i = 0; i < 3; i++) {
+                    const barX = 20 + i * (skillBarWidth + skillBarSpacing);
+                    
+                    // Fundo da barra
+                    ctx.fillStyle = '#374151';
+                    ctx.fillRect(barX, skillBarY, skillBarWidth, skillBarHeight);
+                    
+                    // Barra carregada
+                    if (keyStates.z.charging && keyStates.z.holdTime >= (i + 1) * 1000) {
+                        const colors = ['#3b82f6', '#ff6b35', '#ffd700']; // Azul, Laranja, Dourado
+                        ctx.fillStyle = colors[i];
+                        ctx.fillRect(barX, skillBarY, skillBarWidth, skillBarHeight);
+                    }
+                    
+                    // Borda da barra
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(barX, skillBarY, skillBarWidth, skillBarHeight);
+                }
+                
+                // Indicador de carregamento
+                if (keyStates.z.charging) {
+                    const progress = Math.min(keyStates.z.holdTime / 3000, 1);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.fillRect(20, skillBarY + skillBarHeight + 5, progress * 200, 4);
+                }
                 
                 // Texto das barras
                 ctx.fillStyle = '#ffffff';
