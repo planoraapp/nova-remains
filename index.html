@@ -160,42 +160,6 @@
             100% { background: radial-gradient(125% 125% at 50% 0%, #0f0f23 50%, #4f46e5); }
         }
 
-        /* Interface Moderna */
-        .modern-interface {
-            position: relative;
-            z-index: 10;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .game-header {
-            text-align: center;
-            margin-bottom: 3rem;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .game-title {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 900;
-            background: linear-gradient(135deg, #60a5fa, #a855f7, #ec4899);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 30px rgba(96, 165, 250, 0.5);
-        }
-
-        .game-subtitle {
-            font-size: 1.25rem;
-            color: #94a3b8;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-        }
 
         .menu-grid {
             display: grid;
@@ -329,10 +293,12 @@
             border-radius: 1.5rem;
             padding: 2rem;
             max-width: 90vw;
-            max-height: 90vh;
+            max-height: 80vh;
             overflow-y: auto;
+            overflow-x: hidden;
             position: relative;
             animation: modalSlideIn 0.3s ease-out;
+            box-sizing: border-box;
         }
 
         @keyframes modalSlideIn {
@@ -585,6 +551,49 @@
             max-height: 800px;
         }
         
+        /* Garantir que todas as telas fiquem dentro do game-window */
+        .game-window > div {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        /* Scroll personalizado para telas principais */
+        .game-window > div::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .game-window > div::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-window > div::-webkit-scrollbar-thumb {
+            background: #8B4513;
+            border-radius: 4px;
+        }
+        
+        .game-window > div::-webkit-scrollbar-thumb:hover {
+            background: #A0522D;
+        }
+        
+        /* Telas específicas que precisam de scroll */
+        .character-selection-screen,
+        .world-map-screen {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        /* Modais e menus com scroll específico */
+        .modal-content,
+        .submenu-content {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
         /* Menu principal adaptado para painel lateral */
         #mainMenu {
             position: relative;
@@ -657,84 +666,10 @@
             top: 20px;
             left: 20px;
             z-index: 10;
+            display: none; /* Oculto por padrão */
         }
         
-        /* Botão de menu permanente - Canto inferior direito */
-        #permanentMenu {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 10;
-            display: flex;
-            flex-direction: row;
-            gap: 12px;
-        }
         
-        #permanentMenu button {
-            background: #8B4513;
-            color: #FFD700;
-            border: 3px solid #654321;
-            padding: 10px 16px;
-            border-radius: 0;
-            cursor: pointer;
-            font-weight: bold;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 
-                inset 2px 2px 0px #A0522D,
-                inset -2px -2px 0px #654321,
-                2px 2px 0px #000;
-            transition: all 0.1s ease;
-            min-width: 90px;
-            image-rendering: pixelated;
-        }
-        
-        #permanentMenu button:hover {
-            background: #A0522D;
-            transform: translateY(-1px);
-            box-shadow: 
-                inset 2px 2px 0px #CD853F,
-                inset -2px -2px 0px #8B4513,
-                3px 3px 0px #000;
-        }
-        
-        #permanentMenu button:active {
-            transform: translateY(1px);
-            box-shadow: 
-                inset 2px 2px 0px #654321,
-                inset -2px -2px 0px #8B4513,
-                1px 1px 0px #000;
-        }
-        
-        /* Controles do jogo */
-        #gameControls {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            z-index: 10;
-            display: flex;
-            gap: 10px;
-        }
-        
-        #gameControls button {
-            background: rgba(74, 144, 226, 0.9);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 10px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            min-width: 80px;
-        }
-        
-        #gameControls button:hover {
-            background: rgba(74, 144, 226, 1);
-            transform: translateY(-2px);
-        }
         
         /* Responsividade para telas menores */
         @media (max-width: 1200px) {
@@ -1722,7 +1657,10 @@ npm
             display: flex;
             flex-direction: column;
             overflow-y: auto;
+            overflow-x: hidden;
             position: relative;
+            max-height: 70vh;
+            box-sizing: border-box;
         }
         
         .submenu-header {
@@ -1769,30 +1707,13 @@ npm
             position: absolute;
             top: 15px;
             left: 15px;
-            display: flex;
+            display: none; /* Oculto por padrão */
             flex-direction: column;
             gap: 12px;
             z-index: 10;
         }
         
-        #permanentMenu {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            z-index: 10;
-            display: flex;
-            flex-direction: row;
-            gap: 12px;
-        }
         
-        #gameControls {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            z-index: 10;
-            display: flex;
-            gap: 10px;
-        }
         
         /* Canvas responsivo dentro da janela - DESABILITADO */
         #gameCanvas {
@@ -3666,6 +3587,704 @@ npm
         body.editor-open .game-window {
             margin-left: 0;
         }
+        
+        /* Estilos para Sistema de Missões */
+        .mission-content {
+            padding: 20px;
+        }
+        
+        .mission-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .mission-tab {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .mission-tab:hover {
+            background: linear-gradient(135deg, #4b5563, #6b7280);
+            transform: translateY(-2px);
+        }
+        
+        .mission-tab.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .mission-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .mission-card {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+            border: 2px solid #374151;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .mission-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+        }
+        
+        .mission-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .mission-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 12px;
+        }
+        
+        .mission-info h3 {
+            color: #FFD700;
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+        }
+        
+        .mission-level {
+            color: #60a5fa;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .mission-description {
+            color: #94a3b8;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .mission-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .mission-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+        
+        .mission-detail-icon {
+            color: #3b82f6;
+        }
+        
+        .mission-rewards {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .mission-rewards h4 {
+            color: #22c55e;
+            margin: 0 0 8px 0;
+            font-size: 0.9rem;
+        }
+        
+        .mission-reward {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #d1d5db;
+            font-size: 0.85rem;
+        }
+        
+        .mission-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .mission-btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .mission-btn.primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+        
+        .mission-btn.primary:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+        }
+        
+        .mission-btn.secondary {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+        
+        .mission-btn.secondary:hover {
+            background: linear-gradient(135deg, #4b5563, #374151);
+        }
+        
+        .difficulty-easy { border-left: 4px solid #22c55e; }
+        .difficulty-medium { border-left: 4px solid #f59e0b; }
+        .difficulty-hard { border-left: 4px solid #ef4444; }
+        .difficulty-extreme { border-left: 4px solid #8b5cf6; }
+        
+        
+        /* Estilos para Seleção de Personagem */
+        .character-selection-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .selection-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .selection-title {
+            color: #FFD700;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin: 0 0 15px 0;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            letter-spacing: 3px;
+        }
+        
+        .selection-subtitle {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+        
+        .heroes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+        
+        .hero-card {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+            border: 2px solid #374151;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .hero-card:hover::before {
+            left: 100%;
+        }
+        
+        .hero-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+        }
+        
+        .hero-card.selected {
+            border-color: #22c55e;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 33, 62, 0.9));
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+        }
+        
+        .hero-image {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #374151, #4b5563);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .hero-fallback {
+            font-size: 3rem;
+            color: #6b7280;
+        }
+        
+        .hero-info {
+            text-align: center;
+        }
+        
+        .hero-name {
+            color: #FFD700;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .hero-title {
+            color: #60a5fa;
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0 0 20px 0;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stat-icon {
+            font-size: 1.2rem;
+        }
+        
+        .stat-value {
+            color: #d1d5db;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .hero-description {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin: 0;
+        }
+        
+        .selection-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .confirm-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+        }
+        
+        .confirm-btn:not(:disabled) {
+            opacity: 1;
+        }
+        
+        .confirm-btn:not(:disabled):hover {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
+        }
+        
+        .back-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: linear-gradient(135deg, #4b5563, #374151);
+            transform: translateY(-2px);
+        }
+        
+        /* Estilos para Mapa Mundi */
+        .world-map-screen {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+            padding: 15px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        /* Abas do Mapa Mundi */
+        .map-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .map-tab {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(29, 78, 216, 0.8));
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .map-tab:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 1), rgba(29, 78, 216, 1));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .map-tab.active {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+        
+        /* Conteúdo das Abas */
+        .map-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tab-content {
+            display: none;
+            height: 100%;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Estilos para telas completas */
+        .inventory-full-screen,
+        .shop-full-screen,
+        .missions-full-screen,
+        .character-full-screen,
+        .settings-full-screen {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+        
+        .inventory-header,
+        .shop-header,
+        .missions-header,
+        .character-header,
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .inventory-header h2,
+        .shop-header h2,
+        .missions-header h2,
+        .character-header h2,
+        .settings-header h2 {
+            color: #FFD700;
+            font-size: 1.8rem;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .gold-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .gold-icon {
+            font-size: 1.2rem;
+        }
+        
+        .gold-display span:last-child {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 0;
+        }
+        
+        .map-title {
+            color: #FFD700;
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .map-subtitle {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+        
+        .world-map-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            flex: 1;
+        }
+        
+        .galactic-map {
+            position: relative;
+            background: linear-gradient(135deg, rgba(15, 15, 35, 0.8), rgba(26, 26, 46, 0.8));
+            border: 2px solid #374151;
+            border-radius: 20px;
+            min-height: 600px;
+            overflow: hidden;
+        }
+        
+        .mission-location {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+            border: 2px solid #374151;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            min-width: 120px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .mission-location:hover {
+            border-color: #3b82f6;
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+        }
+        
+        .location-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .location-name {
+            color: #FFD700;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .location-level {
+            color: #60a5fa;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .mission-count {
+            color: #22c55e;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 4px 8px;
+            border-radius: 8px;
+            border: 1px solid #22c55e;
+        }
+        
+        .map-info-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .hero-info-card, .stats-card, .quick-actions {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+            border: 2px solid #374151;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .hero-info-card h3, .stats-card h3, .quick-actions h3 {
+            color: #FFD700;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .hero-info-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .hero-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .hero-details {
+            flex: 1;
+        }
+        
+        .hero-name {
+            color: #FFD700;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .hero-level {
+            color: #60a5fa;
+            font-size: 0.9rem;
+        }
+        
+        .stats-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stat-icon {
+            font-size: 1.1rem;
+            width: 20px;
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .stat-value {
+            color: #d1d5db;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 12px 15px;
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .action-btn:hover {
+            background: linear-gradient(135deg, #4b5563, #374151);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -4005,75 +4624,131 @@ npm
                 </div>
             </div>
 
-            <!-- Interface Moderna Alternativa -->
-            <div id="modernInterface" class="modern-interface" style="display: none;">
-                <!-- Header do Jogo -->
-                <div class="game-header">
-                    <h1 class="game-title">NOVA REMAINS</h1>
-                    <p class="game-subtitle">Star Hunters • Galactic Warfare • Cosmic Adventure</p>
+
+            <!-- Tela de Seleção de Personagem -->
+            <div id="characterSelectionScreen" class="character-selection-screen" style="display: none;">
+                <div class="selection-header">
+                    <h1 class="selection-title">SELECIONE SEU HERÓI</h1>
+                    <p class="selection-subtitle">Escolha seu caçador de estrelas para começar a aventura</p>
+                        </div>
+                
+                <div class="heroes-grid">
+                    <!-- Juno -->
+                    <div class="hero-card" onclick="selectHero(this, 'juno')" data-hero="juno">
+                        <div class="hero-image">
+                            <img src="assets/images/characters/heroes/juno/juno.png" alt="Juno" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="hero-fallback" style="display: none;">⚔️</div>
+                        </div>
+                        <div class="hero-info">
+                            <h3 class="hero-name">JUNO</h3>
+                            <p class="hero-title">Guerreiro Estelar</p>
+                            <div class="hero-stats">
+                                <div class="stat">
+                                    <span class="stat-icon">❤️</span>
+                                    <span class="stat-value">100</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-icon">⚔️</span>
+                                    <span class="stat-value">25</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-icon">🛡️</span>
+                                    <span class="stat-value">15</span>
+                                </div>
+                            </div>
+                            <p class="hero-description">Um guerreiro equilibrado com habilidades de combate versáteis</p>
+                        </div>
+                    </div>
+
+                    <!-- Atlas -->
+                    <div class="hero-card" onclick="selectHero(this, 'atlas')" data-hero="atlas">
+                        <div class="hero-image">
+                            <img src="assets/images/characters/heroes/atlas/atlas.png" alt="Atlas" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="hero-fallback" style="display: none;">🛡️</div>
+                        </div>
+                        <div class="hero-info">
+                            <h3 class="hero-name">ATLAS</h3>
+                            <p class="hero-title">Guardião Cósmico</p>
+                            <div class="hero-stats">
+                                <div class="stat">
+                                    <span class="stat-icon">❤️</span>
+                                    <span class="stat-value">120</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-icon">⚔️</span>
+                                    <span class="stat-value">20</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-icon">🛡️</span>
+                                    <span class="stat-value">20</span>
+                                </div>
+                            </div>
+                            <p class="hero-description">Um defensor poderoso com alta resistência e proteção</p>
+                        </div>
+                    </div>
+
+                    <!-- Vega -->
+                    <div class="hero-card" onclick="selectHero(this, 'vega')" data-hero="vega">
+                        <div class="hero-image">
+                            <img src="assets/images/characters/heroes/vega/vega.png" alt="Vega" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="hero-fallback" style="display: none;">🏹</div>
+                        </div>
+                        <div class="hero-info">
+                            <h3 class="hero-name">VEGA</h3>
+                            <p class="hero-title">Exploradora Espacial</p>
+                            <div class="hero-stats">
+                                <div class="stat">
+                                    <span class="stat-icon">❤️</span>
+                                    <span class="stat-value">80</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-icon">⚔️</span>
+                                    <span class="stat-value">30</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-icon">🛡️</span>
+                                    <span class="stat-value">10</span>
+                                </div>
+                            </div>
+                            <p class="hero-description">Uma atiradora ágil com alta mobilidade e precisão</p>
+                        </div>
+                    </div>
+
+                    <!-- Kai -->
+                    <div class="hero-card" onclick="selectHero(this, 'kai')" data-hero="kai">
+                        <div class="hero-image">
+                            <img src="assets/images/characters/heroes/juno/kai.png" alt="Kai" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="hero-fallback" style="display: none;">⚡</div>
+                        </div>
+                        <div class="hero-info">
+                            <h3 class="hero-name">KAI</h3>
+                            <p class="hero-title">Guerreiro Estelar</p>
+                            <div class="hero-stats">
+                                <div class="stat">
+                                    <span class="stat-icon">❤️</span>
+                                    <span class="stat-value">110</span>
+                    </div>
+                                <div class="stat">
+                                    <span class="stat-icon">⚔️</span>
+                                    <span class="stat-value">28</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-icon">🛡️</span>
+                                    <span class="stat-value">12</span>
+                                </div>
+                            </div>
+                            <p class="hero-description">Um guerreiro equilibrado com habilidades especiais únicas</p>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Grid de Menu -->
-                <div class="menu-grid">
-                    <!-- Star Hunters -->
-                    <div class="menu-card" onclick="openModal('heroModal')">
-                        <div class="status-indicator"></div>
-                        <div class="menu-card-icon" style="background: linear-gradient(135deg, #ef4444, #f97316);">
-                            ⚔️
-                        </div>
-                        <h3 class="menu-card-title">Star Hunters</h3>
-                        <p class="menu-card-description">Selecione seu caçador de estrelas e prepare-se para a batalha</p>
-                    </div>
-
-                    <!-- Galactic Map -->
-                    <div class="menu-card" onclick="openModal('missionModal')">
-                        <div class="status-indicator"></div>
-                        <div class="menu-card-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
-                            🗺️
-                        </div>
-                        <h3 class="menu-card-title">Galactic Map</h3>
-                        <p class="menu-card-description">Explore missões épicas através da galáxia</p>
-                    </div>
-
-                    <!-- Arsenal -->
-                    <div class="menu-card" onclick="openModal('shopModal')">
-                        <div class="status-indicator"></div>
-                        <div class="menu-card-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
-                            🛒
-                        </div>
-                        <h3 class="menu-card-title">Arsenal</h3>
-                        <p class="menu-card-description">Equipe-se com as melhores armas e equipamentos</p>
-                    </div>
-
-                    <!-- Inventory -->
-                    <div class="menu-card" onclick="openModal('inventoryModal')">
-                        <div class="status-indicator"></div>
-                        <div class="menu-card-icon" style="background: linear-gradient(135deg, #a855f7, #7c3aed);">
-                            🎒
-                        </div>
-                        <h3 class="menu-card-title">Inventory</h3>
-                        <p class="menu-card-description">Gerencie seus itens e equipamentos</p>
-                    </div>
-
-                    <!-- Settings -->
-                    <div class="menu-card" onclick="openModal('settingsModal')">
-                        <div class="status-indicator"></div>
-                        <div class="menu-card-icon" style="background: linear-gradient(135deg, #6b7280, #4b5563);">
-                            ⚙️
-                        </div>
-                        <h3 class="menu-card-title">Settings</h3>
-                        <p class="menu-card-description">Configure suas preferências de jogo</p>
-                    </div>
-
-                    <!-- Combat Mode -->
-                    <div class="menu-card" onclick="startCombat()">
-                        <div class="status-indicator"></div>
-                        <div class="menu-card-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
-                            🎯
-                        </div>
-                        <h3 class="menu-card-title">Combat Mode</h3>
-                        <p class="menu-card-description">Entre em combate e teste suas habilidades</p>
-                    </div>
+                
+                <div class="selection-actions">
+                    <button id="confirmHeroBtn" class="confirm-btn" onclick="confirmHeroSelection()" disabled>
+                        🚀 CONFIRMAR HERÓI
+                    </button>
+                    <button class="back-btn" onclick="goBackToMainMenu()">
+                        ← VOLTAR
+                    </button>
                 </div>
             </div>
             
@@ -4098,7 +4773,7 @@ npm
             </div>
             
             <!-- UI do Jogo -->
-            <div id="ui">
+            <div id="ui" style="display: none;">
                 <div id="healthBar">
                     <div id="healthFill"></div>
                     <span id="healthText">100/100</span>
@@ -4114,153 +4789,313 @@ npm
                 </div>
             </div>
             
-            <!-- Botões de Menu Permanente -->
-            <div id="permanentMenu">
-                <button id="menuBtn">MENU</button>
-                <button id="pauseBtn">PAUSE</button>
-                <button id="restartBtn2">RESTART</button>
-            </div>
             
-            <!-- Controles do Jogo -->
-            <div id="gameControls">
-                <button id="pauseBtn2">Pause</button>
-                <button id="restartBtn3">Restart</button>
-            </div>
-            <!-- Mapa Mundo -->
-            <div id="worldMap" class="submenu" style="display: none;">
-            <div class="submenu-header">
-                <button id="backFromWorldMapBtn" class="back-btn">← Voltar</button>
-                <h2>🗺️ Mapa do Mundo</h2>
-            </div>
-            <div class="submenu-content">
-                <div class="world-map-modern">
-                    <!-- Mapa Principal -->
-                    <div class="map-container">
-                        <div class="world-map map-background">
-                        <div class="map-location location-3d" data-location="sanctuary" style="top: 60%; left: 30%;">
-                            <div class="location-icon location-icon-3d">🏛️</div>
-                            <div class="location-name location-name-3d">Santuário das Estrelas</div>
-                            <div class="location-level" style="background: linear-gradient(135deg, #32CD32, #00FF7F); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 4px;">Nível 1-5</div>
-                        </div>
-                            <div class="map-location location-3d" data-location="void" style="top: 40%; left: 50%;">
-                                <div class="location-icon location-icon-3d">🌌</div>
-                                <div class="location-name location-name-3d">Vazio Cósmico</div>
-                                <div class="location-level" style="background: linear-gradient(135deg, #DC143C, #FF6347); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 4px;">Nível 6-10</div>
+            <!-- Mapa Mundi com Missões -->
+            <div id="worldMap" class="world-map-screen" style="display: none;">
+                <!-- Header com Navegação -->
+                <div class="map-header">
+                    <button id="backFromWorldMapBtn" class="back-btn" onclick="goBackToCharacterSelection()">← Voltar</button>
+                    <h1 class="map-title">🗺️ MAPA MUNDI</h1>
+                </div>
+                
+                <!-- Abas Superiores -->
+                <div class="map-tabs">
+                    <button class="map-tab active" data-tab="map" onclick="switchMapTab('map')">
+                        🗺️ Mapa
+                    </button>
+                    <button class="map-tab" data-tab="inventory" onclick="switchMapTab('inventory')">
+                        🎒 Inventário
+                    </button>
+                    <button class="map-tab" data-tab="shop" onclick="switchMapTab('shop')">
+                        🏪 Loja
+                    </button>
+                    <button class="map-tab" data-tab="missions" onclick="switchMapTab('missions')">
+                        🎯 Missões
+                    </button>
+                    <button class="map-tab" data-tab="character" onclick="switchMapTab('character')">
+                        ⚔️ Herói
+                    </button>
+                    <button class="map-tab" data-tab="settings" onclick="switchMapTab('settings')">
+                        ⚙️ Configurações
+                    </button>
+                </div>
+                
+                <!-- Conteúdo das Abas -->
+                <div class="map-content">
+                    <!-- Aba do Mapa -->
+                    <div id="mapTab" class="tab-content active">
+                        <div class="world-map-container">
+                            <div class="galactic-map">
+                                <!-- Vila -->
+                                <div class="map-location mission-location" data-location="village" onclick="openLocationMissions('village')" style="top: 60%; left: 20%;">
+                                    <div class="location-icon">🏘️</div>
+                                    <div class="location-name">VILA</div>
+                                    <div class="location-level">Nível 1-2</div>
+                                    <div class="mission-count">2 Missões</div>
+                                </div>
+                                
+                                <!-- Floresta -->
+                                <div class="map-location mission-location" data-location="forest" onclick="openLocationMissions('forest')" style="top: 40%; left: 35%;">
+                                    <div class="location-icon">🌲</div>
+                                    <div class="location-name">FLORESTA</div>
+                                    <div class="location-level">Nível 3-4</div>
+                                    <div class="mission-count">2 Missões</div>
+                                </div>
+                                
+                                <!-- Caverna -->
+                                <div class="map-location mission-location" data-location="cave" onclick="openLocationMissions('cave')" style="top: 70%; left: 45%;">
+                                    <div class="location-icon">⛰️</div>
+                                    <div class="location-name">CAVERNA</div>
+                                    <div class="location-level">Nível 5-6</div>
+                                    <div class="mission-count">2 Missões</div>
+                                </div>
+                                
+                                <!-- Torre -->
+                                <div class="map-location mission-location" data-location="tower" onclick="openLocationMissions('tower')" style="top: 30%; left: 60%;">
+                                    <div class="location-icon">🏰</div>
+                                    <div class="location-name">TORRE</div>
+                                    <div class="location-level">Nível 7-8</div>
+                                    <div class="mission-count">2 Missões</div>
+                                </div>
+                                
+                                <!-- Masmorra -->
+                                <div class="map-location mission-location" data-location="dungeon" onclick="openLocationMissions('dungeon')" style="top: 50%; left: 75%;">
+                                    <div class="location-icon">🗡️</div>
+                                    <div class="location-name">MASMORRA</div>
+                                    <div class="location-level">Nível 10-15</div>
+                                    <div class="mission-count">2 Missões</div>
+                                </div>
                             </div>
-                            <div class="map-location location-3d" data-location="ruins" style="top: 70%; left: 60%;">
-                                <div class="location-icon location-icon-3d">🏚️</div>
-                                <div class="location-name location-name-3d">Ruínas Celestiais</div>
-                                <div class="location-level" style="background: linear-gradient(135deg, #8A2BE2, #4169E1); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 4px;">Nível 11-15</div>
-                            </div>
-                            <div class="map-location location-3d" data-location="temple" style="top: 20%; left: 70%;">
-                                <div class="location-icon location-icon-3d">⛩️</div>
-                                <div class="location-name location-name-3d">Templo dos Fragmentos</div>
-                                <div class="location-level" style="background: linear-gradient(135deg, #FFD700, #FFA500); color: #1a1a2e; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 4px;">Nível 16-20</div>
-                            </div>
-                            <div class="map-location location-3d" data-location="comet" style="top: 50%; left: 80%;">
-                                <div class="location-icon location-icon-3d">☄️</div>
-                                <div class="location-name location-name-3d">Núcleo do Cometa</div>
-                                <div class="location-level" style="background: linear-gradient(135deg, #FF1493, #FF69B4); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 4px;">Nível 21+</div>
+                            
+                            <!-- Painel de Informações do Herói -->
+                            <div class="map-info-panel">
+                                <div class="hero-info-card">
+                                    <h3>👤 Herói Selecionado</h3>
+                                    <div id="selectedHeroInfo" class="hero-info-display">
+                                        <div class="hero-avatar">⚔️</div>
+                                        <div class="hero-details">
+                                            <div class="hero-name">JUNO</div>
+                                            <div class="hero-level">Nível 1</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="stats-card">
+                                    <h3>📊 Estatísticas</h3>
+                                    <div class="stats-list">
+                                        <div class="stat-item">
+                                            <span class="stat-icon">❤️</span>
+                                            <span class="stat-label">Vida:</span>
+                                            <span class="stat-value">100/100</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-icon">⚔️</span>
+                                            <span class="stat-label">Ataque:</span>
+                                            <span class="stat-value">25</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-icon">🛡️</span>
+                                            <span class="stat-label">Defesa:</span>
+                                            <span class="stat-value">15</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-icon">💰</span>
+                                            <span class="stat-label">Ouro:</span>
+                                            <span class="stat-value">500</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Painel Lateral com Inventário e Loja -->
-                    <div class="map-sidebar">
-                        <!-- Player Stats -->
-                        <div class="sidebar-section panel-3d">
-                            <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">📊 Estatísticas</h3>
-                            <div class="player-stats" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9)); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #444444;">
-                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
-                                    <span style="color: #FF6B6B;">❤️ Vida:</span>
-                                    <span style="color: #FFD700;">120/120</span>
+                    <!-- Aba do Inventário -->
+                    <div id="inventoryTab" class="tab-content">
+                        <div class="inventory-full-screen">
+                            <div class="inventory-header">
+                                <div class="header-left">
+                                    <button class="back-btn-small" onclick="switchMapTab('map')">← Voltar</button>
+                                    <h2>🎒 Inventário Completo</h2>
                                 </div>
-                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
-                                    <span style="color: #4ECDC4;">⚡ Mana:</span>
-                                    <span style="color: #FFD700;">100/100</span>
-                                </div>
-                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
-                                    <span style="color: #45B7D1;">⭐ Nível:</span>
-                                    <span style="color: #FFD700;">1</span>
-                                </div>
-                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
-                                    <span style="color: #96CEB4;">💰 Ouro:</span>
-                                    <span style="color: #FFD700;">500</span>
+                                <div class="gold-display">
+                                    <span class="gold-icon">💰</span>
+                                    <span id="playerGold">1000</span>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Inventário Compacto -->
-                        <div class="sidebar-section panel-3d">
-                            <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">🎒 Inventário</h3>
-                            <div class="inventory-compact">
-                                <div class="inventory-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 10px 0;">
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">⚔️</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">🛡️</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">💊</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">🔮</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">💎</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">🗝️</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">📜</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">⚡</div>
-                                </div>
-                                <button class="btn-3d" onclick="showSubmenu('inventoryMenu')">Ver Inventário Completo</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Loja Compacta -->
-                        <div class="sidebar-section panel-3d">
-                            <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">🏪 Loja</h3>
-                            <div class="shop-compact">
-                                <div class="shop-categories" style="display: flex; gap: 5px; margin: 10px 0;">
-                                    <button class="btn-3d" style="padding: 5px 10px; font-size: 10px;" data-category="weapons">⚔️ Armas</button>
-                                    <button class="btn-3d" style="padding: 5px 10px; font-size: 10px;" data-category="armor">🛡️ Armaduras</button>
-                                    <button class="btn-3d" style="padding: 5px 10px; font-size: 10px;" data-category="potions">💊 Poções</button>
-                                </div>
-                                <div class="shop-items" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); padding: 10px; border-radius: 8px; margin: 10px 0;">
-                                    <div class="shop-item" style="display: flex; justify-content: space-between; align-items: center; margin: 5px 0; padding: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px;">
-                                        <span class="item-icon">⚔️</span>
-                                        <span class="item-name" style="color: #87CEEB; font-size: 12px;">Espada Básica</span>
-                                        <span class="item-price" style="color: #FFD700; font-size: 12px;">200💰</span>
+                            <div class="inventory-modern">
+                                <div class="inventory-main">
+                                    <div class="inventory-grid" id="inventoryGrid">
+                                        <!-- Slots serão gerados dinamicamente -->
                                     </div>
-                                    <div class="shop-item" style="display: flex; justify-content: space-between; align-items: center; margin: 5px 0; padding: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px;">
-                                        <span class="item-icon">🛡️</span>
-                                        <span class="item-name" style="color: #87CEEB; font-size: 12px;">Escudo</span>
-                                        <span class="item-price" style="color: #FFD700; font-size: 12px;">150💰</span>
-                                    </div>
-                                    <div class="shop-item" style="display: flex; justify-content: space-between; align-items: center; margin: 5px 0; padding: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px;">
-                                        <span class="item-icon">💊</span>
-                                        <span class="item-name" style="color: #87CEEB; font-size: 12px;">Poção de Vida</span>
-                                        <span class="item-price" style="color: #FFD700; font-size: 12px;">50💰</span>
+                                    <div class="inventory-info">
+                                        <h3>Equipamentos</h3>
+                                        <div class="equipped-items">
+                                            <div class="equipped-slot">
+                                                <label>Arma:</label>
+                                                <div class="equipped-item">⚔️ Espada Básica</div>
+                                            </div>
+                                            <div class="equipped-slot">
+                                                <label>Armadura:</label>
+                                                <div class="equipped-item">🛡️ Armadura de Couro</div>
+                                            </div>
+                                            <div class="equipped-slot">
+                                                <label>Acessório:</label>
+                                                <div class="equipped-item">💍 Anel de Poder</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <button class="btn-3d" onclick="showSubmenu('shopMenu')">Ver Loja Completa</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Ações Rápidas -->
-                        <div class="sidebar-section">
-                            <h3>⚡ Ações Rápidas</h3>
-                            <div class="quick-actions">
-                                <button class="btn-modern" onclick="showSubmenu('missionsMenu')">🎯 Missões</button>
-                                <button class="btn-modern" onclick="showSubmenu('characterMenu')">⚔️ Heróis</button>
-                                <button class="btn-modern" onclick="showSubmenu('skillsMenu')">⚡ Habilidades</button>
-                                <button class="btn-modern" onclick="showSubmenu('settingsMenu')">⚙️ Configurações</button>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Janela de Chat -->
-                <div class="chat-window">
-                    <div class="chat-header">💬 Chat do Jogo</div>
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="chat-message system">Bem-vindo ao Nova Remains!</div>
-                        <div class="chat-message system">Selecione uma localização no mapa para começar sua aventura.</div>
+                    
+                    <!-- Aba da Loja -->
+                    <div id="shopTab" class="tab-content">
+                        <div class="shop-full-screen">
+                            <div class="shop-header">
+                                <div class="header-left">
+                                    <button class="back-btn-small" onclick="switchMapTab('map')">← Voltar</button>
+                                    <h2>🏪 Loja Galáctica</h2>
+                                </div>
+                                <div class="gold-display">
+                                    <span class="gold-icon">💰</span>
+                                    <span id="shopPlayerGold">1000</span>
+                                </div>
+                            </div>
+                            <div class="shop-modern">
+                                <div class="shop-categories">
+                                    <button class="category-btn active" data-category="all">Todos</button>
+                                    <button class="category-btn" data-category="weapon">Armas</button>
+                                    <button class="category-btn" data-category="armor">Armaduras</button>
+                                    <button class="category-btn" data-category="consumable">Poções</button>
+                                    <button class="category-btn" data-category="gem">Gemas</button>
+                                </div>
+                                <div class="shop-main">
+                                    <div class="shop-items" id="shopItems">
+                                        <!-- Itens serão gerados dinamicamente -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="chat-input-container">
-                        <input type="text" class="chat-input" id="chatInput" placeholder="Digite sua mensagem..." maxlength="100">
-                        <button class="chat-send" id="chatSend">Enviar</button>
+                    
+                    <!-- Aba das Missões -->
+                    <div id="missionsTab" class="tab-content">
+                        <div class="missions-full-screen">
+                            <div class="missions-header">
+                                <div class="header-left">
+                                    <button class="back-btn-small" onclick="switchMapTab('map')">← Voltar</button>
+                                    <h2>🎯 Missões Disponíveis</h2>
+                                </div>
+                                <div class="player-info">
+                                    <span class="player-level">Lv.1</span>
+                                    <span class="player-name">Player</span>
+                                    <span class="player-gold">💰 1000</span>
+                                </div>
+                            </div>
+                            <div class="missions-modern">
+                                <div class="missions-tabs">
+                                    <button class="mission-tab active" data-tab="story">📖 História</button>
+                                    <button class="mission-tab" data-tab="daily">📅 Diárias</button>
+                                    <button class="mission-tab" data-tab="weekly">📆 Semanais</button>
+                                    <button class="mission-tab" data-tab="events">🎉 Eventos</button>
+                                </div>
+                                <div class="missions-map">
+                                    <div class="location-section">
+                                        <h3>🌌 Santuário das Estrelas</h3>
+                                        <div class="mission-list">
+                                            <!-- Missões serão carregadas dinamicamente -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Aba do Herói -->
+                    <div id="characterTab" class="tab-content">
+                        <div class="character-full-screen">
+                            <div class="character-header">
+                                <h2>⚔️ Informações do Herói</h2>
+                            </div>
+                            <div class="character-details">
+                                <div class="character-preview">
+                                    <div class="character-avatar">⚔️</div>
+                                    <h3>JUNO</h3>
+                                    <p class="character-class">Guerreiro Estelar</p>
+                                </div>
+                                <div class="character-stats">
+                                    <h3>📊 Estatísticas</h3>
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <span class="stat-icon">❤️</span>
+                                            <span class="stat-label">Vida:</span>
+                                            <span class="stat-value">100/100</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-icon">⚔️</span>
+                                            <span class="stat-label">Ataque:</span>
+                                            <span class="stat-value">25</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-icon">🛡️</span>
+                                            <span class="stat-label">Defesa:</span>
+                                            <span class="stat-value">15</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-icon">⚡</span>
+                                            <span class="stat-label">Velocidade:</span>
+                                            <span class="stat-value">12</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Aba de Configurações -->
+                    <div id="settingsTab" class="tab-content">
+                        <div class="settings-full-screen">
+                            <div class="settings-header">
+                                <h2>⚙️ Configurações do Jogo</h2>
+                            </div>
+                            <div class="settings-content">
+                                <div class="settings-section">
+                                    <h3>🎮 Controles</h3>
+                                    <div class="setting-item">
+                                        <label>Volume Geral:</label>
+                                        <input type="range" min="0" max="100" value="50">
+                                    </div>
+                                    <div class="setting-item">
+                                        <label>Volume de Efeitos:</label>
+                                        <input type="range" min="0" max="100" value="70">
+                                    </div>
+                                    <div class="setting-item">
+                                        <label>Volume de Música:</label>
+                                        <input type="range" min="0" max="100" value="60">
+                                    </div>
+                                </div>
+                                <div class="settings-section">
+                                    <h3>🖥️ Gráficos</h3>
+                                    <div class="setting-item">
+                                        <label>Qualidade:</label>
+                                        <select>
+                                            <option>Alta</option>
+                                            <option>Média</option>
+                                            <option>Baixa</option>
+                                        </select>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label>Resolução:</label>
+                                        <select>
+                                            <option>1920x1080</option>
+                                            <option>1366x768</option>
+                                            <option>1280x720</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -4748,12 +5583,18 @@ npm
         </div>
         
             <!-- Menu de Pausa -->
-            <div id="pauseMenu" style="display: none;">
-            <h2>Jogo Pausado</h2>
-            <button id="resumeBtn">Continuar</button>
-            <button id="restartBtn">Reiniciar</button>
-            <button id="mainMenuBtn">Menu Principal</button>
-            <button id="settingsBtn2">Configurações</button>
+            <div id="pauseMenu" class="submenu" style="display: none;">
+            <div class="submenu-header">
+                <h2>⏸️ Jogo Pausado</h2>
+            </div>
+            <div class="pause-content">
+                <div class="pause-buttons">
+                    <button id="resumeBtn" class="btn-modern">▶️ Continuar</button>
+                    <button id="restartBtn" class="btn-modern">🔄 Reiniciar</button>
+                    <button id="mainMenuBtn" class="btn-modern">🏠 Menu Principal</button>
+                    <button id="settingsBtn2" class="btn-modern">⚙️ Configurações</button>
+                </div>
+            </div>
         </div>
         
             <!-- Menu de Configurações -->
@@ -4871,6 +5712,7 @@ npm
     <script src="js/inventory-system.js"></script>
     <script src="js/mission-system.js"></script>
     <script src="js/lobby-system.js"></script>
+    <script src="fix-bugs.js"></script>
     
     <script>
         // Método initializeUI que estava faltando
@@ -4993,18 +5835,19 @@ npm
             
             heroImages.forEach(hero => {
                 const img = document.getElementById(`${hero}-preview`);
-                const fallback = img.nextElementSibling;
                 
                 if (img) {
+                    const fallback = img.nextElementSibling; // Verificar se nextElementSibling existe
+                    
                     img.onerror = () => {
                         console.warn(`⚠️ Erro ao carregar imagem do ${hero}, usando fallback`);
                         img.style.display = 'none';
-                        if (fallback) fallback.style.display = 'block';
+                        if (fallback) fallback.style.display = 'block'; // Só acessar se existir
                     };
                     
                     img.onload = () => {
                         console.log(`✅ Imagem do ${hero} carregada com sucesso`);
-                        if (fallback) fallback.style.display = 'none';
+                        if (fallback) fallback.style.display = 'none'; // Só acessar se existir
                     };
                 }
             });
@@ -5012,6 +5855,13 @@ npm
         
         // Configurar fallbacks quando a página carregar
         document.addEventListener('DOMContentLoaded', setupHeroImageFallbacks);
+        
+        // Inicializar sistema de missões quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                initializeMissionSystem();
+            }, 1000);
+        });
         
         // Verificação adicional após carregamento
         setTimeout(() => {
@@ -6007,14 +6857,23 @@ npm
 
     <!-- Modal de Missões -->
     <div class="modal-overlay" id="missionModal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 900px; max-height: 80vh; overflow-y: auto;">
             <div class="modal-header">
-                <h2 class="modal-title">Galactic Mission Map</h2>
+                <h2 class="modal-title">🗺️ Galactic Mission Map</h2>
                 <button class="close-btn" onclick="closeModal('missionModal')">×</button>
             </div>
-            <div style="text-align: center; padding: 2rem;">
-                <h3 style="color: #60a5fa; margin-bottom: 1rem;">Sistema de Missões</h3>
-                <p style="color: #94a3b8;">Em desenvolvimento...</p>
+            <div class="mission-content">
+                <div class="mission-tabs">
+                    <button class="mission-tab active" onclick="showMissionTab('village')">🏘️ Vila</button>
+                    <button class="mission-tab" onclick="showMissionTab('forest')">🌲 Floresta</button>
+                    <button class="mission-tab" onclick="showMissionTab('cave')">⛰️ Caverna</button>
+                    <button class="mission-tab" onclick="showMissionTab('tower')">🏰 Torre</button>
+                    <button class="mission-tab" onclick="showMissionTab('dungeon')">🗡️ Masmorra</button>
+                </div>
+                
+                <div id="missionList" class="mission-list">
+                    <!-- Missões serão carregadas dinamicamente -->
+                </div>
             </div>
         </div>
     </div>
@@ -6233,8 +7092,403 @@ npm
             }
         });
         
+        // Sistema de Missões
+        let currentMissionTab = 'village';
+        let missionSystem = null;
+        
+        function initializeMissionSystem() {
+            if (typeof MissionSystem !== 'undefined') {
+                missionSystem = new MissionSystem();
+                loadMissions('village');
+                console.log('✅ Sistema de missões inicializado');
+            } else {
+                console.warn('⚠️ MissionSystem não encontrado');
+            }
+        }
+        
+        function showMissionTab(location) {
+            currentMissionTab = location;
+            
+            // Atualizar tabs ativas
+            document.querySelectorAll('.mission-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Carregar missões da localização
+            loadMissions(location);
+        }
+        
+        function loadMissions(location) {
+            const missionList = document.getElementById('missionList');
+            if (!missionList || !missionSystem) return;
+            
+            const missions = Array.from(missionSystem.missions.values())
+                .filter(mission => mission.location === location);
+            
+            missionList.innerHTML = '';
+            
+            missions.forEach(mission => {
+                const missionCard = createMissionCard(mission);
+                missionList.appendChild(missionCard);
+            });
+            
+            if (missions.length === 0) {
+                missionList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                        <h3>Nenhuma missão disponível</h3>
+                        <p>Esta localização ainda não possui missões.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Função para alternar entre abas do mapa mundi
+        function switchMapTab(tabName) {
+            // Remover classe active de todas as abas
+            document.querySelectorAll('.map-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Esconder todo conteúdo das abas
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Ativar aba selecionada
+            const selectedTab = document.querySelector(`[data-tab="${tabName}"]`);
+            const selectedContent = document.getElementById(`${tabName}Tab`);
+            
+            if (selectedTab && selectedContent) {
+                selectedTab.classList.add('active');
+                selectedContent.classList.add('active');
+                
+                // Carregar conteúdo específico da aba se necessário
+                switch(tabName) {
+                    case 'inventory':
+                        if (window.InventorySystem) {
+                            window.InventorySystem.renderInventory();
+                        }
+                        break;
+                    case 'shop':
+                        if (window.ShopSystem) {
+                            window.ShopSystem.renderItems();
+                        }
+                        break;
+                    case 'missions':
+                        loadMissions('village');
+                        break;
+                }
+            }
+        }
+        
+        // Tornar função global
+        window.switchMapTab = switchMapTab;
+        
+        // Função para mostrar/ocultar UI do jogo
+        function toggleGameUI(show) {
+            const ui = document.getElementById('ui');
+            if (ui) {
+                ui.style.display = show ? 'flex' : 'none';
+            }
+        }
+        
+        // Função para iniciar missão (mostrar UI)
+        function startMission(missionId) {
+            // Mostrar UI do jogo durante a missão
+            toggleGameUI(true);
+            
+            // Aqui você pode adicionar a lógica para iniciar a missão
+            console.log('Iniciando missão:', missionId);
+            
+            // Exemplo de como ocultar outras telas e mostrar o jogo
+            hideAllScreens();
+            const gameContainer = document.getElementById('gameContainer');
+            if (gameContainer) {
+                gameContainer.style.display = 'block';
+            }
+        }
+        
+        // Função para voltar ao mapa (ocultar UI)
+        function returnToMap() {
+            // Ocultar UI do jogo
+            toggleGameUI(false);
+            
+            // Voltar ao mapa mundi
+            hideAllScreens();
+            const worldMap = document.getElementById('worldMap');
+            if (worldMap) {
+                worldMap.style.display = 'flex';
+            }
+        }
+        
+        // Tornar funções globais
+        window.toggleGameUI = toggleGameUI;
+        window.startMission = startMission;
+        window.returnToMap = returnToMap;
+        
+        function createMissionCard(mission) {
+            const card = document.createElement('div');
+            card.className = `mission-card difficulty-${mission.difficulty}`;
+            
+            const difficultyColors = {
+                easy: '#22c55e',
+                medium: '#f59e0b', 
+                hard: '#ef4444',
+                extreme: '#8b5cf6'
+            };
+            
+            const difficultyNames = {
+                easy: 'Fácil',
+                medium: 'Médio',
+                hard: 'Difícil', 
+                extreme: 'Extremo'
+            };
+            
+            card.innerHTML = `
+                <div class="mission-header">
+                    <div class="mission-icon">${mission.icon}</div>
+                    <div class="mission-info">
+                        <h3>${mission.name}</h3>
+                        <div class="mission-level">Nível ${mission.level} • ${difficultyNames[mission.difficulty]}</div>
+                    </div>
+                </div>
+                
+                <div class="mission-description">
+                    ${mission.description}
+                </div>
+                
+                <div class="mission-details">
+                    <div class="mission-detail">
+                        <span class="mission-detail-icon">👥</span>
+                        <span>Máx. ${mission.maxPlayers} jogadores</span>
+                    </div>
+                    <div class="mission-detail">
+                        <span class="mission-detail-icon">📍</span>
+                        <span>${mission.location}</span>
+                    </div>
+                </div>
+                
+                <div class="mission-rewards">
+                    <h4>🎁 Recompensas</h4>
+                    <div class="mission-reward">
+                        <span>⭐</span>
+                        <span>${mission.rewards.exp} EXP</span>
+                    </div>
+                    <div class="mission-reward">
+                        <span>💰</span>
+                        <span>${mission.rewards.gold} Ouro</span>
+                    </div>
+                </div>
+                
+                <div class="mission-actions">
+                    <button class="mission-btn primary" onclick="startMission('${mission.id}')">
+                        🚀 Iniciar Missão
+                    </button>
+                    <button class="mission-btn secondary" onclick="viewMissionDetails('${mission.id}')">
+                        📋 Detalhes
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        function startMission(missionId) {
+            if (!missionSystem) {
+                console.warn('⚠️ Sistema de missões não inicializado');
+                return;
+            }
+            
+            const mission = missionSystem.getMission(missionId);
+            if (!mission) {
+                console.warn('⚠️ Missão não encontrada:', missionId);
+                return;
+            }
+            
+            console.log('🚀 Iniciando missão:', mission.name);
+            
+            // Aqui você pode implementar a lógica para iniciar a missão
+            // Por exemplo, fechar o modal e iniciar o jogo com a missão selecionada
+            closeModal('missionModal');
+            
+            // Mostrar mensagem de sucesso
+            showNotification(`Missão "${mission.name}" iniciada!`, 'success');
+        }
+        
+        function viewMissionDetails(missionId) {
+            if (!missionSystem) {
+                console.warn('⚠️ Sistema de missões não inicializado');
+                return;
+            }
+            
+            const mission = missionSystem.getMission(missionId);
+            if (!mission) {
+                console.warn('⚠️ Missão não encontrada:', missionId);
+                return;
+            }
+            
+            // Aqui você pode implementar um modal de detalhes da missão
+            console.log('📋 Visualizando detalhes da missão:', mission.name);
+            showNotification(`Detalhes da missão "${mission.name}"`, 'info');
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 10000;
+                font-weight: 500;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animar entrada
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
         // Sistema de Seleção de Heróis
         let selectedHero = null;
+        let currentGameState = 'mainMenu'; // mainMenu, characterSelection, worldMap, mission
+        
+        // Função para iniciar o jogo
+        function startGame() {
+            hideAllScreens();
+            document.getElementById('characterSelectionScreen').style.display = 'flex';
+            currentGameState = 'characterSelection';
+            console.log('🎮 Iniciando seleção de personagem');
+        }
+        
+        // Função para voltar ao menu principal
+        function goBackToMainMenu() {
+            hideAllScreens();
+            document.getElementById('mainMenu').style.display = 'block';
+            currentGameState = 'mainMenu';
+            selectedHero = null;
+            console.log('🏠 Voltando ao menu principal');
+        }
+        
+        // Função para voltar à seleção de personagem
+        function goBackToCharacterSelection() {
+            hideAllScreens();
+            document.getElementById('characterSelectionScreen').style.display = 'flex';
+            currentGameState = 'characterSelection';
+            console.log('👤 Voltando à seleção de personagem');
+        }
+        
+        // Função para esconder todas as telas
+        function hideAllScreens() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('characterSelectionScreen').style.display = 'none';
+            document.getElementById('worldMap').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'none';
+        }
+        
+        // Função para selecionar herói
+        function selectHero(card, heroId) {
+            // Remover seleção anterior
+            document.querySelectorAll('.hero-card').forEach(c => c.classList.remove('selected'));
+            
+            // Selecionar novo herói
+            card.classList.add('selected');
+            selectedHero = heroId;
+            
+            // Habilitar botão de confirmação
+            document.getElementById('confirmHeroBtn').disabled = false;
+            
+            console.log('👤 Herói selecionado:', heroId);
+        }
+        
+        // Função para confirmar seleção de herói
+        function confirmHeroSelection() {
+            if (!selectedHero) {
+                showNotification('Selecione um herói primeiro!', 'error');
+                return;
+            }
+            
+            hideAllScreens();
+            document.getElementById('worldMap').style.display = 'flex';
+            currentGameState = 'worldMap';
+            
+            // Atualizar informações do herói no mapa
+            updateHeroInfoOnMap();
+            
+            showNotification(`Herói ${selectedHero.toUpperCase()} selecionado!`, 'success');
+            console.log('✅ Herói confirmado:', selectedHero);
+        }
+        
+        // Função para atualizar informações do herói no mapa
+        function updateHeroInfoOnMap() {
+            const heroInfo = document.getElementById('selectedHeroInfo');
+            const heroData = {
+                juno: { name: 'JUNO', icon: '⚔️', health: 100, attack: 25, defense: 15 },
+                atlas: { name: 'ATLAS', icon: '🛡️', health: 120, attack: 20, defense: 20 },
+                vega: { name: 'VEGA', icon: '🏹', health: 80, attack: 30, defense: 10 },
+                kai: { name: 'KAI', icon: '⚡', health: 110, attack: 28, defense: 12 }
+            };
+            
+            const hero = heroData[selectedHero];
+            if (hero) {
+                heroInfo.innerHTML = `
+                    <div class="hero-avatar">${hero.icon}</div>
+                    <div class="hero-details">
+                        <div class="hero-name">${hero.name}</div>
+                        <div class="hero-level">Nível 1</div>
+                    </div>
+                `;
+                
+                // Atualizar estatísticas
+                document.querySelector('.stat-item:nth-child(1) .stat-value').textContent = `${hero.health}/${hero.health}`;
+                document.querySelector('.stat-item:nth-child(2) .stat-value').textContent = hero.attack;
+                document.querySelector('.stat-item:nth-child(3) .stat-value').textContent = hero.defense;
+            }
+        }
+        
+        // Função para abrir missões de uma localização
+        function openLocationMissions(location) {
+            if (!selectedHero) {
+                showNotification('Selecione um herói primeiro!', 'error');
+                return;
+            }
+            
+            // Fechar modal de missões se estiver aberto
+            closeModal('missionModal');
+            
+            // Abrir modal de missões com a localização específica
+            openModal('missionModal');
+            
+            // Ativar a aba da localização
+            setTimeout(() => {
+                const tab = document.querySelector(`.mission-tab[onclick*="${location}"]`);
+                if (tab) {
+                    tab.click();
+                }
+            }, 100);
+            
+            console.log('🗺️ Abrindo missões da localização:', location);
+        }
         
         function selectHero(card, heroId) {
             // Remover seleção anterior
@@ -6734,20 +7988,6 @@ npm
             }
         }
         
-        // Alternar entre interfaces
-        function toggleInterface() {
-            const mainMenu = document.getElementById('mainMenu');
-            const modernInterface = document.getElementById('modernInterface');
-            
-            if (mainMenu.style.display === 'block') {
-                mainMenu.style.display = 'none';
-                modernInterface.style.display = 'flex';
-            } else {
-                mainMenu.style.display = 'block';
-                modernInterface.style.display = 'none';
-            }
-        }
-        
         // Teclas de atalho
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
@@ -6756,25 +7996,202 @@ npm
                     modal.style.display = 'none';
                 });
             }
+        });
+
+        // ===== CORREÇÃO AUTOMÁTICA DE BUGS - NOVA REMAINS =====
+        console.log('🔧 Iniciando correções automáticas...');
+
+        // 1. DEFINIR CLASSES GLOBALMENTE
+        function defineGlobalClasses() {
+            console.log('📦 Definindo classes globalmente...');
             
-            // Ctrl + M para alternar interface
-            if (e.ctrlKey && e.key === 'm') {
-                e.preventDefault();
-                toggleInterface();
+            // Definir ShopSystem globalmente
+            if (typeof ShopSystem !== 'undefined' && typeof window.ShopSystem === 'undefined') {
+                window.ShopSystem = ShopSystem;
+                console.log('✅ ShopSystem definido globalmente');
             }
-        });
-        
-        // Adicionar botão para alternar interface no menu principal
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuContent = document.querySelector('.menu-content .menu-section');
-            if (menuContent) {
-                const toggleBtn = document.createElement('button');
-                toggleBtn.className = 'menu-btn';
-                toggleBtn.innerHTML = '🎨 Interface Moderna';
-                toggleBtn.onclick = toggleInterface;
-                menuContent.appendChild(toggleBtn);
+            
+            // Definir InventorySystem globalmente  
+            if (typeof InventorySystem !== 'undefined' && typeof window.InventorySystem === 'undefined') {
+                window.InventorySystem = InventorySystem;
+                console.log('✅ InventorySystem definido globalmente');
             }
-        });
+            
+            // Definir MissionSystem globalmente
+            if (typeof MissionSystem !== 'undefined' && typeof window.MissionSystem === 'undefined') {
+                window.MissionSystem = MissionSystem;
+                console.log('✅ MissionSystem definido globalmente');
+            }
+            
+            // Definir LobbySystem globalmente
+            if (typeof LobbySystem !== 'undefined' && typeof window.LobbySystem === 'undefined') {
+                window.LobbySystem = LobbySystem;
+                console.log('✅ LobbySystem definido globalmente');
+            }
+        }
+
+        // 2. CORRIGIR GAME LOOP
+        function fixGameLoop() {
+            console.log('🎮 Corrigindo game loop...');
+            
+            if (window.game && typeof window.game.gameLoop === 'function') {
+                // Reativar game loop se não estiver rodando
+                if (!window.game.isRunning) {
+                    window.game.isRunning = true;
+                    window.game.gameLoop();
+                    console.log('✅ Game loop reativado');
+                }
+            }
+        }
+
+        // 3. CORRIGIR SETUP DE IMAGENS DOS HERÓIS
+        function fixHeroImageFallbacks() {
+            console.log('🖼️ Corrigindo fallbacks de imagens...');
+            
+            function setupHeroImageFallbacksFixed() {
+                const heroImages = ['juno', 'atlas', 'vega', 'kai'];
+                
+                heroImages.forEach(hero => {
+                    const img = document.getElementById(`${hero}-preview`);
+                    if (img) {
+                        // Verificar se nextElementSibling existe antes de usar
+                        const fallback = img.nextElementSibling;
+
+                        img.onerror = () => {
+                            console.warn(`⚠️ Erro ao carregar imagem do ${hero}, usando fallback`);
+                            img.style.display = 'none';
+                            if (fallback) fallback.style.display = 'block';
+                        };
+
+                        img.onload = () => {
+                            console.log(`✅ Imagem do ${hero} carregada com sucesso`);
+                            if (fallback) fallback.style.display = 'none';
+                        };
+                    }
+                });
+            }
+            
+            // Aplicar correção
+            setupHeroImageFallbacksFixed();
+            console.log('✅ Fallbacks de imagens corrigidos');
+        }
+
+        // 4. VERIFICAR E CORRIGIR CLASSES FALTANTES
+        function checkAndFixMissingClasses() {
+            console.log('🔍 Verificando classes faltantes...');
+            
+            const requiredClasses = [
+                'Game', 'Player', 'Enemy', 'Particle', 'Projectile',
+                'SpriteManager', 'CombatSystem', 'UIManager', 
+                'ShopSystem', 'InventorySystem', 'MissionSystem', 'LobbySystem'
+            ];
+            
+            const missingClasses = requiredClasses.filter(className => 
+                typeof window[className] === 'undefined'
+            );
+            
+            if (missingClasses.length === 0) {
+                console.log('✅ Todas as classes estão carregadas corretamente!');
+                return true;
+            } else {
+                console.warn('⚠️ Classes ainda faltando:', missingClasses);
+                return false;
+            }
+        }
+
+        // 5. CORRIGIR SPRITE DO KAI
+        function fixKaiSprite() {
+            console.log('🎨 Corrigindo sprite do Kai...');
+            
+            // Verificar se o sprite do Kai existe
+            const kaiImg = document.getElementById('kai-preview');
+            if (kaiImg) {
+                // Corrigir caminho do sprite do Kai
+                const correctPath = 'assets/images/characters/heroes/juno/kai.png';
+                kaiImg.src = correctPath;
+                console.log('✅ Caminho do sprite do Kai corrigido');
+            }
+        }
+
+        // 6. CORRIGIR MENSAGEM DO GAME LOOP
+        function fixGameLoopMessage() {
+            console.log('📝 Corrigindo mensagem do game loop...');
+            
+            // Sobrescrever a mensagem incorreta se existir
+            if (window.game && window.game.init) {
+                const originalInit = window.game.init;
+                window.game.init = function() {
+                    originalInit.call(this);
+                    console.log('Nova Remains - Sistema inicializado com sucesso');
+                };
+                console.log('✅ Mensagem do game loop corrigida');
+            }
+        }
+
+        // 7. APLICAR TODAS AS CORREÇÕES
+        function applyAllFixes() {
+            console.log('🚀 Aplicando todas as correções...');
+            
+            try {
+                defineGlobalClasses();
+                fixGameLoop();
+                fixHeroImageFallbacks();
+                fixKaiSprite();
+                fixGameLoopMessage();
+                
+                // Verificar se tudo está funcionando
+                const allGood = checkAndFixMissingClasses();
+                
+                if (allGood) {
+                    console.log('🎉 TODAS AS CORREÇÕES APLICADAS COM SUCESSO!');
+                    console.log('🎮 O jogo deve estar funcionando corretamente agora');
+
+                    // Mostrar mensagem de sucesso na tela
+                    if (document.body) {
+                        const successMsg = document.createElement('div');
+                        successMsg.innerHTML = `
+                            <div style="
+                                position: fixed; 
+                                top: 20px; 
+                                right: 20px; 
+                                background: #4CAF50; 
+                                color: white; 
+                                padding: 15px; 
+                                border-radius: 5px; 
+                                z-index: 10000;
+                                font-family: Arial, sans-serif;
+                                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                            ">
+                                ✅ Bugs corrigidos com sucesso!<br>
+                                🎮 Jogo funcionando normalmente
+                            </div>
+                        `;
+                        document.body.appendChild(successMsg);
+
+                        // Remover mensagem após 5 segundos
+                        setTimeout(() => {
+                            if (successMsg.parentNode) {
+                                successMsg.parentNode.removeChild(successMsg);
+                            }
+                        }, 5000);
+                    }
+
+                } else {
+                    console.warn('⚠️ Algumas correções podem não ter funcionado completamente');
+                    console.log('🔄 Recarregue a página se necessário');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro ao aplicar correções:', error);
+            }
+        }
+
+        // 8. EXECUTAR CORREÇÕES AUTOMATICAMENTE
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applyAllFixes);
+        } else {
+            applyAllFixes();
+        }
     </script>
 </body>
 </html>

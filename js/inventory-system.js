@@ -220,4 +220,113 @@ class InventorySystem {
         }
         return emptySlots;
     }
+    
+    renderInventory() {
+        const inventoryGrid = document.getElementById('inventoryGrid');
+        if (!inventoryGrid) return;
+        
+        inventoryGrid.innerHTML = '';
+        
+        for (let i = 0; i < this.maxSlots; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'inventory-slot';
+            slot.setAttribute('data-slot', i);
+            
+            const item = this.items.get(i);
+            if (item) {
+                const itemData = this.getItemData(item.id);
+                slot.innerHTML = `
+                    <div class="item-icon">${this.getItemIcon(itemData?.type || 'unknown')}</div>
+                    <div class="item-quantity">${item.quantity}</div>
+                    <div class="item-name">${itemData?.name || 'Item Desconhecido'}</div>
+                `;
+                
+                if (item.equipped) {
+                    slot.classList.add('equipped');
+                }
+                
+                slot.addEventListener('click', () => {
+                    this.handleSlotClick(i);
+                });
+            } else {
+                slot.innerHTML = '<div class="empty-slot">+</div>';
+                slot.addEventListener('click', () => {
+                    this.handleSlotClick(i);
+                });
+            }
+            
+            inventoryGrid.appendChild(slot);
+        }
+        
+        // Atualizar equipamentos
+        this.updateEquippedItems();
+    }
+    
+    handleSlotClick(slot) {
+        const item = this.items.get(slot);
+        if (item) {
+            // Se é um item equipável, equipar/desequipar
+            const itemData = this.getItemData(item.id);
+            if (itemData && ['weapon', 'armor', 'accessory'].includes(itemData.type)) {
+                if (item.equipped) {
+                    this.unequipItem(slot);
+                } else {
+                    this.equipItem(slot);
+                }
+            }
+        }
+    }
+    
+    updateEquippedItems() {
+        const equippedWeapon = document.getElementById('equippedWeapon');
+        const equippedArmor = document.getElementById('equippedArmor');
+        const equippedAccessory = document.getElementById('equippedAccessory');
+        
+        if (equippedWeapon) {
+            const weaponSlot = this.equippedItems.weapon;
+            if (weaponSlot !== null) {
+                const item = this.items.get(weaponSlot);
+                const itemData = this.getItemData(item.id);
+                equippedWeapon.textContent = itemData?.name || 'Arma Desconhecida';
+            } else {
+                equippedWeapon.textContent = 'Nenhuma';
+            }
+        }
+        
+        if (equippedArmor) {
+            const armorSlot = this.equippedItems.armor;
+            if (armorSlot !== null) {
+                const item = this.items.get(armorSlot);
+                const itemData = this.getItemData(item.id);
+                equippedArmor.textContent = itemData?.name || 'Armadura Desconhecida';
+            } else {
+                equippedArmor.textContent = 'Nenhuma';
+            }
+        }
+        
+        if (equippedAccessory) {
+            const accessorySlot = this.equippedItems.accessory;
+            if (accessorySlot !== null) {
+                const item = this.items.get(accessorySlot);
+                const itemData = this.getItemData(item.id);
+                equippedAccessory.textContent = itemData?.name || 'Acessório Desconhecido';
+            } else {
+                equippedAccessory.textContent = 'Nenhum';
+            }
+        }
+    }
+    
+    getItemIcon(type) {
+        const icons = {
+            weapon: '⚔️',
+            armor: '🛡️',
+            consumable: '🧪',
+            gem: '💎',
+            accessory: '💍'
+        };
+        return icons[type] || '📦';
+    }
 }
+
+// Definir globalmente
+window.InventorySystem = InventorySystem;

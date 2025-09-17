@@ -87,4 +87,68 @@ class ShopSystem {
     addGold(amount) {
         this.playerGold += amount;
     }
+    
+    renderItems(category = 'all') {
+        const shopItems = document.getElementById('shopItems');
+        if (!shopItems) return;
+        
+        let itemsToShow = Array.from(this.items.values());
+        if (category !== 'all') {
+            itemsToShow = itemsToShow.filter(item => item.type === category);
+        }
+        
+        shopItems.innerHTML = '';
+        
+        itemsToShow.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'shop-item';
+            itemDiv.innerHTML = `
+                <div class="item-icon">${this.getItemIcon(item.type)}</div>
+                <div class="item-info">
+                    <h4>${item.name}</h4>
+                    <p>${item.description}</p>
+                    <div class="item-stats">
+                        ${item.stats > 0 ? `+${item.stats} ${this.getStatName(item.type)}` : ''}
+                    </div>
+                </div>
+                <div class="item-price">
+                    <span class="price">${item.price} 💰</span>
+                    <button class="buy-btn" data-item="${item.id}">Comprar</button>
+                </div>
+            `;
+            
+            shopItems.appendChild(itemDiv);
+        });
+        
+        // Adicionar event listeners para botões de compra
+        shopItems.querySelectorAll('.buy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const itemId = e.target.getAttribute('data-item');
+                this.buyItem(itemId);
+            });
+        });
+    }
+    
+    getItemIcon(type) {
+        const icons = {
+            weapon: '⚔️',
+            armor: '🛡️',
+            consumable: '🧪',
+            gem: '💎'
+        };
+        return icons[type] || '📦';
+    }
+    
+    getStatName(type) {
+        const stats = {
+            weapon: 'Ataque',
+            armor: 'Defesa',
+            consumable: 'Efeito',
+            gem: 'Poder'
+        };
+        return stats[type] || 'Stat';
+    }
 }
+
+// Definir globalmente
+window.ShopSystem = ShopSystem;

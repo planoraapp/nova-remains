@@ -315,3 +315,6 @@ class MissionSystem {
         return icons[difficulty] || '⭐';
     }
 }
+
+// Definir globalmente
+window.MissionSystem = MissionSystem;
