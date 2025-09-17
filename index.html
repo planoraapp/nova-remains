@@ -8364,10 +8364,10 @@ npm
             
             const missionState = {
                 player: {
-                    x: 200, y: 450, width: 40, height: 60,
+                    x: 200, y: 440, width: 40, height: 60,
                     vx: 0, vy: 0, speed: 0.55, jumpPower: 20,
                     health: 100, maxHealth: 100, mana: 50, maxMana: 50,
-                    onGround: false, facingRight: true,
+                    onGround: true, facingRight: true,
                     attacking: false, defending: false, grabbing: false,
                     grabbedEnemy: null, attackCooldown: 0, defendCooldown: 0,
                     grabCooldown: 0, invulnerable: false, invulnerabilityTime: 0,
@@ -8650,11 +8650,11 @@ npm
                     // Verificar colisão apenas no topo das plataformas
                     if (state.player.x + state.player.width > platform.x &&
                         state.player.x < platform.x + platform.width &&
-                        state.player.y + state.player.height > platform.y &&
-                        state.player.y + state.player.height < platform.y + 20 && // Só o topo é piso
+                        state.player.y + state.player.height >= platform.y &&
+                        state.player.y + state.player.height <= platform.y + 20 && // Só o topo é piso
                         state.player.vy >= 0) { // Só colide se estiver caindo
                         
-                        console.log('🏠 Colisão com plataforma detectada!', platform.type, 'y:', platform.y);
+                        console.log('🏠 Colisão com plataforma detectada!', platform.type, 'y:', platform.y, 'playerY:', state.player.y);
                         state.player.y = platform.y - state.player.height;
                         state.player.vy = 0;
                         state.player.onGround = true;
