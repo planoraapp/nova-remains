@@ -51,8 +51,8 @@ class Game {
         this.setupEventListeners();
         this.createPlatforms();
         this.initializeUI();
-        // this.gameLoop(); // Loop do jogo desabilitado por enquanto
-        console.log('Nova Remains - Sistema de menus inicializado - Jogo principal desabilitado');
+        this.gameLoop(); // Loop do jogo reativado
+        console.log('Nova Remains - Sistema inicializado com sucesso');
     }
     
     initializeUI() {
@@ -220,6 +220,13 @@ class Game {
             });
         }
         
+        const backFromShopBtn = document.getElementById('backFromShopBtn');
+        if (backFromShopBtn) {
+            backFromShopBtn.addEventListener('click', () => {
+                this.hideShopMenu();
+            });
+        }
+        
         // Botões do mapa do mundo
         const missionsFromWorldMapBtn = document.getElementById('missionsFromWorldMapBtn');
         if (missionsFromWorldMapBtn) {
@@ -343,6 +350,13 @@ class Game {
         if (backToMenuBtn) {
             backToMenuBtn.addEventListener('click', () => {
                 this.showMainMenu();
+            });
+        }
+        
+        const backFromSettingsBtn = document.getElementById('backFromSettingsBtn');
+        if (backFromSettingsBtn) {
+            backFromSettingsBtn.addEventListener('click', () => {
+                this.hideSettingsMenu();
             });
         }
         
@@ -603,14 +617,25 @@ class Game {
     showSettings() {
         this.gameState = 'settings';
         this.hideAllMenus();
-        document.getElementById('settingsMenu').style.display = 'block';
+        const settingsMenu = document.getElementById('settingsMenu');
+        if (settingsMenu) {
+            settingsMenu.style.display = 'block';
+        }
+    }
+    
+    hideSettingsMenu() {
+        this.hideAllMenus();
+        this.showMainMenu();
     }
     
     togglePause() {
         if (this.gameState === 'playing') {
             this.gameState = 'paused';
             this.hideAllMenus();
-            document.getElementById('pauseMenu').style.display = 'block';
+            const pauseMenu = document.getElementById('pauseMenu');
+            if (pauseMenu) {
+                pauseMenu.style.display = 'block';
+            }
         } else if (this.gameState === 'paused') {
             this.resumeGame();
         }
@@ -619,8 +644,10 @@ class Game {
     resumeGame() {
         this.gameState = 'playing';
         this.hideAllMenus();
-        document.getElementById('gameControls').style.display = 'block';
-        document.getElementById('permanentMenu').style.display = 'block';
+        const gameControls = document.getElementById('gameControls');
+        const permanentMenu = document.getElementById('permanentMenu');
+        if (gameControls) gameControls.style.display = 'block';
+        if (permanentMenu) permanentMenu.style.display = 'block';
     }
     
     restartGame() {
@@ -631,14 +658,16 @@ class Game {
         if (this.gameState === 'settings') {
             this.gameState = 'playing';
             this.hideAllMenus();
-            document.getElementById('gameControls').style.display = 'block';
-            document.getElementById('permanentMenu').style.display = 'block';
+            const gameControls = document.getElementById('gameControls');
+            const permanentMenu = document.getElementById('permanentMenu');
+            if (gameControls) gameControls.style.display = 'block';
+            if (permanentMenu) permanentMenu.style.display = 'block';
         }
     }
     
     hideAllMenus() {
         const menus = [
-            'mainMenu', 'pauseMenu', 'settingsMenu', 'characterSelection', 'worldMap',
+            'mainMenu', 'pauseMenu', 'settingsMenu', 'characterMenu', 'worldMap',
             'skillsMenu', 'inventoryMenu', 'controlsMenu', 'aboutMenu', 'shopMenu', 'missionsMenu',
             'gameUI', 'loadingScreen'
         ];
@@ -653,7 +682,10 @@ class Game {
     
     // Métodos dos submenus
     showCharacterMenu() {
-        document.getElementById('characterMenu').style.display = 'block';
+        const characterMenu = document.getElementById('characterMenu');
+        if (characterMenu) {
+            characterMenu.style.display = 'block';
+        }
     }
     
     hideCharacterMenu() {
@@ -662,7 +694,10 @@ class Game {
     }
     
     showSkillsMenu() {
-        document.getElementById('skillsMenu').style.display = 'block';
+        const skillsMenu = document.getElementById('skillsMenu');
+        if (skillsMenu) {
+            skillsMenu.style.display = 'block';
+        }
     }
     
     hideSkillsMenu() {
@@ -671,7 +706,10 @@ class Game {
     }
     
     showInventoryMenu() {
-        document.getElementById('inventoryMenu').style.display = 'block';
+        const inventoryMenu = document.getElementById('inventoryMenu');
+        if (inventoryMenu) {
+            inventoryMenu.style.display = 'block';
+        }
     }
     
     hideInventoryMenu() {
@@ -680,7 +718,10 @@ class Game {
     }
     
     showControlsMenu() {
-        document.getElementById('controlsMenu').style.display = 'block';
+        const controlsMenu = document.getElementById('controlsMenu');
+        if (controlsMenu) {
+            controlsMenu.style.display = 'block';
+        }
     }
     
     hideControlsMenu() {
@@ -689,7 +730,10 @@ class Game {
     }
     
     showAboutMenu() {
-        document.getElementById('aboutMenu').style.display = 'block';
+        const aboutMenu = document.getElementById('aboutMenu');
+        if (aboutMenu) {
+            aboutMenu.style.display = 'block';
+        }
     }
     
     hideAboutMenu() {
@@ -824,20 +868,23 @@ class Game {
     }
     
     hideAllSubmenus() {
-        document.getElementById('characterMenu').style.display = 'none';
-        document.getElementById('skillsMenu').style.display = 'none';
-        document.getElementById('inventoryMenu').style.display = 'none';
-        document.getElementById('controlsMenu').style.display = 'none';
-        document.getElementById('aboutMenu').style.display = 'none';
-        document.getElementById('shopMenu').style.display = 'none';
-        document.getElementById('missionsMenu').style.display = 'none';
+        const menus = ['characterMenu', 'skillsMenu', 'inventoryMenu', 'controlsMenu', 'aboutMenu', 'shopMenu', 'missionsMenu'];
+        menus.forEach(menuId => {
+            const menu = document.getElementById(menuId);
+            if (menu) {
+                menu.style.display = 'none';
+            }
+        });
     }
     
     // Métodos do sistema de missões
     showMissionsMenu() {
         this.gameState = 'missions';
         this.hideAllMenus();
-        document.getElementById('missionsMenu').style.display = 'block';
+        const missionsMenu = document.getElementById('missionsMenu');
+        if (missionsMenu) {
+            missionsMenu.style.display = 'block';
+        }
         
         // Inicializar sistema de missões se não existir
         if (!this.missionSystem) {
@@ -857,10 +904,18 @@ class Game {
         this.showMainMenu();
     }
     
+    hideShopMenu() {
+        this.hideAllMenus();
+        this.showWorldMap();
+    }
+    
     showShopMenu() {
         this.gameState = 'shop';
         this.hideAllMenus();
-        document.getElementById('shopMenu').style.display = 'block';
+        const shopMenu = document.getElementById('shopMenu');
+        if (shopMenu) {
+            shopMenu.style.display = 'block';
+        }
         
         // Inicializar sistema de loja se não existir
         if (!this.shopSystem) {
@@ -874,7 +929,10 @@ class Game {
     showInventoryMenu() {
         this.gameState = 'inventory';
         this.hideAllMenus();
-        document.getElementById('inventoryMenu').style.display = 'block';
+        const inventoryMenu = document.getElementById('inventoryMenu');
+        if (inventoryMenu) {
+            inventoryMenu.style.display = 'block';
+        }
         
         // Inicializar sistema de inventário se não existir
         if (!this.inventorySystem) {

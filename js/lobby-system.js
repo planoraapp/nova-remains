@@ -422,3 +422,6 @@ class LobbySystem {
         return `${hours}h atrás`;
     }
 }
+
+// Definir globalmente
+window.LobbySystem = LobbySystem;
