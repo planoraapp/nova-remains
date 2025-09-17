@@ -8364,7 +8364,7 @@ npm
             
             const missionState = {
                 player: {
-                    x: 200, y: 500, width: 40, height: 60,
+                    x: 200, y: 440, width: 40, height: 60,
                     vx: 0, vy: 0, speed: 2.0, jumpPower: 20,
                     health: 100, maxHealth: 100, mana: 50, maxMana: 50,
                     onGround: true, facingRight: true,
@@ -8798,7 +8798,7 @@ npm
                 
                 // Definir posição alvo da câmera (centrada no jogador)
                 camera.targetX = player.x - canvas.width / 2;
-                camera.targetY = Math.max(0, player.y - canvas.height / 2); // Garantir que a câmera não vá muito para cima
+                camera.targetY = Math.max(0, Math.min(100, player.y - canvas.height / 2)); // Limitar câmera Y para mostrar o chão
                 
                 // Limitar movimento da câmera aos limites do mapa
                 camera.targetX = Math.max(0, Math.min(state.mapWidth - canvas.width, camera.targetX));
@@ -9584,7 +9584,7 @@ npm
                     }
                     
                     // Só renderizar se estiver visível na tela
-                    if (platformX + platform.width > 0 && platformX < canvas.width) {
+                    if (platformX + platform.width > 0 && platformX < canvas.width && platformY < canvas.height) {
                         if (platform.type === 'ground') {
                             // Chão principal - gradiente
                             const gradient = ctx.createLinearGradient(platformX, platformY, platformX, platformY + platform.height);
@@ -9592,6 +9592,11 @@ npm
                             gradient.addColorStop(1, '#2d3748');
                             ctx.fillStyle = gradient;
                             ctx.fillRect(platformX, platformY, platform.width, platform.height);
+                            
+                            // Debug: desenhar uma borda vermelha para verificar
+                            ctx.strokeStyle = '#ff0000';
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(platformX, platformY, platform.width, platform.height);
                         } else {
                             // Plataformas flutuantes - visual melhorado
                             const gradient = ctx.createLinearGradient(platformX, platformY, platformX, platformY + platform.height);
