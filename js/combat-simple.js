@@ -11,7 +11,7 @@ class SimpleCombatSystem {
                 maxHealth: 100,
                 attack: 25,
                 defense: 20,
-                speed: 0.55, // Velocidade corrigida
+                speed: 2.0, // Velocidade corrigida
                 canDoubleJump: false
             },
             atlas: {
@@ -20,7 +20,7 @@ class SimpleCombatSystem {
                 maxHealth: 80,
                 attack: 20,
                 defense: 15,
-                speed: 0.55, // Velocidade corrigida
+                speed: 2.0, // Velocidade corrigida
                 canDoubleJump: true
             },
             vega: {
@@ -29,7 +29,7 @@ class SimpleCombatSystem {
                 maxHealth: 70,
                 attack: 15,
                 defense: 10,
-                speed: 0.55, // Velocidade corrigida
+                speed: 2.0, // Velocidade corrigida
                 canDoubleJump: false
             },
             kai: {
@@ -38,7 +38,7 @@ class SimpleCombatSystem {
                 maxHealth: 85,
                 attack: 30,
                 defense: 18,
-                speed: 0.55, // Velocidade corrigida
+                speed: 2.0, // Velocidade corrigida
                 canDoubleJump: true
             }
         };

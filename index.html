@@ -8364,8 +8364,8 @@ npm
             
             const missionState = {
                 player: {
-                    x: 200, y: 440, width: 40, height: 60,
-                    vx: 0, vy: 0, speed: 0.55, jumpPower: 20,
+                    x: 200, y: 500, width: 40, height: 60,
+                    vx: 0, vy: 0, speed: 2.0, jumpPower: 20,
                     health: 100, maxHealth: 100, mana: 50, maxMana: 50,
                     onGround: true, facingRight: true,
                     attacking: false, defending: false, grabbing: false,
@@ -8652,7 +8652,8 @@ npm
                         state.player.x < platform.x + platform.width &&
                         state.player.y + state.player.height >= platform.y &&
                         state.player.y + state.player.height <= platform.y + 20 && // Só o topo é piso
-                        state.player.vy >= 0) { // Só colide se estiver caindo
+                        state.player.vy >= 0 && // Só colide se estiver caindo
+                        !state.player.onGround) { // Só colide se não estiver no chão
                         
                         console.log('🏠 Colisão com plataforma detectada!', platform.type, 'y:', platform.y, 'playerY:', state.player.y);
                         state.player.y = platform.y - state.player.height;
@@ -9238,7 +9239,7 @@ npm
                     y: spawnPos.y, 
                     width: type === 'boss' ? 60 : type === 'orc' ? 45 : 35, 
                     height: type === 'boss' ? 80 : type === 'orc' ? 65 : 50,
-                    vx: -0.5, // Velocidade fixa de 0.5 para todos os inimigos
+                    vx: -1.0, // Velocidade fixa de 1.0 para todos os inimigos
                     vy: 0,
                     health: type === 'boss' ? 150 : type === 'orc' ? 80 : type === 'skeleton' ? 50 : 40,
                     maxHealth: type === 'boss' ? 150 : type === 'orc' ? 80 : type === 'skeleton' ? 50 : 40,
