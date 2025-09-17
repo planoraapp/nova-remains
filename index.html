@@ -1092,7 +1092,7 @@
             text-align: center;
             box-shadow: 2px 2px 0px #000;
         }
-        
+   E     
         .exp-display {
             color: #00FF00;
         }
@@ -8449,12 +8449,12 @@ npm
                     keyStates.z.pressed = true;
                     keyStates.z.charging = true;
                 }
-                if (e.key === 'ArrowUp') {
-                    keyStates.arrowUp.justPressed = !keyStates.arrowUp.pressed;
+                if (e.key === 'ArrowUp' && !keyStates.arrowUp.pressed) {
+                    keyStates.arrowUp.justPressed = true;
                     keyStates.arrowUp.pressed = true;
                 }
-                if (e.key === 'ArrowDown') {
-                    keyStates.arrowDown.justPressed = !keyStates.arrowDown.pressed;
+                if (e.key === 'ArrowDown' && !keyStates.arrowDown.pressed) {
+                    keyStates.arrowDown.justPressed = true;
                     keyStates.arrowDown.pressed = true;
                 }
                 if (e.key === 'ArrowLeft') keyStates.arrowLeft.pressed = true;
@@ -8541,8 +8541,11 @@ npm
                 
                 // Sistema de pulo (seta para cima) - pode ser usado duas vezes
                 if (keyStates.arrowUp.justPressed) {
+                    console.log('🦘 Pulo detectado! onGround:', state.player.onGround, 'jumpCount:', state.player.jumpCount);
+                    
                     // Pulo normal (primeiro pulo)
                     if (state.player.onGround && !state.player.grabbing) {
+                        console.log('🦘 Executando pulo normal');
                         state.player.vy = -state.player.jumpPower;
                         state.player.onGround = false;
                         state.player.animationState = 'jump';
