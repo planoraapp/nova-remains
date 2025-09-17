@@ -8430,6 +8430,7 @@ npm
             // APLICAR STATS DO PERSONAGEM SELECIONADO
             if (window.simpleCombatSystem) {
                 window.simpleCombatSystem.applyCharacterStats(missionState.player, missionState.character);
+                console.log('👤 Stats aplicadas:', missionState.player.speed, 'jumpPower:', missionState.player.jumpPower);
             }
             
             const keys = {};
@@ -8634,6 +8635,11 @@ npm
                 state.player.onGround = false;
                 state.player.platformStanding = null;
                 
+                // Debug: verificar posição do jogador
+                if (state.time % 1000 < 16) { // Log a cada segundo
+                    console.log('🎮 Player pos:', state.player.x, state.player.y, 'onGround:', state.player.onGround, 'vy:', state.player.vy);
+                }
+                
                 state.platforms.forEach(platform => {
                     // Atualizar plataformas móveis
                     if (platform.moving) {
@@ -8648,6 +8654,7 @@ npm
                         state.player.y + state.player.height < platform.y + 20 && // Só o topo é piso
                         state.player.vy >= 0) { // Só colide se estiver caindo
                         
+                        console.log('🏠 Colisão com plataforma detectada!', platform.type, 'y:', platform.y);
                         state.player.y = platform.y - state.player.height;
                         state.player.vy = 0;
                         state.player.onGround = true;
