@@ -7373,7 +7373,7 @@ npm
                 width: 40, height: 50,
                 hp: 100, maxHp: 100,
                 mp: 100, maxMp: 100,
-                speed: 5, jumpPower: 15,
+                speed: 1.4, jumpPower: 15,
                 lastMoveDirection: 'right',
                 isJumping: false,
                 isAttacking: false,
@@ -7558,7 +7558,7 @@ npm
             const enemy = {
                 x: Math.random() > 0.5 ? 950 : 0,
                 y: 360,
-                vx: 2,
+                vx: 1, // Velocidade fixa de 1 para todos os inimigos
                 element: document.createElement('div'),
             };
 
@@ -8365,7 +8365,7 @@ npm
             const missionState = {
                 player: {
                     x: 200, y: 450, width: 40, height: 60,
-                    vx: 0, vy: 0, speed: 6, jumpPower: 20,
+                    vx: 0, vy: 0, speed: 1.4, jumpPower: 20,
                     health: 100, maxHealth: 100, mana: 50, maxMana: 50,
                     onGround: false, facingRight: true,
                     attacking: false, defending: false, grabbing: false,
@@ -9228,7 +9228,7 @@ npm
                     y: spawnPos.y, 
                     width: type === 'boss' ? 60 : type === 'orc' ? 45 : 35, 
                     height: type === 'boss' ? 80 : type === 'orc' ? 65 : 50,
-                    vx: -1 - Math.random(), 
+                    vx: -1, // Velocidade fixa de 1 para todos os inimigos
                     vy: 0,
                     health: type === 'boss' ? 150 : type === 'orc' ? 80 : type === 'skeleton' ? 50 : 40,
                     maxHealth: type === 'boss' ? 150 : type === 'orc' ? 80 : type === 'skeleton' ? 50 : 40,
