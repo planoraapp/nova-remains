@@ -5867,8 +5867,9 @@ npm
     <script src="js/inventory-system.js"></script>
     <script src="js/mission-system.js"></script>
     <script src="js/lobby-system.js"></script>
-    <script src="js/level-design-system.js"></script>
-    <script src="js/overlay-system.js"></script>
+            <script src="js/level-design-system.js"></script>
+            <script src="js/overlay-system.js"></script>
+            <script src="js/map-assets-system.js"></script>
     
     <script>
         // Método initializeUI que estava faltando
@@ -9570,6 +9571,12 @@ npm
                 // Renderizar fundo
                 renderBackground(ctx, state);
                 
+                // RENDERIZAR ASSETS DO MAPA (PARALLAX)
+                if (window.mapAssetsSystem) {
+                    window.mapAssetsSystem.renderParallax(ctx, state.camera, canvas);
+                    window.mapAssetsSystem.renderDecorations(ctx, state.camera, canvas);
+                }
+                
                 // RENDERIZAR SISTEMA DE LEVEL DESIGN
                 window.levelDesignSystem.render(ctx, state.camera);
                 
@@ -9878,6 +9885,13 @@ npm
                 console.log('✅ Level Design System inicializado');
             } catch (error) {
                 console.error('❌ Erro ao inicializar Level Design System:', error);
+            }
+            
+            try {
+                window.mapAssetsSystem = new MapAssetsSystem();
+                console.log('✅ Map Assets System inicializado');
+            } catch (error) {
+                console.error('❌ Erro ao inicializar Map Assets System:', error);
             }
             
             try {
