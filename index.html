@@ -109,13 +109,6 @@
             z-index: 1000;
         }
         
-        /* Version info */
-        .version-info {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9em;
-            margin-top: 10px;
-            font-weight: 300;
-        }
 
         /* Fundo Animado de Estrelas - Dentro da Janela do Jogo */
         .starfield-container {
@@ -583,6 +576,174 @@
             contain: layout;
             max-width: 1200px;
             max-height: 800px;
+
+        }
+        
+        /* ========================================
+           SISTEMA DE OVERLAYS PARA GAME-WINDOW
+           ======================================== */
+        
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .game-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .overlay-content {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95));
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .game-overlay.active .overlay-content {
+            transform: scale(1);
+        }
+        
+        .overlay-title {
+            color: #FFD700;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .overlay-message {
+            color: #87CEEB;
+            font-size: 16px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .overlay-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .overlay-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .overlay-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        .overlay-btn.secondary {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+        
+        .overlay-btn.secondary:hover {
+            background: linear-gradient(135deg, #4b5563, #374151);
+        }
+        
+        .overlay-btn.danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .overlay-btn.danger:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+        
+        /* Overlay específico para Game Over */
+        .game-over-overlay .overlay-content {
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+        
+        .game-over-overlay .overlay-title {
+            color: #EF4444;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+        
+        /* Overlay específico para Missão Completa */
+        .mission-complete-overlay .overlay-content {
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+        
+        .mission-complete-overlay .overlay-title {
+            color: #10B981;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        
+        /* Overlay específico para Confirmação de Saída */
+        .exit-confirmation-overlay .overlay-content {
+            border-color: rgba(245, 158, 11, 0.5);
+        }
+        
+        .exit-confirmation-overlay .overlay-title {
+            color: #F59E0B;
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+        
+        /* Overlay para Pausa */
+        .pause-overlay .overlay-content {
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+        
+        .pause-overlay .overlay-title {
+            color: #8B5CF6;
+            text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+        
+        /* Responsividade para overlays */
+        @media (max-width: 768px) {
+            .overlay-content {
+                padding: 20px;
+                max-width: 90%;
+            }
+            
+            .overlay-title {
+                font-size: 20px;
+            }
+            
+            .overlay-message {
+                font-size: 14px;
+            }
+            
+            .overlay-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .overlay-btn {
+                width: 100%;
+                max-width: 200px;
+            }
         }
         
         /* Menu principal adaptado para painel lateral */
@@ -596,14 +757,6 @@
             padding: 0;
         }
         
-        .menu-header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        
-        .menu-subtitle {
-            font-size: 1.1em;
-        }
         
         .menu-content {
             display: flex;
@@ -659,82 +812,6 @@
             z-index: 10;
         }
         
-        /* Botão de menu permanente - Canto inferior direito */
-        #permanentMenu {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 10;
-            display: flex;
-            flex-direction: row;
-            gap: 12px;
-        }
-        
-        #permanentMenu button {
-            background: #8B4513;
-            color: #FFD700;
-            border: 3px solid #654321;
-            padding: 10px 16px;
-            border-radius: 0;
-            cursor: pointer;
-            font-weight: bold;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 
-                inset 2px 2px 0px #A0522D,
-                inset -2px -2px 0px #654321,
-                2px 2px 0px #000;
-            transition: all 0.1s ease;
-            min-width: 90px;
-            image-rendering: pixelated;
-        }
-        
-        #permanentMenu button:hover {
-            background: #A0522D;
-            transform: translateY(-1px);
-            box-shadow: 
-                inset 2px 2px 0px #CD853F,
-                inset -2px -2px 0px #8B4513,
-                3px 3px 0px #000;
-        }
-        
-        #permanentMenu button:active {
-            transform: translateY(1px);
-            box-shadow: 
-                inset 2px 2px 0px #654321,
-                inset -2px -2px 0px #8B4513,
-                1px 1px 0px #000;
-        }
-        
-        /* Controles do jogo */
-        #gameControls {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            z-index: 10;
-            display: flex;
-            gap: 10px;
-        }
-        
-        #gameControls button {
-            background: rgba(74, 144, 226, 0.9);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 10px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            min-width: 80px;
-        }
-        
-        #gameControls button:hover {
-            background: rgba(74, 144, 226, 1);
-            transform: translateY(-2px);
-        }
         
         /* Responsividade para telas menores */
         @media (max-width: 1200px) {
@@ -1100,7 +1177,9 @@
         }
         
         .map-location:hover {
-            transform: translate(-50%, -50%) scale(1.1);
+            transform: translate(-50%, -50%) scale(1.05);
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
         }
         
         .location-icon {
@@ -1203,13 +1282,6 @@ npm
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .map-sidebar {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            overflow-y: auto;
-        }
         
         .sidebar-section {
             background: rgba(255, 255, 255, 0.05);
@@ -1775,24 +1847,6 @@ npm
             z-index: 10;
         }
         
-        #permanentMenu {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            z-index: 10;
-            display: flex;
-            flex-direction: row;
-            gap: 12px;
-        }
-        
-        #gameControls {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            z-index: 10;
-            display: flex;
-            gap: 10px;
-        }
         
         /* Canvas responsivo dentro da janela - DESABILITADO */
         #gameCanvas {
@@ -1870,40 +1924,6 @@ npm
             min-width: 200px;
         }
         
-        /* Ajustar título para janela menor */
-        .menu-header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
-            background-size: 400% 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: cosmicGlow 3s ease-in-out infinite alternate;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            position: relative;
-            z-index: 1;
-        }
-        
-        @keyframes cosmicGlow {
-            0% { 
-                background-position: 0% 50%;
-                filter: hue-rotate(0deg);
-            }
-            100% { 
-                background-position: 100% 50%;
-                filter: hue-rotate(360deg);
-            }
-        }
-        
-        .menu-subtitle {
-            font-size: 1.2em;
-            color: #87CEEB;
-            text-shadow: 0 0 10px rgba(135, 206, 235, 0.8);
-            animation: starShimmer 2s ease-in-out infinite alternate;
-            position: relative;
-            z-index: 1;
-        }
         
         @keyframes starShimmer {
             0% { 
@@ -3666,6 +3686,841 @@ npm
         body.editor-open .game-window {
             margin-left: 0;
         }
+
+        /* ========================================
+           ESTILOS PARA HEADER DO MAPA DO MUNDO
+           ======================================== */
+        
+        .world-map-actions {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(29, 78, 216, 0.8));
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+        
+        .action-btn:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 1), rgba(29, 78, 216, 1));
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Ajustar header do mapa para acomodar os botões */
+        .submenu-header {
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .submenu-header h2 {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* ========================================
+           ESTILOS PARA NOVA ESTRUTURA DO MAPA
+           ======================================== */
+        
+        /* Header do mapa do mundo */
+        .world-map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95));
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 100;
+        }
+
+        .world-map-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(29, 78, 216, 0.8));
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            min-width: 50px;
+            text-align: center;
+            position: relative;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 1), rgba(29, 78, 216, 1));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .nav-btn:active {
+            transform: translateY(0px);
+        }
+
+        /* Título sobreposto */
+        .map-title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+            color: #FFD700;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 50;
+        }
+
+        /* Conteúdo do mapa */
+        .submenu-content {
+            position: relative;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+        }
+
+        /* Container do mapa */
+        .map-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Hover melhorado para ícones */
+        .map-location:hover {
+            transform: translate(-50%, -50%) scale(1.05) !important;
+            filter: brightness(1.2) !important;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        /* Responsividade para o header */
+        @media (max-width: 768px) {
+            .world-map-header {
+                padding: 10px 15px;
+            }
+            
+            .world-map-nav {
+                gap: 5px;
+            }
+            
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 14px;
+                min-width: 40px;
+            }
+            
+            .map-title {
+                font-size: 16px;
+                padding: 8px 15px;
+                top: 15px;
+                left: 15px;
+            }
+        }
+        
+        /* ========================================
+           FUNDO DE ESTRELAS PARA O MAPA DO MUNDO
+           ======================================== */
+        
+        /* Fundo de Estrelas para o Mapa do Mundo */
+        .world-map-starfield {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f23 100%);
+        }
+        
+        .world-map-starfield-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        /* Ajustar z-index dos elementos do mapa */
+        .world-map-header {
+            position: relative;
+            z-index: 100 !important;
+        }
+        
+        .map-title {
+            position: relative;
+            z-index: 50 !important;
+        }
+        
+        .map-container {
+            position: relative;
+            z-index: 10 !important;
+        }
+        
+        .world-map-modern {
+            position: relative;
+            z-index: 10 !important;
+        }
+        
+        /* ========================================
+           ESTILOS PARA MENUS MELHORADOS
+           ======================================== */
+        
+        /* Layout do Inventário */
+        .inventory-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+            padding: 20px;
+        }
+        
+        .inventory-section, .equipment-section, .item-details-section {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .inventory-section h3, .equipment-section h3, .item-details-section h3 {
+            color: #FFD700;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .inventory-slot {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(29, 78, 216, 0.3));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .inventory-slot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            border-color: #3b82f6;
+        }
+        
+        .inventory-slot.empty {
+            background: linear-gradient(135deg, rgba(107, 114, 128, 0.2), rgba(75, 85, 99, 0.2));
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+        }
+        
+        .inventory-slot.empty:hover {
+            background: linear-gradient(135deg, rgba(107, 114, 128, 0.3), rgba(75, 85, 99, 0.3));
+        }
+        
+        .item-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .item-name {
+            font-size: 10px;
+            color: #fff;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .item-quantity {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+        
+        /* Grid de Equipamentos */
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .equipment-slot {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(124, 58, 237, 0.3));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .equipment-slot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        }
+        
+        .slot-label {
+            color: #FFD700;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .equipped-item {
+            color: #fff;
+            font-size: 14px;
+        }
+        
+        /* Detalhes do Item */
+        .item-details-section {
+            overflow-y: auto;
+        }
+        
+        .item-preview {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .item-icon-large {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .item-name-large {
+            color: #FFD700;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .item-rarity {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .item-rarity.common { background: #6b7280; color: white; }
+        .item-rarity.uncommon { background: #10b981; color: white; }
+        .item-rarity.rare { background: #3b82f6; color: white; }
+        .item-rarity.epic { background: #8b5cf6; color: white; }
+        .item-rarity.legendary { background: #f59e0b; color: white; }
+        
+        .item-stats {
+            margin-bottom: 15px;
+        }
+        
+        .stat-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+        
+        .stat-name {
+            color: #94a3b8;
+        }
+        
+        .stat-value {
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .item-description {
+            color: #d1d5db;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn.equip {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .action-btn.sell {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Layout da Loja */
+        .shop-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            height: 100%;
+            padding: 20px;
+        }
+        
+        .shop-categories, .shop-items-section, .shop-details-section {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .category-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .category-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(29, 78, 216, 0.3));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-color: #3b82f6;
+        }
+        
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .shop-item {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(29, 78, 216, 0.2));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .shop-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        .shop-item.special-offer {
+            border: 2px solid #f59e0b;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2));
+        }
+        
+        .special-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #f59e0b;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .buy-btn {
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .buy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+        
+        .purchase-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .action-btn.buy {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .action-btn.compare {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+        
+        /* Player Resources */
+        .player-resources {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .player-resources > div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
+        .shop-special {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+        
+        .mission-progress {
+            color: #10b981 !important;
+        }
+        
+        /* ========================================
+           REDUÇÃO GERAL DE TAMANHOS - COMPACTO
+           ======================================== */
+        
+        /* Reduzir fontes globais */
+        .submenu-header h2, .menu-card-title, .mission-tab, .category-btn, .control-section h3, .settings-section h3, .game-info h3 {
+            font-size: 14px !important;
+        }
+        
+        /* Reduzir padding e margins */
+        .submenu-header, .menu-content, .submenu-content {
+            padding: 8px 12px !important;
+        }
+        
+        /* Reduzir tamanho dos botões */
+        .back-btn, .nav-btn, .action-btn, .category-btn, .mission-tab, .settings-btn {
+            padding: 6px 10px !important;
+            font-size: 12px !important;
+        }
+        
+        /* Reduzir padding dos grids (mantendo layout original) */
+        .inventory-grid, .shop-items {
+            padding: 8px !important;
+        }
+        
+        /* Manter tamanho original dos slots de itens */
+        
+        /* Reduzir altura máxima dos containers */
+        .inventory-modern, .shop-modern, .missions-modern {
+            max-height: 300px !important;
+            padding: 10px !important;
+        }
+        
+        /* Ajustar containers específicos da loja */
+        .shop-layout {
+            display: grid;
+            grid-template-columns: 180px 1fr !important;
+            gap: 8px !important;
+            height: auto !important;
+            max-height: 250px !important;
+        }
+        
+        .shop-categories {
+            padding: 6px !important;
+            max-height: 200px !important;
+            overflow-y: auto !important;
+        }
+        
+        .shop-main {
+            padding: 6px !important;
+            overflow-y: auto !important;
+            max-height: 200px !important;
+        }
+        
+        .shop-info {
+            max-height: 150px !important;
+            overflow-y: auto !important;
+            padding: 6px !important;
+        }
+        
+        .category-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 4px !important;
+        }
+        
+        .category-btn {
+            padding: 4px 8px !important;
+            font-size: 11px !important;
+        }
+        
+        /* Reduzir tamanho dos inputs e selects */
+        input, select, textarea {
+            font-size: 12px !important;
+            padding: 4px 6px !important;
+        }
+        
+        /* Reduzir espaçamento entre elementos */
+        .setting-item, .control-item, .mission-item {
+            margin: 4px 0 !important;
+            padding: 4px !important;
+        }
+        
+        /* ========================================
+           ÍCONES DE MISSÕES NO MAPA DO MUNDO
+           ======================================== */
+        
+        .mission-icons-container {
+            position: absolute;
+            top: 45%; /* Ligeiramente acima do centro vertical */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 15px 25px;
+            z-index: 60;
+            pointer-events: none; /* Permitir clique através do container */
+            width: 85%; /* Largura do container */
+            max-width: 750px; /* Largura máxima */
+            gap: 15px; /* Espaçamento entre ícones */
+        }
+        
+        .mission-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95));
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            border-radius: 15px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            pointer-events: auto; /* Permitir clique no ícone */
+            backdrop-filter: blur(15px);
+            min-width: 90px;
+            max-width: 110px;
+            text-align: center;
+            flex: 1; /* Distribuir uniformemente */
+        }
+        
+        .mission-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(29, 78, 216, 0.9));
+            border-color: rgba(255, 215, 0, 0.8);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        .mission-icon-symbol {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        
+        .mission-icon-name {
+            font-size: 12px;
+            color: #FFD700;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .mission-icon-level {
+            font-size: 10px;
+            color: #87CEEB;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 3px 6px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Estados dos ícones */
+        .mission-icon.available {
+            border-color: #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+        }
+        
+        .mission-icon.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #6b7280;
+        }
+        
+        .mission-icon.completed {
+            border-color: #FFD700;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+        }
+        
+        /* ========================================
+           SISTEMA DE COMBATE PARA MISSÕES (GRAND CHASE STYLE)
+           ======================================== */
+        
+        .mission-combat-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f23 100%);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .mission-combat-ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(26, 26, 46, 0.9);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .mission-info {
+            color: #FFD700;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .mission-progress {
+            color: #87CEEB;
+            font-size: 12px;
+        }
+        
+        .mission-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .mission-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .mission-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+        }
+        
+        .mission-canvas {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            background: rgba(15, 15, 35, 0.8);
+            max-width: 95vw;
+            max-height: 70vh;
+        }
+        
+        .mission-controls-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(26, 26, 46, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .controls-title {
+            color: #FFD700;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .control-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #87CEEB;
+            font-size: 12px;
+        }
+        
+        .control-key {
+            background: rgba(255, 215, 0, 0.2);
+            color: #FFD700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -3987,18 +4842,9 @@ npm
         <div class="game-window">
             <!-- Menu Principal -->
             <div id="mainMenu" style="display: block;" role="main" aria-label="Menu Principal do Jogo">
-                <div class="menu-header">
-                    <h1 id="gameTitle">Nova Remains</h1>
-                    <p class="menu-subtitle">Caçadores de Estrelas em Busca dos Nova Remains</p>
-                    <div class="version-info">v1.0.0 - Beta</div>
-                </div>
-                
                 <div class="menu-content">
                     <div class="menu-section">
                         <button id="startBtn" class="menu-btn primary">🎮 Iniciar Jogo</button>
-                        <button id="missionsBtn" class="menu-btn">🎯 Missões</button>
-                        <button id="shopBtn" class="menu-btn">🏪 Loja</button>
-                        <button id="inventoryBtn" class="menu-btn">🎒 Inventário</button>
                         <button id="settingsBtn" class="menu-btn">⚙️ Configurações</button>
                         <button id="aboutBtn" class="menu-btn">ℹ️ Sobre</button>
                     </div>
@@ -4097,42 +4943,71 @@ npm
                 </canvas>
             </div>
             
-            <!-- UI do Jogo -->
-            <div id="ui">
-                <div id="healthBar">
-                    <div id="healthFill"></div>
-                    <span id="healthText">100/100</span>
-                </div>
-                <div id="manaBar">
-                    <div id="manaFill"></div>
-                    <span id="manaText">50/50</span>
-                </div>
-                <div class="ui-info">
-                    <div class="level-display">Lv. <span id="levelValue">1</span></div>
-                    <div class="gold-display">💰 <span id="goldValue">1000</span></div>
-                    <div class="exp-display">EXP: <span id="expValue">0/100</span></div>
-                </div>
-            </div>
             
-            <!-- Botões de Menu Permanente -->
-            <div id="permanentMenu">
-                <button id="menuBtn">MENU</button>
-                <button id="pauseBtn">PAUSE</button>
-                <button id="restartBtn2">RESTART</button>
-            </div>
             
-            <!-- Controles do Jogo -->
-            <div id="gameControls">
-                <button id="pauseBtn2">Pause</button>
-                <button id="restartBtn3">Restart</button>
-            </div>
             <!-- Mapa Mundo -->
-            <div id="worldMap" class="submenu" style="display: none;">
-            <div class="submenu-header">
-                <button id="backFromWorldMapBtn" class="back-btn">← Voltar</button>
-                <h2>🗺️ Mapa do Mundo</h2>
+            <div id="worldMap" class="submenu" style="display: block;">
+            <!-- Fundo de Estrelas para o Mapa -->
+            <div class="world-map-starfield">
+                <canvas class="world-map-starfield-canvas" id="worldMapStarfieldCanvas"></canvas>
             </div>
+            
+            <!-- Header com barra horizontal -->
+            <div class="world-map-header">
+                <button id="backFromWorldMapBtn" class="back-btn">← Voltar</button>
+                <div class="world-map-nav">
+                    <button id="inventoryFromWorldMapBtn" class="nav-btn" title="Inventário">🎒</button>
+                    <button id="shopFromWorldMapBtn" class="nav-btn" title="Loja">🏪</button>
+                    <button id="missionsFromWorldMapBtn" class="nav-btn" title="Missões">🎯</button>
+                    <button id="characterFromWorldMapBtn" class="nav-btn" title="Heróis">⚔️</button>
+                    <button id="skillsFromWorldMapBtn" class="nav-btn" title="Habilidades">⚡</button>
+                    <button id="settingsFromWorldMapBtn" class="nav-btn" title="Configurações">⚙️</button>
+                </div>
+            </div>
+            
             <div class="submenu-content">
+                <!-- Título sobreposto -->
+                <div class="map-title">🗺️ Mapa do Mundo</div>
+                
+                <!-- Ícones de Missões dentro do canvas do jogo -->
+                <div class="mission-icons-container">
+                    <div class="mission-icon available" data-mission="tutorial" title="Tutorial Inicial - Aprenda os controles básicos">
+                        <div class="mission-icon-symbol">🎓</div>
+                        <div class="mission-icon-name">Tutorial</div>
+                        <div class="mission-icon-level">Nível 1</div>
+                    </div>
+                    
+                    <div class="mission-icon available" data-mission="sanctuary" title="Santuário das Estrelas - Primeira missão épica">
+                        <div class="mission-icon-symbol">🏛️</div>
+                        <div class="mission-icon-name">Santuário</div>
+                        <div class="mission-icon-level">Nível 1-5</div>
+                    </div>
+                    
+                    <div class="mission-icon locked" data-mission="void" title="Vazio Cósmico - Complete o Santuário primeiro">
+                        <div class="mission-icon-symbol">🌌</div>
+                        <div class="mission-icon-name">Vazio</div>
+                        <div class="mission-icon-level">Nível 6-10</div>
+                    </div>
+                    
+                    <div class="mission-icon locked" data-mission="ruins" title="Ruínas Celestiais - Desbloqueie o Vazio Cósmico">
+                        <div class="mission-icon-symbol">🏚️</div>
+                        <div class="mission-icon-name">Ruínas</div>
+                        <div class="mission-icon-level">Nível 11-15</div>
+                    </div>
+                    
+                    <div class="mission-icon locked" data-mission="temple" title="Templo dos Fragmentos - Desbloqueie as Ruínas">
+                        <div class="mission-icon-symbol">⛩️</div>
+                        <div class="mission-icon-name">Templo</div>
+                        <div class="mission-icon-level">Nível 16-20</div>
+                    </div>
+                    
+                    <div class="mission-icon locked" data-mission="comet" title="Núcleo do Cometa - Missão final épica">
+                        <div class="mission-icon-symbol">☄️</div>
+                        <div class="mission-icon-name">Cometa</div>
+                        <div class="mission-icon-level">Nível 21-25</div>
+                    </div>
+                </div>
+                
                 <div class="world-map-modern">
                     <!-- Mapa Principal -->
                     <div class="map-container">
@@ -4165,104 +5040,8 @@ npm
                         </div>
                     </div>
                     
-                    <!-- Painel Lateral com Inventário e Loja -->
-                    <div class="map-sidebar">
-                        <!-- Player Stats -->
-                        <div class="sidebar-section panel-3d">
-                            <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">📊 Estatísticas</h3>
-                            <div class="player-stats" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9)); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #444444;">
-                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
-                                    <span style="color: #FF6B6B;">❤️ Vida:</span>
-                                    <span style="color: #FFD700;">120/120</span>
-                                </div>
-                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
-                                    <span style="color: #4ECDC4;">⚡ Mana:</span>
-                                    <span style="color: #FFD700;">100/100</span>
-                                </div>
-                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
-                                    <span style="color: #45B7D1;">⭐ Nível:</span>
-                                    <span style="color: #FFD700;">1</span>
-                                </div>
-                                <div class="stat-row" style="display: flex; justify-content: space-between; margin: 5px 0;">
-                                    <span style="color: #96CEB4;">💰 Ouro:</span>
-                                    <span style="color: #FFD700;">500</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Inventário Compacto -->
-                        <div class="sidebar-section panel-3d">
-                            <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">🎒 Inventário</h3>
-                            <div class="inventory-compact">
-                                <div class="inventory-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 10px 0;">
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">⚔️</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">🛡️</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">💊</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">🔮</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">💎</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">🗝️</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">📜</div>
-                                    <div class="inventory-slot" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); border: 2px solid #444444; padding: 10px; text-align: center; border-radius: 4px;">⚡</div>
-                                </div>
-                                <button class="btn-3d" onclick="showSubmenu('inventoryMenu')">Ver Inventário Completo</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Loja Compacta -->
-                        <div class="sidebar-section panel-3d">
-                            <h3 style="color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">🏪 Loja</h3>
-                            <div class="shop-compact">
-                                <div class="shop-categories" style="display: flex; gap: 5px; margin: 10px 0;">
-                                    <button class="btn-3d" style="padding: 5px 10px; font-size: 10px;" data-category="weapons">⚔️ Armas</button>
-                                    <button class="btn-3d" style="padding: 5px 10px; font-size: 10px;" data-category="armor">🛡️ Armaduras</button>
-                                    <button class="btn-3d" style="padding: 5px 10px; font-size: 10px;" data-category="potions">💊 Poções</button>
-                                </div>
-                                <div class="shop-items" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.8)); padding: 10px; border-radius: 8px; margin: 10px 0;">
-                                    <div class="shop-item" style="display: flex; justify-content: space-between; align-items: center; margin: 5px 0; padding: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px;">
-                                        <span class="item-icon">⚔️</span>
-                                        <span class="item-name" style="color: #87CEEB; font-size: 12px;">Espada Básica</span>
-                                        <span class="item-price" style="color: #FFD700; font-size: 12px;">200💰</span>
-                                    </div>
-                                    <div class="shop-item" style="display: flex; justify-content: space-between; align-items: center; margin: 5px 0; padding: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px;">
-                                        <span class="item-icon">🛡️</span>
-                                        <span class="item-name" style="color: #87CEEB; font-size: 12px;">Escudo</span>
-                                        <span class="item-price" style="color: #FFD700; font-size: 12px;">150💰</span>
-                                    </div>
-                                    <div class="shop-item" style="display: flex; justify-content: space-between; align-items: center; margin: 5px 0; padding: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px;">
-                                        <span class="item-icon">💊</span>
-                                        <span class="item-name" style="color: #87CEEB; font-size: 12px;">Poção de Vida</span>
-                                        <span class="item-price" style="color: #FFD700; font-size: 12px;">50💰</span>
-                                    </div>
-                                </div>
-                                <button class="btn-3d" onclick="showSubmenu('shopMenu')">Ver Loja Completa</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Ações Rápidas -->
-                        <div class="sidebar-section">
-                            <h3>⚡ Ações Rápidas</h3>
-                            <div class="quick-actions">
-                                <button class="btn-modern" onclick="showSubmenu('missionsMenu')">🎯 Missões</button>
-                                <button class="btn-modern" onclick="showSubmenu('characterMenu')">⚔️ Heróis</button>
-                                <button class="btn-modern" onclick="showSubmenu('skillsMenu')">⚡ Habilidades</button>
-                                <button class="btn-modern" onclick="showSubmenu('settingsMenu')">⚙️ Configurações</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 
-                <!-- Janela de Chat -->
-                <div class="chat-window">
-                    <div class="chat-header">💬 Chat do Jogo</div>
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="chat-message system">Bem-vindo ao Nova Remains!</div>
-                        <div class="chat-message system">Selecione uma localização no mapa para começar sua aventura.</div>
-                    </div>
-                    <div class="chat-input-container">
-                        <input type="text" class="chat-input" id="chatInput" placeholder="Digite sua mensagem..." maxlength="100">
-                        <button class="chat-send" id="chatSend">Enviar</button>
-                    </div>
-                </div>
             </div>
         </div>
         
@@ -4434,91 +5213,308 @@ npm
         
             <!-- Submenu de Inventário -->
             <div id="inventoryMenu" class="submenu" style="display: none;">
+                <!-- Header com navegação -->
                 <div class="submenu-header">
-                    <button id="backFromInventoryBtn" class="back-btn">← Voltar</button>
-                    <h2>🎒 Inventário</h2>
-                    <div class="gold-display">
-                        <span class="gold-icon">💰</span>
-                        <span id="playerGold">1000</span>
+                    <button id="backFromInventoryBtn" class="back-btn">← Voltar ao Mapa</button>
+                    <h2>🎒 Inventário do Herói</h2>
+                    <div class="player-resources">
+                        <div class="gold-display">
+                            <span class="gold-icon">💰</span>
+                            <span id="playerGold">1000</span>
+                        </div>
+                        <div class="level-display">
+                            <span class="level-icon">⭐</span>
+                            <span id="playerLevel">Nível 1</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="submenu-content">
+                    <div class="inventory-layout">
+                        <!-- Grid de Inventário -->
+                        <div class="inventory-section">
+                            <h3>🎒 Itens no Inventário</h3>
+                            <div class="inventory-grid" id="inventoryGrid">
+                                <!-- Slots serão gerados dinamicamente -->
+                                <div class="inventory-slot" data-slot="0">
+                                    <div class="item-icon">⚔️</div>
+                                    <div class="item-name">Espada Básica</div>
+                                    <div class="item-quantity">1</div>
+                                </div>
+                                <div class="inventory-slot" data-slot="1">
+                                    <div class="item-icon">🛡️</div>
+                                    <div class="item-name">Escudo de Madeira</div>
+                                    <div class="item-quantity">1</div>
+                                </div>
+                                <div class="inventory-slot" data-slot="2">
+                                    <div class="item-icon">🧪</div>
+                                    <div class="item-name">Poção de Cura</div>
+                                    <div class="item-quantity">3</div>
+                                </div>
+                                <div class="inventory-slot" data-slot="3">
+                                    <div class="item-icon">💎</div>
+                                    <div class="item-name">Cristal de Poder</div>
+                                    <div class="item-quantity">1</div>
+                                </div>
+                                <!-- Slots vazios -->
+                                <div class="inventory-slot empty" data-slot="4"></div>
+                                <div class="inventory-slot empty" data-slot="5"></div>
+                                <div class="inventory-slot empty" data-slot="6"></div>
+                                <div class="inventory-slot empty" data-slot="7"></div>
+                                <div class="inventory-slot empty" data-slot="8"></div>
+                                <div class="inventory-slot empty" data-slot="9"></div>
+                                <div class="inventory-slot empty" data-slot="10"></div>
+                                <div class="inventory-slot empty" data-slot="11"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Equipamentos -->
+                        <div class="equipment-section">
+                            <h3>⚔️ Equipamentos</h3>
+                            <div class="equipment-grid">
+                                <div class="equipment-slot helmet" data-type="helmet">
+                                    <div class="slot-label">Capacete</div>
+                                    <div class="equipped-item" id="equippedHelmet">Nenhum</div>
+                                </div>
+                                <div class="equipment-slot weapon" data-type="weapon">
+                                    <div class="slot-label">Arma</div>
+                                    <div class="equipped-item" id="equippedWeapon">Espada Básica</div>
+                                </div>
+                                <div class="equipment-slot armor" data-type="armor">
+                                    <div class="slot-label">Armadura</div>
+                                    <div class="equipped-item" id="equippedArmor">Túnica Básica</div>
+                                </div>
+                                <div class="equipment-slot shield" data-type="shield">
+                                    <div class="slot-label">Escudo</div>
+                                    <div class="equipped-item" id="equippedShield">Escudo de Madeira</div>
+                                </div>
+                                <div class="equipment-slot accessory1" data-type="accessory1">
+                                    <div class="slot-label">Acessório 1</div>
+                                    <div class="equipped-item" id="equippedAccessory1">Nenhum</div>
+                                </div>
+                                <div class="equipment-slot accessory2" data-type="accessory2">
+                                    <div class="slot-label">Acessório 2</div>
+                                    <div class="equipped-item" id="equippedAccessory2">Nenhum</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Detalhes do Item -->
+                        <div class="item-details-section">
+                            <h3>📋 Detalhes do Item</h3>
+                            <div class="item-details" id="itemDetails">
+                                <div class="item-preview">
+                                    <div class="item-icon-large">⚔️</div>
+                                    <div class="item-name-large">Espada Básica</div>
+                                    <div class="item-rarity common">Comum</div>
+                                </div>
+                                <div class="item-stats">
+                                    <div class="stat-line">
+                                        <span class="stat-name">Dano:</span>
+                                        <span class="stat-value">+15</span>
+                                    </div>
+                                    <div class="stat-line">
+                                        <span class="stat-name">Velocidade:</span>
+                                        <span class="stat-value">+2</span>
+                                    </div>
+                                </div>
+                                <div class="item-description">
+                                    Uma espada simples, mas confiável para iniciantes.
+                                </div>
+                                <div class="item-actions">
+                                    <button class="action-btn equip">Equipar</button>
+                                    <button class="action-btn sell">Vender</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Submenu de Loja -->
+            <div id="shopMenu" class="submenu" style="display: none;">
+                <div class="submenu-header">
+                    <button id="backFromShopBtn" class="back-btn">← Voltar ao Mapa</button>
+                    <h2>🏪 Loja do Mercador</h2>
+                    <div class="player-resources">
+                        <div class="gold-display">
+                            <span class="gold-icon">💰</span>
+                            <span id="shopPlayerGold">1000</span>
+                        </div>
+                        <div class="shop-special">
+                            <span class="special-icon">⭐</span>
+                            <span>Ofertas Especiais!</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="submenu-content">
+                    <div class="shop-layout">
+                    <!-- Categorias -->
+                    <div class="shop-categories">
+                        <h3>🏷️ Categorias</h3>
+                        <div class="category-buttons">
+                            <button class="category-btn active" data-category="all">
+                                <span class="category-icon">🛍️</span>
+                                <span>Todos</span>
+                            </button>
+                            <button class="category-btn" data-category="weapon">
+                                <span class="category-icon">⚔️</span>
+                                <span>Armas</span>
+                            </button>
+                            <button class="category-btn" data-category="armor">
+                                <span class="category-icon">🛡️</span>
+                                <span>Armaduras</span>
+                            </button>
+                            <button class="category-btn" data-category="consumable">
+                                <span class="category-icon">🧪</span>
+                                <span>Poções</span>
+                            </button>
+                            <button class="category-btn" data-category="gem">
+                                <span class="category-icon">💎</span>
+                                <span>Gemas</span>
+                            </button>
+                            <button class="category-btn" data-category="special">
+                                <span class="category-icon">✨</span>
+                                <span>Especiais</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Itens da Loja -->
+                    <div class="shop-items-section">
+                        <h3>🛒 Itens Disponíveis</h3>
+                        <div class="shop-items" id="shopItems">
+                            <!-- Armas -->
+                            <div class="shop-item" data-category="weapon" data-price="500">
+                                <div class="item-icon">⚔️</div>
+                                <div class="item-name">Espada de Aço</div>
+                                <div class="item-price">💰 500</div>
+                                <div class="item-rarity uncommon">Incomum</div>
+                                <button class="buy-btn">Comprar</button>
+                            </div>
+                            
+                            <div class="shop-item" data-category="weapon" data-price="800">
+                                <div class="item-icon">🗡️</div>
+                                <div class="item-name">Espada Flamejante</div>
+                                <div class="item-price">💰 800</div>
+                                <div class="item-rarity rare">Raro</div>
+                                <button class="buy-btn">Comprar</button>
+                            </div>
+                            
+                            <!-- Armaduras -->
+                            <div class="shop-item" data-category="armor" data-price="400">
+                                <div class="item-icon">🛡️</div>
+                                <div class="item-name">Armadura de Couro</div>
+                                <div class="item-price">💰 400</div>
+                                <div class="item-rarity common">Comum</div>
+                                <button class="buy-btn">Comprar</button>
+                            </div>
+                            
+                            <div class="shop-item" data-category="armor" data-price="1200">
+                                <div class="item-icon">👑</div>
+                                <div class="item-name">Armadura Real</div>
+                                <div class="item-price">💰 1200</div>
+                                <div class="item-rarity epic">Épico</div>
+                                <button class="buy-btn">Comprar</button>
+                            </div>
+                            
+                            <!-- Poções -->
+                            <div class="shop-item" data-category="consumable" data-price="50">
+                                <div class="item-icon">🧪</div>
+                                <div class="item-name">Poção de Cura</div>
+                                <div class="item-price">💰 50</div>
+                                <div class="item-rarity common">Comum</div>
+                                <button class="buy-btn">Comprar</button>
+                            </div>
+                            
+                            <div class="shop-item" data-category="consumable" data-price="100">
+                                <div class="item-icon">💙</div>
+                                <div class="item-name">Poção de Mana</div>
+                                <div class="item-price">💰 100</div>
+                                <div class="item-rarity common">Comum</div>
+                                <button class="buy-btn">Comprar</button>
+                            </div>
+                            
+                            <!-- Gemas -->
+                            <div class="shop-item" data-category="gem" data-price="300">
+                                <div class="item-icon">💎</div>
+                                <div class="item-name">Cristal de Poder</div>
+                                <div class="item-price">💰 300</div>
+                                <div class="item-rarity rare">Raro</div>
+                                <button class="buy-btn">Comprar</button>
+                            </div>
+                            
+                            <!-- Especiais -->
+                            <div class="shop-item special-offer" data-category="special" data-price="2000">
+                                <div class="item-icon">✨</div>
+                                <div class="item-name">Anel da Estrela</div>
+                                <div class="item-price">💰 2000</div>
+                                <div class="item-rarity legendary">Lendário</div>
+                                <div class="special-badge">OFERTA!</div>
+                                <button class="buy-btn">Comprar</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detalhes do Item -->
+                    <div class="shop-details-section">
+                        <h3>📋 Informações do Item</h3>
+                        <div class="item-details" id="shopItemDetails">
+                            <div class="item-preview">
+                                <div class="item-icon-large">⚔️</div>
+                                <div class="item-name-large">Espada de Aço</div>
+                                <div class="item-rarity-large uncommon">Incomum</div>
+                            </div>
+                            <div class="item-stats">
+                                <div class="stat-line">
+                                    <span class="stat-name">Dano:</span>
+                                    <span class="stat-value">+25</span>
+                                </div>
+                                <div class="stat-line">
+                                    <span class="stat-name">Velocidade:</span>
+                                    <span class="stat-value">+3</span>
+                                </div>
+                                <div class="stat-line">
+                                    <span class="stat-name">Crítico:</span>
+                                    <span class="stat-value">+5%</span>
+                                </div>
+                            </div>
+                            <div class="item-description">
+                                Uma espada forjada com aço de qualidade superior, oferecendo maior dano e precisão.
+                            </div>
+                            <div class="purchase-actions">
+                                <button class="action-btn buy">Comprar por 💰 500</button>
+                                <button class="action-btn compare">Comparar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        
+            <!-- Submenu de Missões -->
+            <div id="missionsMenu" class="submenu" style="display: none;">
+                <div class="submenu-header">
+                    <button id="backFromMissionsBtn" class="back-btn">← Voltar ao Mapa</button>
+                    <h2>🎯 Missões e Aventuras</h2>
+                    <div class="player-info">
+                        <div class="player-level">
+                            <span class="level-icon">⭐</span>
+                            <span>Nível 1</span>
+                        </div>
+                        <div class="player-gold">
+                            <span class="gold-icon">💰</span>
+                            <span>1000</span>
+                        </div>
+                        <div class="mission-progress">
+                            <span class="progress-icon">📊</span>
+                            <span>Progresso: 15%</span>
+                        </div>
                     </div>
                 </div>
                 <div class="submenu-content">
-                    <div class="inventory-modern">
-                        <div class="inventory-main">
-                            <div class="inventory-grid" id="inventoryGrid">
-                                <!-- Slots serão gerados dinamicamente -->
-                            </div>
-                            <div class="inventory-info">
-                                <h3>Equipamentos</h3>
-                                <div class="equipped-items">
-                                    <div class="equipped-slot">
-                                        <label>Arma:</label>
-                                        <div id="equippedWeapon" class="equipped-item">Nenhuma</div>
-                                    </div>
-                                    <div class="equipped-slot">
-                                        <label>Armadura:</label>
-                                        <div id="equippedArmor" class="equipped-item">Nenhuma</div>
-                                    </div>
-                                    <div class="equipped-slot">
-                                        <label>Acessório:</label>
-                                        <div id="equippedAccessory" class="equipped-item">Nenhum</div>
-                                    </div>
-                                </div>
-                        <div class="item-details" id="itemDetails">
-                            <p>Selecione um item para ver detalhes</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Submenu de Loja -->
-        <div id="shopMenu" class="submenu" style="display: none;">
-            <div class="submenu-header">
-                <button id="backFromShopBtn" class="back-btn">← Voltar</button>
-                <h2>🏪 Loja</h2>
-                <div class="gold-display">
-                    <span class="gold-icon">💰</span>
-                    <span id="shopPlayerGold">1000</span>
-                </div>
-            </div>
-            <div class="submenu-content">
-                <div class="shop-modern">
-                    <div class="shop-categories">
-                        <button class="category-btn active" data-category="all">Todos</button>
-                        <button class="category-btn" data-category="weapon">Armas</button>
-                        <button class="category-btn" data-category="armor">Armaduras</button>
-                        <button class="category-btn" data-category="consumable">Poções</button>
-                        <button class="category-btn" data-category="gem">Gemas</button>
-                    </div>
-                    <div class="shop-main">
-                        <div class="shop-items" id="shopItems">
-                            <!-- Itens serão gerados dinamicamente -->
-                        </div>
-                        <div class="shop-info">
-                            <h3>Informações do Item</h3>
-                            <div class="item-details" id="shopItemDetails">
-                                <p>Selecione um item para ver detalhes</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Submenu de Missões -->
-        <div id="missionsMenu" class="submenu" style="display: none;">
-            <div class="submenu-header">
-                <button id="backFromMissionsBtn" class="back-btn">← Voltar</button>
-                <h2>🎯 Missões</h2>
-                <div class="player-info">
-                    <span class="player-level">Lv.1</span>
-                    <span class="player-name">Player</span>
-                    <span class="player-gold">💰 1000</span>
-                </div>
-            </div>
-            <div class="submenu-content">
-                <div class="missions-modern">
+                    <div class="missions-modern">
                     <div class="missions-tabs">
                         <button class="mission-tab active" data-tab="story">📖 História</button>
                         <button class="mission-tab" data-tab="daily">📅 Diárias</button>
@@ -4660,16 +5656,16 @@ npm
                     <!-- Lobby da sala será gerado dinamicamente -->
                 </div>
             </div>
-        </div>
+            </div>
         
             <!-- Submenu de Controles -->
             <div id="controlsMenu" class="submenu" style="display: none;">
-            <div class="submenu-header">
-                <button id="backFromControlsBtn" class="back-btn">← Voltar</button>
-                <h2>🎮 Controles</h2>
-            </div>
-            <div class="controls-content">
-                <div class="control-section">
+                <div class="submenu-header">
+                    <button id="backFromControlsBtn" class="back-btn">← Voltar</button>
+                    <h2>🎮 Controles</h2>
+                </div>
+                <div class="controls-content">
+                    <div class="control-section">
                     <h3>Movimento</h3>
                     <div class="control-item">
                         <span>⬅️ Seta Esquerda</span>
@@ -4715,16 +5711,16 @@ npm
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
         
             <!-- Submenu Sobre -->
             <div id="aboutMenu" class="submenu" style="display: none;">
-            <div class="submenu-header">
-                <button id="backFromAboutBtn" class="back-btn">← Voltar</button>
-                <h2>ℹ️ Sobre o Jogo</h2>
-            </div>
-            <div class="about-content">
-                <div class="game-info">
+                <div class="submenu-header">
+                    <button id="backFromAboutBtn" class="back-btn">← Voltar</button>
+                    <h2>ℹ️ Sobre o Jogo</h2>
+                </div>
+                <div class="about-content">
+                    <div class="game-info">
                     <h3>Grand Chase Web</h3>
                     <p>Versão: 1.0.0</p>
                     <p>Desenvolvido com HTML5, CSS3 e JavaScript</p>
@@ -4745,7 +5741,7 @@ npm
                     </ul>
                 </div>
             </div>
-        </div>
+            </div>
         
             <!-- Menu de Pausa -->
             <div id="pauseMenu" style="display: none;">
@@ -4758,12 +5754,12 @@ npm
         
             <!-- Menu de Configurações -->
             <div id="settingsMenu" class="submenu" style="display: none;">
-            <div class="submenu-header">
-                <button id="backFromSettingsBtn" class="back-btn">← Voltar</button>
-                <h2>⚙️ Configurações</h2>
-            </div>
-            <div class="settings-content">
-                <div class="settings-section">
+                <div class="submenu-header">
+                    <button id="backFromSettingsBtn" class="back-btn">← Voltar</button>
+                    <h2>⚙️ Configurações</h2>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
                     <h3>🔊 Áudio</h3>
                     <div class="setting-item">
                         <label>Volume Geral:</label>
@@ -4862,7 +5858,7 @@ npm
                     <button id="resetSettingsBtn" class="settings-btn reset">🔄 Resetar</button>
                     <button id="saveSettingsBtn" class="settings-btn save">💾 Salvar</button>
                 </div>
-            </div>
+                </div>
             </div>
         </div>
         
@@ -4871,6 +5867,8 @@ npm
     <script src="js/inventory-system.js"></script>
     <script src="js/mission-system.js"></script>
     <script src="js/lobby-system.js"></script>
+    <script src="js/level-design-system.js"></script>
+    <script src="js/overlay-system.js"></script>
     
     <script>
         // Método initializeUI que estava faltando
@@ -4895,7 +5893,7 @@ npm
                     'js/particles.js',
                     'js/enemy.js',
                     'js/player.js',
-                    'js/combat.js',
+                    'js/combat-simple.js',
                     'js/ui.js',
                     'js/game.js',
                     'js/main.js'
@@ -6217,6 +7215,111 @@ npm
         new GlobalStarfield();
         new GameStarfield();
         
+        // Sistema de Estrelas para o Mapa do Mundo
+        class WorldMapStarfield {
+            constructor() {
+                this.canvas = document.getElementById('worldMapStarfieldCanvas');
+                if (!this.canvas) return;
+                
+                this.ctx = this.canvas.getContext('2d');
+                this.stars = [];
+                this.numStars = 500;
+                this.speed = 0.4;
+                
+                this.resize();
+                this.createStars();
+                this.animate();
+                
+                window.addEventListener('resize', () => this.resize());
+            }
+            
+            resize() {
+                if (!this.canvas) return;
+                this.canvas.width = this.canvas.offsetWidth;
+                this.canvas.height = this.canvas.offsetHeight;
+            }
+            
+            createStars() {
+                for (let i = 0; i < this.numStars; i++) {
+                    this.stars.push({
+                        x: Math.random() * this.canvas.width - this.canvas.width / 2,
+                        y: Math.random() * this.canvas.height - this.canvas.height / 2,
+                        z: Math.random() * 1000,
+                        prevX: 0,
+                        prevY: 0,
+                        size: Math.random() * 2 + 0.5
+                    });
+                }
+            }
+            
+            animate() {
+                if (!this.canvas) return;
+                
+                this.ctx.fillStyle = 'rgba(15, 15, 35, 0.05)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                
+                this.stars.forEach(star => {
+                    star.prevX = star.x / star.z * 100 + centerX;
+                    star.prevY = star.y / star.z * 100 + centerY;
+                    
+                    star.z -= this.speed;
+                    
+                    if (star.z <= 0) {
+                        star.x = Math.random() * this.canvas.width - this.canvas.width / 2;
+                        star.y = Math.random() * this.canvas.height - this.canvas.height / 2;
+                        star.z = 1000;
+                    }
+                    
+                    const x = star.x / star.z * 100 + centerX;
+                    const y = star.y / star.z * 100 + centerY;
+                    
+                    const opacity = 1 - star.z / 1000;
+                    const size = star.size * (1 - star.z / 1000);
+                    
+                    // Desenhar estrela como círculo
+                    this.ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.8})`;
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    
+                    // Adicionar brilho
+                    if (opacity > 0.5) {
+                        this.ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.3})`;
+                        this.ctx.beginPath();
+                        this.ctx.arc(x, y, size * 2, 0, Math.PI * 2);
+                        this.ctx.fill();
+                    }
+                });
+                
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        
+        // Função para inicializar estrelas do mapa
+        function initializeWorldMapStarfield() {
+            const starfield = new WorldMapStarfield();
+            return starfield;
+        }
+        
+        // Inicializar estrelas quando o mapa for mostrado
+        let worldMapStarfield = null;
+        
+        // Modificar a função showSubmenu para inicializar estrelas
+        const originalShowSubmenu = window.showSubmenu;
+        window.showSubmenu = function(menuId) {
+            originalShowSubmenu(menuId);
+            
+            // Inicializar estrelas se for o mapa do mundo
+            if (menuId === 'worldMap' && !worldMapStarfield) {
+                setTimeout(() => {
+                    worldMapStarfield = initializeWorldMapStarfield();
+                }, 100);
+            }
+        };
+        
         // Sistema de Modais
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'flex';
@@ -6775,6 +7878,1774 @@ npm
                 menuContent.appendChild(toggleBtn);
             }
         });
+
+        // ========================================
+        // EVENT LISTENERS PARA HEADER DO MAPA DO MUNDO
+        // ========================================
+        
+        // Configurar botões do header do mapa do mundo
+        function setupWorldMapHeaderButtons() {
+            // Botão de inventário
+            const inventoryBtn = document.getElementById('inventoryFromWorldMapBtn');
+            if (inventoryBtn) {
+                inventoryBtn.addEventListener('click', () => {
+                    showSubmenu('inventoryMenu');
+                });
+            }
+            
+            // Botão de loja
+            const shopBtn = document.getElementById('shopFromWorldMapBtn');
+            if (shopBtn) {
+                shopBtn.addEventListener('click', () => {
+                    showSubmenu('shopMenu');
+                });
+            }
+            
+            // Botão de missões
+            const missionsBtn = document.getElementById('missionsFromWorldMapBtn');
+            if (missionsBtn) {
+                missionsBtn.addEventListener('click', () => {
+                    showSubmenu('missionsMenu');
+                });
+            }
+            
+            // Botão de heróis
+            const characterBtn = document.getElementById('characterFromWorldMapBtn');
+            if (characterBtn) {
+                characterBtn.addEventListener('click', () => {
+                    showSubmenu('characterMenu');
+                });
+            }
+            
+            // Botão de habilidades
+            const skillsBtn = document.getElementById('skillsFromWorldMapBtn');
+            if (skillsBtn) {
+                skillsBtn.addEventListener('click', () => {
+                    showSubmenu('skillsMenu');
+                });
+            }
+            
+            // Botão de configurações
+            const settingsBtn = document.getElementById('settingsFromWorldMapBtn');
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', () => {
+                    showSubmenu('settingsMenu');
+                });
+            }
+        }
+        
+        // Função para mostrar submenu (se não existir)
+        function showSubmenu(menuId) {
+            console.log('Mostrando submenu:', menuId);
+            hideAllMenus();
+            const menu = document.getElementById(menuId);
+            if (menu) {
+                menu.style.display = 'block';
+                console.log('Submenu exibido:', menuId);
+            } else {
+                console.error('Submenu não encontrado:', menuId);
+            }
+        }
+        
+        // Função para esconder todos os menus
+        function hideAllMenus() {
+            const menus = [
+                'characterMenu', 'skillsMenu', 'inventoryMenu', 
+                'shopMenu', 'missionsMenu', 'worldMap', 'settingsMenu'
+            ];
+            
+            menus.forEach(menuId => {
+                const menu = document.getElementById(menuId);
+                if (menu) {
+                    menu.style.display = 'none';
+                }
+            });
+        }
+        
+        // Função para mostrar menu principal
+        function showMainMenu() {
+            hideAllMenus();
+            const mainMenu = document.getElementById('mainMenu');
+            if (mainMenu) {
+                mainMenu.style.display = 'block';
+            }
+        }
+        
+        // Configurar botões de voltar para todos os menus
+        function setupBackButtons() {
+            // Botão voltar do mapa do mundo
+            const backFromWorldMapBtn = document.getElementById('backFromWorldMapBtn');
+            if (backFromWorldMapBtn) {
+                backFromWorldMapBtn.addEventListener('click', () => {
+                    showMainMenu();
+                });
+            }
+            
+            // Botão voltar do inventário
+            const backFromInventoryBtn = document.getElementById('backFromInventoryBtn');
+            if (backFromInventoryBtn) {
+                backFromInventoryBtn.addEventListener('click', () => {
+                    showSubmenu('worldMap');
+                });
+            }
+            
+            // Botão voltar da loja
+            const backFromShopBtn = document.getElementById('backFromShopBtn');
+            if (backFromShopBtn) {
+                backFromShopBtn.addEventListener('click', () => {
+                    showSubmenu('worldMap');
+                });
+            }
+            
+            // Botão voltar das missões
+            const backFromMissionsBtn = document.getElementById('backFromMissionsBtn');
+            if (backFromMissionsBtn) {
+                backFromMissionsBtn.addEventListener('click', () => {
+                    showSubmenu('worldMap');
+                });
+            }
+            
+            // Botão voltar dos heróis
+            const backFromCharacterBtn = document.getElementById('backFromCharacterBtn');
+            if (backFromCharacterBtn) {
+                backFromCharacterBtn.addEventListener('click', () => {
+                    showSubmenu('worldMap');
+                });
+            }
+            
+            // Botão voltar das habilidades
+            const backFromSkillsBtn = document.getElementById('backFromSkillsBtn');
+            if (backFromSkillsBtn) {
+                backFromSkillsBtn.addEventListener('click', () => {
+                    showSubmenu('worldMap');
+                });
+            }
+            
+            // Botão voltar das configurações
+            const backFromSettingsBtn = document.getElementById('backFromSettingsBtn');
+            if (backFromSettingsBtn) {
+                backFromSettingsBtn.addEventListener('click', () => {
+                    showSubmenu('worldMap');
+                });
+            }
+        }
+        
+        // Inicializar botões do header do mapa quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            setupWorldMapHeaderButtons();
+            setupBackButtons();
+            setupInventoryInteractions();
+            setupShopInteractions();
+        });
+        
+        // Configurar interações do inventário
+        function setupInventoryInteractions() {
+            // Clique nos slots do inventário
+            document.querySelectorAll('.inventory-slot').forEach(slot => {
+                slot.addEventListener('click', () => {
+                    if (!slot.classList.contains('empty')) {
+                        // Mostrar detalhes do item
+                        console.log('Item clicado:', slot.querySelector('.item-name').textContent);
+                    }
+                });
+            });
+            
+            // Clique nos equipamentos
+            document.querySelectorAll('.equipment-slot').forEach(slot => {
+                slot.addEventListener('click', () => {
+                    console.log('Equipamento clicado:', slot.dataset.type);
+                });
+            });
+        }
+        
+        // Configurar interações da loja
+        function setupShopInteractions() {
+            // Filtros de categoria
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remover active de todos
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    // Adicionar active no clicado
+                    btn.classList.add('active');
+                    
+                    // Filtrar itens
+                    const category = btn.dataset.category;
+                    document.querySelectorAll('.shop-item').forEach(item => {
+                        if (category === 'all' || item.dataset.category === category) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Clique nos itens da loja
+            document.querySelectorAll('.shop-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    console.log('Item da loja clicado:', item.querySelector('.item-name').textContent);
+                });
+            });
+            
+            // Botões de compra
+            document.querySelectorAll('.buy-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const item = btn.closest('.shop-item');
+                    const itemName = item.querySelector('.item-name').textContent;
+                    const price = item.dataset.price;
+                    
+                    if (confirm(`Comprar ${itemName} por ${price} moedas?`)) {
+                        alert(`${itemName} comprado com sucesso!`);
+                        // Aqui você implementaria a lógica de compra
+                    }
+                });
+            });
+        }
+        
+        // ========================================
+        // SISTEMA DE MISSÕES DO MAPA DO MUNDO (GRAND CHASE STYLE)
+        // ========================================
+        
+        function initializeMissionIcons() {
+            const missionIcons = document.querySelectorAll('.mission-icon');
+            
+            missionIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const missionId = this.dataset.mission;
+                    
+                    if (this.classList.contains('locked')) {
+                        alert(`Esta missão está bloqueada. Complete as missões anteriores para desbloqueá-la.`);
+                        return;
+                    }
+                    
+                    if (this.classList.contains('available')) {
+                        startMission(missionId);
+                    }
+                });
+            });
+        }
+        
+        // Variável global para personagem selecionado
+        let selectedCharacter = 'juno';
+        
+        function startMission(missionId) {
+            console.log('🎮 Iniciando missão:', missionId);
+            
+            // Obter personagem selecionado
+            const characterSelect = document.getElementById('characterSelect');
+            if (characterSelect) {
+                selectedCharacter = characterSelect.value || 'juno';
+                console.log('👤 Personagem selecionado:', selectedCharacter);
+            }
+            
+            const missions = {
+                'tutorial': {
+                    name: 'Tutorial Inicial',
+                    description: 'Aprenda os controles básicos do Grand Chase',
+                    level: 1,
+                    enemies: 3,
+                    enemyTypes: ['goblin'],
+                    rewards: { gold: 100, exp: 50 }
+                },
+                'sanctuary': {
+                    name: 'Santuário das Estrelas',
+                    description: 'Explore o antigo santuário e encontre os fragmentos perdidos',
+                    level: 5,
+                    enemies: 5,
+                    enemyTypes: ['goblin', 'skeleton'],
+                    rewards: { gold: 300, exp: 150 }
+                },
+                'void': {
+                    name: 'Vazio Cósmico',
+                    description: 'Navegue pelo perigoso vazio cósmico',
+                    level: 10,
+                    enemies: 8,
+                    enemyTypes: ['skeleton', 'orc'],
+                    rewards: { gold: 500, exp: 250 }
+                },
+                'ruins': {
+                    name: 'Ruínas Celestiais',
+                    description: 'Desvende os segredos das ruínas antigas',
+                    level: 15,
+                    enemies: 12,
+                    enemyTypes: ['orc', 'boss'],
+                    rewards: { gold: 750, exp: 375 }
+                },
+                'temple': {
+                    name: 'Templo dos Fragmentos',
+                    description: 'Recupere os fragmentos sagrados no templo',
+                    level: 20,
+                    enemies: 15,
+                    enemyTypes: ['boss'],
+                    rewards: { gold: 1000, exp: 500 }
+                },
+                'comet': {
+                    name: 'Núcleo do Cometa',
+                    description: 'Missão final: Destrua o núcleo do cometa maligno',
+                    level: 25,
+                    enemies: 20,
+                    enemyTypes: ['boss'],
+                    rewards: { gold: 2000, exp: 1000 }
+                }
+            };
+            
+            const mission = missions[missionId];
+            if (mission) {
+                showMissionCombat(mission, selectedCharacter);
+            }
+        }
+        
+        function showMissionCombat(mission, character) {
+            console.log('⚔️ Mostrando combate da missão:', mission.name, 'com personagem:', character);
+            
+            const combatContainer = document.createElement('div');
+            combatContainer.className = 'mission-combat-container';
+            combatContainer.innerHTML = `
+                <div class="mission-combat-ui">
+                    <div class="mission-info">
+                        🎯 ${mission.name} - ${mission.description}
+                    </div>
+                    <div class="mission-progress">
+                        Inimigos: 0/${mission.enemies} | Ouro: 0 | EXP: 0 | HP: 100/100 | MP: 50/50
+                    </div>
+                    <div class="mission-controls">
+                        <button class="mission-btn" onclick="pauseMission()">⏸️ Pausar</button>
+                        <button class="mission-btn" onclick="exitMission()">🚪 Sair</button>
+                    </div>
+                </div>
+                <canvas class="mission-canvas" width="1200" height="600" id="missionCanvas"></canvas>
+                <div class="mission-controls-info">
+                    <div class="controls-title">🎮 Controles Grand Chase</div>
+                    <div class="controls-grid">
+                        <div class="control-item">
+                            <span>Movimento:</span>
+                            <span class="control-key">← → ↑ ↓</span>
+                        </div>
+                        <div class="control-item">
+                            <span>Pulo Duplo:</span>
+                            <span class="control-key">↑ ↑</span>
+                        </div>
+                        <div class="control-item">
+                            <span>Ataque:</span>
+                            <span class="control-key">Z</span>
+                        </div>
+                        <div class="control-item">
+                            <span>Defender:</span>
+                            <span class="control-key">X</span>
+                        </div>
+                        <div class="control-item">
+                            <span>Agarrar:</span>
+                            <span class="control-key">C</span>
+                        </div>
+                        <div class="control-item">
+                            <span>Bola de Fogo:</span>
+                            <span class="control-key">K</span>
+                        </div>
+                        <div class="control-item">
+                            <span>Curar:</span>
+                            <span class="control-key">L</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(combatContainer);
+            combatContainer.style.display = 'block';
+            
+            initializeMissionCombat(mission, character);
+        }
+        
+        function initializeMissionCombat(mission, character) {
+            console.log('🔧 Inicializando combate da missão:', mission.name, 'com personagem:', character);
+            
+            const canvas = document.getElementById('missionCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // CRIAR MAPA DA MISSÃO
+            if (window.levelDesignSystem) {
+                try {
+                    window.levelDesignSystem.createMissionMap(mission);
+                    console.log('✅ Mapa da missão criado');
+                } catch (error) {
+                    console.error('❌ Erro ao criar mapa da missão:', error);
+                }
+            } else {
+                console.error('❌ Level Design System não encontrado');
+            }
+            
+            // Sistema de Sprites e Animações
+            const spriteSystem = {
+                player: {
+                    sprites: {
+                        idle: { frames: 4, currentFrame: 0, timer: 0, speed: 150 },
+                        walk: { frames: 6, currentFrame: 0, timer: 0, speed: 100 },
+                        jump: { frames: 3, currentFrame: 0, timer: 0, speed: 200 },
+                        attack: { frames: 4, currentFrame: 0, timer: 0, speed: 120 },
+                        defend: { frames: 2, currentFrame: 0, timer: 0, speed: 200 },
+                        grab: { frames: 3, currentFrame: 0, timer: 0, speed: 150 }
+                    },
+                    currentAnimation: 'idle',
+                    facingRight: true
+                },
+                enemies: {
+                    goblin: {
+                        sprites: {
+                            walk: { frames: 4, currentFrame: 0, timer: 0, speed: 180 },
+                            attack: { frames: 3, currentFrame: 0, timer: 0, speed: 150 },
+                            death: { frames: 4, currentFrame: 0, timer: 0, speed: 200 }
+                        },
+                        currentAnimation: 'walk'
+                    },
+                    skeleton: {
+                        sprites: {
+                            walk: { frames: 4, currentFrame: 0, timer: 0, speed: 160 },
+                            attack: { frames: 3, currentFrame: 0, timer: 0, speed: 140 },
+                            death: { frames: 4, currentFrame: 0, timer: 0, speed: 180 }
+                        },
+                        currentAnimation: 'walk'
+                    },
+                    orc: {
+                        sprites: {
+                            walk: { frames: 4, currentFrame: 0, timer: 0, speed: 140 },
+                            attack: { frames: 4, currentFrame: 0, timer: 0, speed: 130 },
+                            death: { frames: 5, currentFrame: 0, timer: 0, speed: 160 }
+                        },
+                        currentAnimation: 'walk'
+                    },
+                    boss: {
+                        sprites: {
+                            walk: { frames: 6, currentFrame: 0, timer: 0, speed: 120 },
+                            attack: { frames: 5, currentFrame: 0, timer: 0, speed: 100 },
+                            special: { frames: 8, currentFrame: 0, timer: 0, speed: 80 },
+                            death: { frames: 6, currentFrame: 0, timer: 0, speed: 150 }
+                        },
+                        currentAnimation: 'walk'
+                    }
+                }
+            };
+            
+            // Sistema de Mapa de Fundo para mapa grande
+            const backgroundSystem = {
+                layers: [
+                    { // Camada de fundo - céu
+                        type: 'gradient',
+                        color1: '#1a1a2e',
+                        color2: '#16213e',
+                        y: 0,
+                        height: 300
+                    },
+                    { // Camada de montanhas distantes
+                        type: 'mountains',
+                        color: '#2d3748',
+                        y: 200,
+                        height: 150,
+                        peaks: [30, 80, 150, 220, 300, 380, 450, 520, 600, 680, 750, 820, 900, 980, 1050, 1120, 1200, 1280, 1360, 1440, 1520, 1600, 1680, 1760, 1840, 1920, 2000, 2080, 2160, 2240, 2320, 2400, 2480, 2560, 2640, 2720, 2800, 2880, 2960, 3000]
+                    },
+                    { // Camada de árvores
+                        type: 'trees',
+                        color: '#2d5016',
+                        y: 350,
+                        height: 100,
+                        trees: [50, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160, 1240, 1320, 1400, 1480, 1560, 1640, 1720, 1800, 1880, 1960, 2040, 2120, 2200, 2280, 2360, 2440, 2520, 2600, 2680, 2760, 2840, 2920, 3000]
+                    },
+                    { // Camada de chão
+                        type: 'ground',
+                        color: '#4a5568',
+                        y: 450,
+                        height: 150
+                    }
+                ]
+            };
+            
+            // Mapa muito maior para scroll horizontal
+            const MAP_WIDTH = 3000; // Largura total do mapa
+            const MAP_HEIGHT = 600; // Altura do mapa
+            
+            const missionState = {
+                player: {
+                    x: 200, y: 450, width: 40, height: 60,
+                    vx: 0, vy: 0, speed: 6, jumpPower: 20,
+                    health: 100, maxHealth: 100, mana: 50, maxMana: 50,
+                    onGround: false, facingRight: true,
+                    attacking: false, defending: false, grabbing: false,
+                    grabbedEnemy: null, attackCooldown: 0, defendCooldown: 0,
+                    grabCooldown: 0, invulnerable: false, invulnerabilityTime: 0,
+                    color: '#3b82f6',
+                    animationState: 'idle',
+                    spriteTimer: 0,
+                    currentFrame: 0,
+                    // Sistema de pulo melhorado
+                    canDoubleJump: true, // Alguns personagens terão pulo duplo
+                    hasDoubleJumped: false,
+                    jumpCount: 0,
+                    maxJumps: 2, // Pulo duplo para alguns personagens
+                    // Detecção de plataforma
+                    platformStanding: null
+                },
+                
+                // APLICAR STATS DO PERSONAGEM SELECIONADO
+                character: character || 'juno',
+                enemies: [], projectiles: [], particles: [], effects: [],
+                platforms: [
+                    // Chão principal (toda a largura do mapa) - só o topo é piso
+                    { x: 0, y: 500, width: MAP_WIDTH, height: 100, type: 'ground', collisionTop: true, collisionSides: false },
+                    
+                    // Plataformas espalhadas pelo mapa - apenas o topo é piso
+                    { x: 300, y: 420, width: 120, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 500, y: 380, width: 100, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 700, y: 400, width: 150, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 950, y: 350, width: 120, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 1200, y: 420, width: 100, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 1400, y: 380, width: 130, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 1650, y: 400, width: 120, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 1900, y: 350, width: 150, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 2150, y: 420, width: 100, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 2400, y: 380, width: 120, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 2650, y: 400, width: 130, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
+                    
+                    // Plataformas altas para desafio
+                    { x: 800, y: 280, width: 80, height: 25, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 1600, y: 250, width: 100, height: 25, type: 'platform', collisionTop: true, collisionSides: false },
+                    { x: 2300, y: 280, width: 90, height: 25, type: 'platform', collisionTop: true, collisionSides: false },
+                    
+                    // Plataformas móveis (exemplo)
+                    { x: 1000, y: 320, width: 80, height: 20, type: 'platform', collisionTop: true, collisionSides: false, moving: true, moveSpeed: 1, moveRange: 100 },
+                    { x: 1800, y: 300, width: 70, height: 20, type: 'platform', collisionTop: true, collisionSides: false, moving: true, moveSpeed: 0.8, moveRange: 80 }
+                ],
+                score: 0, enemiesDefeated: 0, totalEnemies: mission.enemies,
+                gameRunning: true, gravity: 0.9, friction: 0.85,
+                camera: { x: 0, y: 0, targetX: 0, targetY: 0 },
+                time: 0,
+                enemySpawnTimer: 0,
+                enemySpawnDelay: 2500, // 2.5 segundos entre spawns
+                mapWidth: MAP_WIDTH,
+                mapHeight: MAP_HEIGHT
+            };
+            
+            for (let i = 0; i < Math.min(2, mission.enemies); i++) {
+                createEnemy(missionState, mission.enemyTypes);
+            }
+            
+            // APLICAR STATS DO PERSONAGEM SELECIONADO
+            if (window.simpleCombatSystem) {
+                window.simpleCombatSystem.applyCharacterStats(missionState.player, missionState.character);
+            }
+            
+            const keys = {};
+            document.addEventListener('keydown', (e) => { keys[e.key] = true; });
+            document.addEventListener('keyup', (e) => { keys[e.key] = false; });
+            
+            function gameLoop() {
+                if (!missionState.gameRunning) return;
+                
+                ctx.fillStyle = 'rgba(15, 15, 35, 0.8)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                updateGame(missionState, keys);
+                renderGame(ctx, missionState);
+                
+                requestAnimationFrame(gameLoop);
+            }
+            
+            function updateGame(state, keys) {
+                state.time += 16;
+                
+                // ATUALIZAR SISTEMA DE LEVEL DESIGN
+                window.levelDesignSystem.update(state, keys, 16);
+                
+                // Atualizar cooldowns do jogador
+                if (state.player.attackCooldown > 0) state.player.attackCooldown -= 16;
+                if (state.player.defendCooldown > 0) state.player.defendCooldown -= 16;
+                if (state.player.grabCooldown > 0) state.player.grabCooldown -= 16;
+                if (state.player.invulnerabilityTime > 0) state.player.invulnerabilityTime -= 16;
+                
+                // Controles de movimento do jogador
+                if (keys['ArrowLeft']) {
+                    state.player.vx = -state.player.speed;
+                    state.player.facingRight = false;
+                    if (state.player.onGround && !state.player.attacking && !state.player.defending) {
+                        state.player.animationState = 'walk';
+                    }
+                } else if (keys['ArrowRight']) {
+                    state.player.vx = state.player.speed;
+                    state.player.facingRight = true;
+                    if (state.player.onGround && !state.player.attacking && !state.player.defending) {
+                        state.player.animationState = 'walk';
+                    }
+                } else {
+                    state.player.vx *= state.friction;
+                    if (state.player.onGround && !state.player.attacking && !state.player.defending && !state.player.grabbing) {
+                        state.player.animationState = 'idle';
+                    }
+                }
+                
+                // Sistema de pulo melhorado
+                if (keys['ArrowUp']) {
+                    // Pulo normal (primeiro pulo)
+                    if (state.player.onGround && !state.player.grabbing) {
+                        state.player.vy = -state.player.jumpPower;
+                        state.player.onGround = false;
+                        state.player.animationState = 'jump';
+                        state.player.jumpCount = 1;
+                        state.player.hasDoubleJumped = false;
+                        
+                        // Efeito de pulo
+                        for (let i = 0; i < 4; i++) {
+                            state.particles.push({
+                                x: state.player.x + Math.random() * state.player.width,
+                                y: state.player.y + state.player.height,
+                                vx: (Math.random() - 0.5) * 3,
+                                vy: Math.random() * 2,
+                                life: 15,
+                                color: '#87CEEB',
+                                size: Math.random() * 2 + 1
+                            });
+                        }
+                    }
+                    // Pulo duplo (segundo pulo)
+                    else if (state.player.canDoubleJump && 
+                             !state.player.hasDoubleJumped && 
+                             state.player.jumpCount < state.player.maxJumps && 
+                             !state.player.grabbing) {
+                        state.player.vy = -state.player.jumpPower * 0.8; // Pulo duplo um pouco menor
+                        state.player.hasDoubleJumped = true;
+                        state.player.jumpCount++;
+                        state.player.animationState = 'jump';
+                        
+                        // Efeito de pulo duplo (azul)
+                        for (let i = 0; i < 6; i++) {
+                            state.particles.push({
+                                x: state.player.x + Math.random() * state.player.width,
+                                y: state.player.y + state.player.height/2,
+                                vx: (Math.random() - 0.5) * 4,
+                                vy: Math.random() * 3,
+                                life: 20,
+                                color: '#3b82f6',
+                                size: Math.random() * 3 + 2
+                            });
+                        }
+                    }
+                }
+                
+                // Agachamento
+                if (keys['ArrowDown'] && state.player.onGround) {
+                    state.player.height = 30;
+                } else {
+                    state.player.height = 60;
+                }
+                
+                // Controles de combate
+                if (keys['KeyZ'] && state.player.attackCooldown <= 0 && !state.player.grabbing) {
+                    attack(state);
+                }
+                
+                if (keys['KeyX'] && state.player.defendCooldown <= 0 && !state.player.grabbing) {
+                    defend(state);
+                }
+                
+                if (keys['KeyC'] && state.player.grabCooldown <= 0 && !state.player.grabbing) {
+                    grab(state);
+                }
+                
+                if (state.player.grabbing && !keys['KeyC']) {
+                    throwEnemy(state);
+                }
+                
+                if (keys['KeyK'] && state.player.mana >= 10) {
+                    castFireball(state);
+                }
+                
+                if (keys['KeyL'] && state.player.mana >= 20) {
+                    castHeal(state);
+                }
+                
+                // Atualizar animações do jogador
+                updatePlayerAnimation(state.player);
+                
+                // Física do jogador
+                state.player.vy += state.gravity;
+                state.player.x += state.player.vx;
+                state.player.y += state.player.vy;
+                
+                // Limitar movimento horizontal dentro do mapa
+                state.player.x = Math.max(50, Math.min(state.mapWidth - state.player.width - 50, state.player.x));
+                
+                // Sistema de colisão melhorado com plataformas
+                state.player.onGround = false;
+                state.player.platformStanding = null;
+                
+                state.platforms.forEach(platform => {
+                    // Atualizar plataformas móveis
+                    if (platform.moving) {
+                        if (!platform.originalX) platform.originalX = platform.x;
+                        platform.x = platform.originalX + Math.sin(state.time * 0.001 * platform.moveSpeed) * platform.moveRange;
+                    }
+                    
+                    // Verificar colisão apenas no topo das plataformas
+                    if (state.player.x + state.player.width > platform.x &&
+                        state.player.x < platform.x + platform.width &&
+                        state.player.y + state.player.height > platform.y &&
+                        state.player.y + state.player.height < platform.y + 20 && // Só o topo é piso
+                        state.player.vy >= 0) { // Só colide se estiver caindo
+                        
+                        state.player.y = platform.y - state.player.height;
+                        state.player.vy = 0;
+                        state.player.onGround = true;
+                        state.player.platformStanding = platform;
+                        
+                        // Reset do sistema de pulo quando pousar
+                        state.player.jumpCount = 0;
+                        state.player.hasDoubleJumped = false;
+                        
+                        // Efeito de pouso
+                        if (state.player.vy > 5) {
+                            for (let i = 0; i < 3; i++) {
+                                state.particles.push({
+                                    x: state.player.x + Math.random() * state.player.width,
+                                    y: state.player.y + state.player.height,
+                                    vx: (Math.random() - 0.5) * 2,
+                                    vy: Math.random() * 2,
+                                    life: 10,
+                                    color: '#d1d5db',
+                                    size: Math.random() * 2 + 1
+                                });
+                            }
+                        }
+                    }
+                });
+                
+                // Atualizar câmera para seguir o jogador
+                updateCamera(state);
+                
+                // Atualizar inimigos
+                state.enemies.forEach((enemy, index) => {
+                    // IA do inimigo
+                    updateEnemyAI(enemy, state);
+                    
+                    // Física do inimigo
+                    enemy.x += enemy.vx;
+                    enemy.y += enemy.vy;
+                    enemy.vy += state.gravity;
+                    
+                    // Verificar colisão com plataformas (inimigo)
+                    enemy.onGround = false;
+                    state.platforms.forEach(platform => {
+                        if (enemy.x < platform.x + platform.width &&
+                            enemy.x + enemy.width > platform.x &&
+                            enemy.y < platform.y + platform.height &&
+                            enemy.y + enemy.height > platform.y) {
+                            enemy.y = platform.y - enemy.height;
+                            enemy.vy = 0;
+                            enemy.onGround = true;
+                        }
+                    });
+                    
+                    // Atualizar animações do inimigo
+                    updateEnemyAnimation(enemy);
+                    
+                    // Verificar morte do inimigo
+                    if (enemy.health <= 0) {
+                        enemy.animationState = 'death';
+                        if (enemy.currentFrame >= spriteSystem.enemies[enemy.type].sprites.death.frames - 1) {
+                            state.enemies.splice(index, 1);
+                            state.enemiesDefeated++;
+                            state.score += enemy.type === 'boss' ? 500 : enemy.type === 'orc' ? 200 : 100;
+                            createDeathEffect(state, enemy.x, enemy.y);
+                            updateMissionUI(state, mission);
+                        }
+                    }
+                });
+                
+                // Atualizar projéteis
+                state.projectiles.forEach((projectile, index) => {
+                    projectile.x += projectile.vx;
+                    projectile.y += projectile.vy;
+                    projectile.life--;
+                    
+                    // Verificar colisão com inimigos
+                    state.enemies.forEach(enemy => {
+                        if (projectile.x < enemy.x + enemy.width &&
+                            projectile.x + 8 > enemy.x &&
+                            projectile.y < enemy.y + enemy.height &&
+                            projectile.y + 8 > enemy.y) {
+                            enemy.health -= projectile.damage;
+                            createHitEffect(state, enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                            state.projectiles.splice(index, 1);
+                        }
+                    });
+                    
+                    if (projectile.life <= 0) {
+                        state.projectiles.splice(index, 1);
+                    }
+                });
+                
+                // Atualizar partículas
+                state.particles.forEach((particle, index) => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    particle.life--;
+                    
+                    if (particle.life <= 0) {
+                        state.particles.splice(index, 1);
+                    }
+                });
+                
+                // Atualizar efeitos especiais
+                state.effects.forEach((effect, index) => {
+                    effect.life--;
+                    if (effect.type === 'explosion') {
+                        effect.opacity -= 0.05;
+                        effect.radius += 2;
+                    }
+                    
+                    if (effect.life <= 0) {
+                        state.effects.splice(index, 1);
+                    }
+                });
+                
+                // Spawnar novos inimigos
+                state.enemySpawnTimer += 16;
+                if (state.enemySpawnTimer >= state.enemySpawnDelay && 
+                    state.enemies.length < 3 && 
+                    state.enemiesDefeated < state.totalEnemies) {
+                    createEnemy(state, mission.enemyTypes);
+                    state.enemySpawnTimer = 0;
+                }
+                
+                // Verificar fim da missão
+                if (state.enemiesDefeated >= state.totalEnemies) {
+                    completeMission(state, mission);
+                }
+                
+                // Verificar morte do jogador
+                if (state.player.health <= 0) {
+                    gameOver(state, mission);
+                }
+            }
+            
+            // Função de atualização da câmera
+            function updateCamera(state) {
+                const player = state.player;
+                const camera = state.camera;
+                
+                // Definir posição alvo da câmera (centrada no jogador)
+                camera.targetX = player.x - canvas.width / 2;
+                camera.targetY = player.y - canvas.height / 2;
+                
+                // Limitar movimento da câmera aos limites do mapa
+                camera.targetX = Math.max(0, Math.min(state.mapWidth - canvas.width, camera.targetX));
+                camera.targetY = Math.max(0, Math.min(state.mapHeight - canvas.height, camera.targetY));
+                
+                // Interpolar suavemente a posição da câmera
+                const lerpSpeed = 0.1;
+                camera.x += (camera.targetX - camera.x) * lerpSpeed;
+                camera.y += (camera.targetY - camera.y) * lerpSpeed;
+                
+                // Garantir que a câmera não saia dos limites
+                camera.x = Math.max(0, Math.min(state.mapWidth - canvas.width, camera.x));
+                camera.y = Math.max(0, Math.min(state.mapHeight - canvas.height, camera.y));
+            }
+            
+            // Funções de animação
+            function updatePlayerAnimation(player) {
+                player.spriteTimer += 16;
+                const animation = spriteSystem.player.sprites[player.animationState];
+                
+                if (player.spriteTimer >= animation.speed) {
+                    player.currentFrame = (player.currentFrame + 1) % animation.frames;
+                    player.spriteTimer = 0;
+                }
+            }
+            
+            function updateEnemyAnimation(enemy) {
+                enemy.spriteTimer += 16;
+                const animation = spriteSystem.enemies[enemy.type].sprites[enemy.animationState];
+                
+                if (enemy.spriteTimer >= animation.speed) {
+                    enemy.currentFrame = (enemy.currentFrame + 1) % animation.frames;
+                    enemy.spriteTimer = 0;
+                }
+            }
+            
+            // IA dos inimigos
+            function updateEnemyAI(enemy, state) {
+                const player = state.player;
+                const distanceToPlayer = Math.abs(player.x - enemy.x);
+                
+                switch(enemy.ai.state) {
+                    case 'patrol':
+                        // Patrulha dentro dos limites do mapa
+                        if (enemy.x <= 50 || enemy.x >= state.mapWidth - 50) {
+                            enemy.ai.patrolDirection *= -1;
+                        }
+                        enemy.vx = enemy.ai.patrolDirection * (enemy.type === 'boss' ? 1.5 : 1);
+                        enemy.facingRight = enemy.vx > 0;
+                        
+                        // Se o jogador estiver próximo, começar a perseguir
+                        if (distanceToPlayer < 200) {
+                            enemy.ai.state = 'chase';
+                        }
+                        break;
+                        
+                    case 'chase':
+                        // Perseguir o jogador
+                        if (player.x < enemy.x) {
+                            enemy.vx = -(enemy.type === 'boss' ? 2.5 : 2);
+                            enemy.facingRight = false;
+                        } else {
+                            enemy.vx = enemy.type === 'boss' ? 2.5 : 2;
+                            enemy.facingRight = true;
+                        }
+                        
+                        // Se estiver próximo o suficiente, atacar
+                        if (distanceToPlayer < 80) {
+                            enemy.ai.state = 'attack';
+                        }
+                        
+                        // Se o jogador se afastar muito, voltar a patrulhar
+                        if (distanceToPlayer > 300) {
+                            enemy.ai.state = 'patrol';
+                        }
+                        break;
+                        
+                    case 'attack':
+                        enemy.vx = 0;
+                        enemy.animationState = 'attack';
+                        
+                        // Verificar se pode atacar
+                        const currentTime = state.time;
+                        if (currentTime - enemy.ai.lastAttackTime >= enemy.ai.attackCooldown) {
+                            // Ataque ao jogador
+                            if (distanceToPlayer < 90 && !player.invulnerable) {
+                                player.health -= enemy.damage;
+                                player.invulnerable = true;
+                                player.invulnerabilityTime = 1000;
+                                createHitEffect(state, player.x + player.width/2, player.y + player.height/2);
+                            }
+                            enemy.ai.lastAttackTime = currentTime;
+                        }
+                        
+                        // Se o jogador se afastar, voltar a perseguir
+                        if (distanceToPlayer > 100) {
+                            enemy.ai.state = 'chase';
+                            enemy.animationState = 'walk';
+                        }
+                        break;
+                }
+                
+                // Limitar movimento dos inimigos dentro do mapa
+                enemy.x = Math.max(50, Math.min(state.mapWidth - enemy.width - 50, enemy.x));
+            }
+            
+            function createDeathEffect(state, x, y) {
+                // Efeito de explosão
+                state.effects.push({
+                    type: 'explosion',
+                    x: x,
+                    y: y,
+                    radius: 10,
+                    opacity: 1,
+                    life: 30
+                });
+                
+                // Partículas de morte
+                for (let i = 0; i < 15; i++) {
+                    state.particles.push({
+                        x: x + Math.random() * 40,
+                        y: y + Math.random() * 40,
+                        vx: (Math.random() - 0.5) * 8,
+                        vy: (Math.random() - 0.5) * 8,
+                        life: 40,
+                        color: '#FFD700',
+                        size: Math.random() * 4 + 2
+                    });
+                }
+            }
+            
+            function attack(state) {
+                state.player.attacking = true;
+                state.player.animationState = 'attack';
+                state.player.attackCooldown = 500;
+                
+                state.enemies.forEach(enemy => {
+                    const distance = Math.abs(enemy.x - state.player.x);
+                    if (distance < 60) {
+                        enemy.health -= 25;
+                        createHitEffect(state, enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                        
+                        // Efeito de impacto
+                        for (let i = 0; i < 8; i++) {
+                            state.particles.push({
+                                x: enemy.x + enemy.width/2,
+                                y: enemy.y + enemy.height/2,
+                                vx: (Math.random() - 0.5) * 6,
+                                vy: (Math.random() - 0.5) * 6,
+                                life: 25,
+                                color: '#FFD700',
+                                size: Math.random() * 3 + 2
+                            });
+                        }
+                    }
+                });
+                
+                setTimeout(() => {
+                    state.player.attacking = false;
+                    state.player.animationState = 'idle';
+                }, 300);
+            }
+            
+            function defend(state) {
+                state.player.defending = true;
+                state.player.animationState = 'defend';
+                state.player.defendCooldown = 500;
+                state.player.invulnerable = true;
+                state.player.invulnerabilityTime = 300;
+                
+                for (let i = 0; i < 8; i++) {
+                    state.particles.push({
+                        x: state.player.x + Math.random() * 40,
+                        y: state.player.y + Math.random() * 60,
+                        vx: (Math.random() - 0.5) * 4,
+                        vy: (Math.random() - 0.5) * 4,
+                        life: 30,
+                        color: '#3b82f6',
+                        size: Math.random() * 3 + 2
+                    });
+                }
+                
+                setTimeout(() => {
+                    state.player.defending = false;
+                    state.player.invulnerable = false;
+                    state.player.animationState = 'idle';
+                }, 300);
+            }
+            
+            function grab(state) {
+                state.player.grabbing = true;
+                state.player.animationState = 'grab';
+                state.player.grabCooldown = 2000;
+                
+                const grabRange = 50;
+                for (let enemy of state.enemies) {
+                    const distance = Math.abs(enemy.x - state.player.x);
+                    if (distance < grabRange) {
+                        state.player.grabbedEnemy = enemy;
+                        enemy.grabbed = true;
+                        enemy.vx = 0;
+                        break;
+                    }
+                }
+            }
+            
+            function throwEnemy(state) {
+                if (state.player.grabbedEnemy) {
+                    const enemy = state.player.grabbedEnemy;
+                    enemy.grabbed = false;
+                    enemy.vx = state.player.facingRight ? 10 : -10;
+                    enemy.vy = -6;
+                    
+                    state.enemies.forEach(otherEnemy => {
+                        if (otherEnemy !== enemy) {
+                            const dx = enemy.x - otherEnemy.x;
+                            const dy = enemy.y - otherEnemy.y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+                            
+                            if (distance < 50) {
+                                otherEnemy.health -= 20;
+                                createHitEffect(state, otherEnemy.x + otherEnemy.width/2, otherEnemy.y + otherEnemy.height/2);
+                            }
+                        }
+                    });
+                    
+                    state.player.grabbedEnemy = null;
+                    state.player.grabbing = false;
+                    state.player.animationState = 'idle';
+                }
+            }
+            
+            function castFireball(state) {
+                state.player.mana -= 10;
+                
+                state.projectiles.push({
+                    x: state.player.x + (state.player.facingRight ? 40 : -10),
+                    y: state.player.y + 20,
+                    vx: state.player.facingRight ? 8 : -8,
+                    vy: 0,
+                    life: 80,
+                    damage: 30,
+                    color: '#ff6b35',
+                    size: 8
+                });
+                
+                // Efeito de lançamento
+                for (let i = 0; i < 6; i++) {
+                    state.particles.push({
+                        x: state.player.x + (state.player.facingRight ? 35 : 5),
+                        y: state.player.y + 25,
+                        vx: (Math.random() - 0.5) * 4,
+                        vy: (Math.random() - 0.5) * 4,
+                        life: 20,
+                        color: '#ff6b35',
+                        size: Math.random() * 2 + 1
+                    });
+                }
+            }
+            
+            function castHeal(state) {
+                state.player.mana -= 20;
+                state.player.health = Math.min(state.player.maxHealth, state.player.health + 40);
+                
+                for (let i = 0; i < 12; i++) {
+                    state.particles.push({
+                        x: state.player.x + Math.random() * 40,
+                        y: state.player.y + Math.random() * 60,
+                        vx: (Math.random() - 0.5) * 2,
+                        vy: -Math.random() * 4,
+                        life: 50,
+                        color: '#10b981',
+                        size: Math.random() * 3 + 2
+                    });
+                }
+                
+                // Efeito de cura especial
+                state.effects.push({
+                    type: 'heal',
+                    x: state.player.x + state.player.width/2,
+                    y: state.player.y + state.player.height/2,
+                    radius: 30,
+                    opacity: 0.8,
+                    life: 20
+                });
+            }
+            
+            function createEnemy(state, enemyTypes) {
+                const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+                
+                // Spawnar inimigos em diferentes posições do mapa
+                const spawnPositions = [
+                    { x: state.player.x + 300, y: 450 },
+                    { x: state.player.x + 500, y: 450 },
+                    { x: state.player.x - 200, y: 450 },
+                    { x: state.player.x + 800, y: 420 },
+                    { x: state.player.x - 400, y: 420 }
+                ];
+                
+                const spawnPos = spawnPositions[Math.floor(Math.random() * spawnPositions.length)];
+                
+                const enemy = {
+                    x: Math.max(50, Math.min(state.mapWidth - 100, spawnPos.x)), 
+                    y: spawnPos.y, 
+                    width: type === 'boss' ? 60 : type === 'orc' ? 45 : 35, 
+                    height: type === 'boss' ? 80 : type === 'orc' ? 65 : 50,
+                    vx: -1 - Math.random(), 
+                    vy: 0,
+                    health: type === 'boss' ? 150 : type === 'orc' ? 80 : type === 'skeleton' ? 50 : 40,
+                    maxHealth: type === 'boss' ? 150 : type === 'orc' ? 80 : type === 'skeleton' ? 50 : 40,
+                    damage: type === 'boss' ? 35 : type === 'orc' ? 25 : type === 'skeleton' ? 18 : 15,
+                    onGround: false, 
+                    grabbed: false,
+                    facingRight: false,
+                    type: type,
+                    animationState: 'walk',
+                    currentFrame: 0,
+                    spriteTimer: 0,
+                    attackTimer: 0,
+                    ai: {
+                        state: 'patrol', // patrol, chase, attack, dead
+                        targetX: null,
+                        patrolDirection: Math.random() > 0.5 ? 1 : -1,
+                        lastAttackTime: 0,
+                        attackCooldown: 2000 // 2 segundos
+                    }
+                };
+                
+                state.enemies.push(enemy);
+            }
+            
+            function createHitEffect(state, x, y) {
+                for (let i = 0; i < 6; i++) {
+                    state.particles.push({
+                        x: x + Math.random() * 20,
+                        y: y + Math.random() * 20,
+                        vx: (Math.random() - 0.5) * 6,
+                        vy: (Math.random() - 0.5) * 6,
+                        life: 20,
+                        color: '#FFD700'
+                    });
+                }
+            }
+            
+            // Função para renderizar o fundo com câmera
+            function renderBackground(ctx, state) {
+                const camera = state.camera;
+                const layers = backgroundSystem.layers;
+                
+                layers.forEach(layer => {
+                    switch(layer.type) {
+                        case 'gradient':
+                            const gradient = ctx.createLinearGradient(0, layer.y, 0, layer.y + layer.height);
+                            gradient.addColorStop(0, layer.color1);
+                            gradient.addColorStop(1, layer.color2);
+                            ctx.fillStyle = gradient;
+                            ctx.fillRect(-camera.x, layer.y - camera.y, canvas.width, layer.height);
+                            break;
+                            
+                        case 'mountains':
+                            ctx.fillStyle = layer.color;
+                            ctx.beginPath();
+                            ctx.moveTo(-camera.x, layer.y + layer.height - camera.y);
+                            
+                            // Renderizar montanhas com parallax (movimento mais lento)
+                            const parallaxX = camera.x * 0.3;
+                            layer.peaks.forEach((peak, index) => {
+                                const x = (index * state.mapWidth) / (layer.peaks.length - 1) - parallaxX;
+                                const y = layer.y + layer.height - (peak / 8) - camera.y;
+                                
+                                if (x > -camera.x - 50 && x < canvas.width - camera.x + 50) {
+                                    ctx.lineTo(x, y);
+                                }
+                            });
+                            ctx.lineTo(canvas.width - camera.x, layer.y + layer.height - camera.y);
+                            ctx.closePath();
+                            ctx.fill();
+                            break;
+                            
+                        case 'trees':
+                            ctx.fillStyle = layer.color;
+                            layer.trees.forEach(x => {
+                                const treeX = x - camera.x;
+                                const treeY = layer.y + layer.height - 40 - camera.y;
+                                
+                                if (treeX > -50 && treeX < canvas.width + 50) {
+                                    // Tronco
+                                    ctx.fillRect(treeX, treeY, 8, 40);
+                                    // Copa
+                                    ctx.beginPath();
+                                    ctx.arc(treeX + 4, treeY, 20, 0, Math.PI * 2);
+                                    ctx.fill();
+                                }
+                            });
+                            break;
+                            
+                        case 'ground':
+                            ctx.fillStyle = layer.color;
+                            ctx.fillRect(-camera.x, layer.y - camera.y, state.mapWidth, layer.height);
+                            
+                            // Adicionar textura ao chão
+                            ctx.fillStyle = '#718096';
+                            for(let i = Math.floor(-camera.x / 20) * 20; i < canvas.width - camera.x; i += 20) {
+                                ctx.fillRect(i, layer.y - camera.y, 2, layer.height);
+                            }
+                            break;
+                    }
+                });
+            }
+            
+            // Função para desenhar sprites animados
+            function drawAnimatedSprite(ctx, x, y, width, height, type, animation, frame, facingRight = true) {
+                ctx.save();
+                
+                if (!facingRight) {
+                    ctx.scale(-1, 1);
+                    ctx.translate(-2 * x - width, 0);
+                }
+                
+                // Sistema de sprites baseado em formas geométricas coloridas
+                switch(type) {
+                    case 'player':
+                        drawPlayerSprite(ctx, x, y, width, height, animation, frame);
+                        break;
+                    case 'goblin':
+                        drawGoblinSprite(ctx, x, y, width, height, animation, frame);
+                        break;
+                    case 'skeleton':
+                        drawSkeletonSprite(ctx, x, y, width, height, animation, frame);
+                        break;
+                    case 'orc':
+                        drawOrcSprite(ctx, x, y, width, height, animation, frame);
+                        break;
+                    case 'boss':
+                        drawBossSprite(ctx, x, y, width, height, animation, frame);
+                        break;
+                }
+                
+                ctx.restore();
+            }
+            
+            function drawPlayerSprite(ctx, x, y, width, height, animation, frame) {
+                const colors = {
+                    idle: ['#3b82f6', '#1d4ed8', '#1e40af'],
+                    walk: ['#3b82f6', '#2563eb', '#1d4ed8'],
+                    jump: ['#1e40af', '#1e3a8a'],
+                    attack: ['#ef4444', '#dc2626', '#b91c1c'],
+                    defend: ['#6b7280', '#4b5563'],
+                    grab: ['#f59e0b', '#d97706']
+                };
+                
+                const color = colors[animation] ? colors[animation][frame % colors[animation].length] : '#3b82f6';
+                
+                // Corpo principal
+                ctx.fillStyle = color;
+                ctx.fillRect(x + 5, y + 15, width - 10, height - 25);
+                
+                // Cabeça
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillRect(x + 10, y + 5, width - 20, 15);
+                
+                // Braços (animação)
+                ctx.fillStyle = '#fbbf24';
+                const armOffset = animation === 'walk' ? Math.sin(frame * 0.5) * 3 : 0;
+                ctx.fillRect(x - 5 + armOffset, y + 20, 8, 20);
+                ctx.fillRect(x + width - 3 - armOffset, y + 20, 8, 20);
+                
+                // Pernas (animação)
+                ctx.fillStyle = '#1f2937';
+                const legOffset = animation === 'walk' ? Math.sin(frame * 0.5 + Math.PI) * 2 : 0;
+                ctx.fillRect(x + 8 + legOffset, y + height - 15, 6, 15);
+                ctx.fillRect(x + width - 14 - legOffset, y + height - 15, 6, 15);
+                
+                // Efeito de ataque
+                if (animation === 'attack') {
+                    ctx.fillStyle = 'rgba(255, 215, 0, 0.6)';
+                    ctx.fillRect(x + width - 5, y + 10, 15, height - 20);
+                }
+                
+                // Efeito de defesa
+                if (animation === 'defend') {
+                    ctx.fillStyle = 'rgba(59, 130, 246, 0.3)';
+                    ctx.fillRect(x - 3, y - 3, width + 6, height + 6);
+                }
+            }
+            
+            function drawGoblinSprite(ctx, x, y, width, height, animation, frame) {
+                const colors = {
+                    walk: ['#22c55e', '#16a34a', '#15803d'],
+                    attack: ['#dc2626', '#b91c1c', '#991b1b'],
+                    death: ['#6b7280', '#4b5563', '#374151']
+                };
+                
+                const color = colors[animation] ? colors[animation][frame % colors[animation].length] : '#22c55e';
+                
+                // Corpo
+                ctx.fillStyle = color;
+                ctx.fillRect(x + 3, y + 12, width - 6, height - 20);
+                
+                // Cabeça
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillRect(x + 8, y + 2, width - 16, 12);
+                
+                // Orelhas pontudas
+                ctx.fillStyle = color;
+                ctx.fillRect(x + 5, y + 1, 4, 6);
+                ctx.fillRect(x + width - 9, y + 1, 4, 6);
+                
+                // Olhos vermelhos
+                ctx.fillStyle = '#dc2626';
+                ctx.fillRect(x + 10, y + 5, 2, 2);
+                ctx.fillRect(x + width - 12, y + 5, 2, 2);
+                
+                // Pernas
+                ctx.fillStyle = '#1f2937';
+                ctx.fillRect(x + 5, y + height - 12, 6, 12);
+                ctx.fillRect(x + width - 11, y + height - 12, 6, 12);
+            }
+            
+            function drawSkeletonSprite(ctx, x, y, width, height, animation, frame) {
+                const colors = {
+                    walk: ['#f3f4f6', '#e5e7eb', '#d1d5db'],
+                    attack: ['#dc2626', '#b91c1c'],
+                    death: ['#6b7280', '#4b5563']
+                };
+                
+                const color = colors[animation] ? colors[animation][frame % colors[animation].length] : '#f3f4f6';
+                
+                // Crânio
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(x + width/2, y + 8, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Olhos vazios
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(x + width/2 - 4, y + 6, 2, 2);
+                ctx.fillRect(x + width/2 + 2, y + 6, 2, 2);
+                
+                // Costelas
+                ctx.fillStyle = color;
+                for(let i = 0; i < 4; i++) {
+                    ctx.fillRect(x + 5 + i * 8, y + 15, 4, 15);
+                }
+                
+                // Braços
+                ctx.fillStyle = color;
+                ctx.fillRect(x - 3, y + 18, 6, 20);
+                ctx.fillRect(x + width - 3, y + 18, 6, 20);
+                
+                // Pernas
+                ctx.fillStyle = color;
+                ctx.fillRect(x + 3, y + height - 15, 6, 15);
+                ctx.fillRect(x + width - 9, y + height - 15, 6, 15);
+            }
+            
+            function drawOrcSprite(ctx, x, y, width, height, animation, frame) {
+                const colors = {
+                    walk: ['#ea580c', '#dc2626', '#b91c1c'],
+                    attack: ['#dc2626', '#b91c1c', '#991b1b'],
+                    death: ['#6b7280', '#4b5563']
+                };
+                
+                const color = colors[animation] ? colors[animation][frame % colors[animation].length] : '#ea580c';
+                
+                // Corpo musculoso
+                ctx.fillStyle = color;
+                ctx.fillRect(x + 2, y + 10, width - 4, height - 15);
+                
+                // Cabeça grande
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillRect(x + 5, y + 2, width - 10, 12);
+                
+                // Presas
+                ctx.fillStyle = '#f3f4f6';
+                ctx.fillRect(x + 8, y + 8, 2, 4);
+                ctx.fillRect(x + width - 10, y + 8, 2, 4);
+                
+                // Olhos amarelos
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillRect(x + 8, y + 5, 2, 2);
+                ctx.fillRect(x + width - 10, y + 5, 2, 2);
+                
+                // Pernas grossas
+                ctx.fillStyle = '#1f2937';
+                ctx.fillRect(x + 3, y + height - 12, 8, 12);
+                ctx.fillRect(x + width - 11, y + height - 12, 8, 12);
+            }
+            
+            function drawBossSprite(ctx, x, y, width, height, animation, frame) {
+                const colors = {
+                    walk: ['#dc2626', '#b91c1c', '#991b1b'],
+                    attack: ['#7c2d12', '#dc2626', '#b91c1c'],
+                    special: ['#7c3aed', '#6d28d9', '#5b21b6'],
+                    death: ['#6b7280', '#4b5563']
+                };
+                
+                const color = colors[animation] ? colors[animation][frame % colors[animation].length] : '#dc2626';
+                
+                // Corpo gigante
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y + 15, width, height - 20);
+                
+                // Cabeça com chifres
+                ctx.fillStyle = '#1f2937';
+                ctx.fillRect(x + 5, y + 5, width - 10, 15);
+                ctx.fillRect(x + 3, y + 2, 4, 8);
+                ctx.fillRect(x + width - 7, y + 2, 4, 8);
+                
+                // Olhos brilhantes
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillRect(x + 8, y + 8, 3, 3);
+                ctx.fillRect(x + width - 11, y + 8, 3, 3);
+                
+                // Armadura
+                ctx.fillStyle = '#374151';
+                ctx.fillRect(x + 2, y + 12, width - 4, 8);
+                
+                // Pernas enormes
+                ctx.fillStyle = '#1f2937';
+                ctx.fillRect(x + 2, y + height - 15, 10, 15);
+                ctx.fillRect(x + width - 12, y + height - 15, 10, 15);
+                
+                // Efeito especial
+                if (animation === 'special') {
+                    ctx.fillStyle = 'rgba(124, 58, 237, 0.5)';
+                    ctx.fillRect(x - 5, y - 5, width + 10, height + 10);
+                }
+            }
+            
+            function renderGame(ctx, state) {
+                // Limpar canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Renderizar fundo
+                renderBackground(ctx, state);
+                
+                // RENDERIZAR SISTEMA DE LEVEL DESIGN
+                window.levelDesignSystem.render(ctx, state.camera);
+                
+                // Renderizar plataformas com visual melhorado
+                state.platforms.forEach(platform => {
+                    const platformX = platform.x - state.camera.x;
+                    const platformY = platform.y - state.camera.y;
+                    
+                    // Só renderizar se estiver visível na tela
+                    if (platformX + platform.width > 0 && platformX < canvas.width) {
+                        if (platform.type === 'ground') {
+                            // Chão principal - gradiente
+                            const gradient = ctx.createLinearGradient(platformX, platformY, platformX, platformY + platform.height);
+                            gradient.addColorStop(0, '#4a5568');
+                            gradient.addColorStop(1, '#2d3748');
+                            ctx.fillStyle = gradient;
+                            ctx.fillRect(platformX, platformY, platform.width, platform.height);
+                        } else {
+                            // Plataformas flutuantes - visual melhorado
+                            const gradient = ctx.createLinearGradient(platformX, platformY, platformX, platformY + platform.height);
+                            gradient.addColorStop(0, '#6b7280');
+                            gradient.addColorStop(0.3, '#4b5563');
+                            gradient.addColorStop(1, '#374151');
+                            ctx.fillStyle = gradient;
+                            ctx.fillRect(platformX, platformY, platform.width, platform.height);
+                            
+                            // Destaque do topo (piso)
+                            ctx.fillStyle = '#9ca3af';
+                            ctx.fillRect(platformX, platformY, platform.width, 3);
+                            
+                            // Sombra da plataforma
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                            ctx.fillRect(platformX + 2, platformY + 2, platform.width, platform.height);
+                            
+                            // Re-desenhar a plataforma sobre a sombra
+                            ctx.fillStyle = gradient;
+                            ctx.fillRect(platformX, platformY, platform.width, platform.height);
+                            
+                            // Topo destacado novamente
+                            ctx.fillStyle = '#d1d5db';
+                            ctx.fillRect(platformX, platformY, platform.width, 2);
+                        }
+                        
+                        // Borda das plataformas
+                        ctx.strokeStyle = platform.type === 'ground' ? '#374151' : '#1f2937';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(platformX, platformY, platform.width, platform.height);
+                    }
+                });
+                
+                // Renderizar jogador
+                const playerX = state.player.x - state.camera.x;
+                const playerY = state.player.y - state.camera.y;
+                const playerAnim = state.player.animationState;
+                const playerFrame = state.player.currentFrame;
+                drawAnimatedSprite(ctx, playerX, playerY, state.player.width, state.player.height, 
+                    'player', playerAnim, playerFrame, state.player.facingRight);
+                
+                // Renderizar inimigos
+                state.enemies.forEach(enemy => {
+                    const enemyX = enemy.x - state.camera.x;
+                    const enemyY = enemy.y - state.camera.y;
+                    
+                    // Só renderizar se estiver visível na tela
+                    if (enemyX + enemy.width > -50 && enemyX < canvas.width + 50) {
+                        const enemyAnim = enemy.animationState || 'walk';
+                        const enemyFrame = enemy.currentFrame || 0;
+                        drawAnimatedSprite(ctx, enemyX, enemyY, enemy.width, enemy.height, 
+                            enemy.type, enemyAnim, enemyFrame, enemy.facingRight);
+                        
+                        // Barra de vida do inimigo
+                        if (enemy.health < enemy.maxHealth) {
+                            ctx.fillStyle = '#ef4444';
+                            ctx.fillRect(enemyX, enemyY - 10, enemy.width, 4);
+                            ctx.fillStyle = '#10b981';
+                            ctx.fillRect(enemyX, enemyY - 10, (enemy.health / enemy.maxHealth) * enemy.width, 4);
+                        }
+                    }
+                });
+                
+                // Renderizar projéteis
+                state.projectiles.forEach(projectile => {
+                    const projectileX = projectile.x - state.camera.x;
+                    const projectileY = projectile.y - state.camera.y;
+                    
+                    if (projectileX + 8 > -50 && projectileX < canvas.width + 50) {
+                        ctx.fillStyle = projectile.color;
+                        ctx.beginPath();
+                        ctx.arc(projectileX, projectileY, 8, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Efeito de rastro
+                        ctx.fillStyle = 'rgba(255, 107, 53, 0.3)';
+                        ctx.beginPath();
+                        ctx.arc(projectileX - projectile.vx * 2, projectileY - projectile.vy * 2, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+                
+                // Renderizar partículas
+                state.particles.forEach(particle => {
+                    const particleX = particle.x - state.camera.x;
+                    const particleY = particle.y - state.camera.y;
+                    
+                    if (particleX + 5 > -10 && particleX < canvas.width + 10) {
+                        ctx.fillStyle = particle.color;
+                        ctx.beginPath();
+                        ctx.arc(particleX, particleY, particle.size || 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+                
+                // Renderizar efeitos especiais
+                state.effects.forEach(effect => {
+                    const effectX = effect.x - state.camera.x;
+                    const effectY = effect.y - state.camera.y;
+                    
+                    if (effectX + effect.radius > -50 && effectX < canvas.width + 50) {
+                        if (effect.type === 'explosion') {
+                            ctx.fillStyle = `rgba(255, 215, 0, ${effect.opacity})`;
+                            ctx.beginPath();
+                            ctx.arc(effectX, effectY, effect.radius, 0, Math.PI * 2);
+                            ctx.fill();
+                        } else if (effect.type === 'heal') {
+                            ctx.fillStyle = `rgba(16, 185, 129, ${effect.opacity})`;
+                            ctx.beginPath();
+                            ctx.arc(effectX, effectY, effect.radius, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Efeito de cura com círculos concêntricos
+                            ctx.strokeStyle = `rgba(16, 185, 129, ${effect.opacity * 0.5})`;
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(effectX, effectY, effect.radius * 0.7, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    }
+                });
+                
+                // Renderizar UI (sempre visível)
+                renderUI(ctx, state);
+            }
+            
+            function renderUI(ctx, state) {
+                // Barra de vida do jogador
+                ctx.fillStyle = '#ef4444';
+                ctx.fillRect(20, 20, 200, 12);
+                ctx.fillStyle = '#10b981';
+                ctx.fillRect(20, 20, (state.player.health / state.player.maxHealth) * 200, 12);
+                
+                // Barra de mana do jogador
+                ctx.fillStyle = '#6b7280';
+                ctx.fillRect(20, 37, 200, 12);
+                ctx.fillStyle = '#3b82f6';
+                ctx.fillRect(20, 37, (state.player.mana / state.player.maxMana) * 200, 12);
+                
+                // Bordas das barras
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(20, 20, 200, 12);
+                ctx.strokeRect(20, 37, 200, 12);
+                
+                // Texto das barras
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '12px Arial';
+                ctx.fillText('HP', 5, 30);
+                ctx.fillText('MP', 5, 47);
+                
+                // Indicador de pulos disponíveis
+                if (state.player.canDoubleJump) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '10px Arial';
+                    ctx.fillText('Pulos:', canvas.width - 80, 30);
+                    
+                    // Mostrar pulos disponíveis
+                    const jumpsLeft = state.player.maxJumps - state.player.jumpCount;
+                    for (let i = 0; i < state.player.maxJumps; i++) {
+                        ctx.fillStyle = i < jumpsLeft ? '#3b82f6' : '#6b7280';
+                        ctx.fillRect(canvas.width - 60 + i * 15, 35, 10, 10);
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(canvas.width - 60 + i * 15, 35, 10, 10);
+                    }
+                }
+                
+                // Indicador de plataforma atual
+                if (state.player.platformStanding) {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.font = '10px Arial';
+                    ctx.fillText('Plataforma', canvas.width - 80, canvas.height - 20);
+                }
+            }
+            
+            function updateMissionUI(state, mission) {
+                const progressElement = document.querySelector('.mission-progress');
+                if (progressElement) {
+                    progressElement.textContent = `Inimigos: ${state.enemiesDefeated}/${mission.enemies} | Ouro: ${state.score} | EXP: ${state.score * 2} | HP: ${state.player.health}/${state.player.maxHealth} | MP: ${state.player.mana}/${state.player.maxMana}`;
+                }
+            }
+            
+            function completeMission(state, mission) {
+                state.gameRunning = false;
+                
+                const totalGold = mission.rewards.gold + state.score;
+                const totalExp = mission.rewards.exp + (state.score * 2);
+                
+                alert(`🎉 Missão Concluída!\n\n${mission.name}\n\nRecompensas:\n💰 ${totalGold} Ouro\n⭐ ${totalExp} EXP\n\nScore: ${state.score}`);
+                
+                const combatContainer = document.querySelector('.mission-combat-container');
+                if (combatContainer) {
+                    combatContainer.remove();
+                }
+                
+                console.log(`Missão ${mission.name} concluída! Recompensas: ${totalGold} ouro, ${totalExp} EXP`);
+            }
+            
+            function gameOver(state, mission) {
+                state.gameRunning = false;
+                
+                alert(`💀 Game Over!\n\n${mission.name}\n\nVocê foi derrotado!\n\nTente novamente!`);
+                
+                const combatContainer = document.querySelector('.mission-combat-container');
+                if (combatContainer) {
+                    combatContainer.remove();
+                }
+            }
+            
+            gameLoop();
+        }
+        
+        function pauseMission() {
+            if (window.gameOverlaySystem && window.gameOverlaySystem.showPauseMenu) {
+                window.gameOverlaySystem.showPauseMenu();
+            } else {
+                // Fallback simples
+                const canvas = document.getElementById('missionCanvas');
+                if (canvas) {
+                    alert('Missão pausada. Pressione OK para continuar.');
+                }
+            }
+        }
+        
+        function exitMission() {
+            if (window.gameOverlaySystem && window.gameOverlaySystem.showExitConfirmation) {
+                window.gameOverlaySystem.showExitConfirmation();
+            } else {
+                // Fallback simples
+                if (confirm('Tem certeza que deseja sair da missão? Todo o progresso será perdido.')) {
+                    const combatContainer = document.querySelector('.mission-combat-container');
+                    if (combatContainer) {
+                        combatContainer.remove();
+                    }
+                }
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeMissionIcons();
+            
+            // INICIALIZAR SISTEMAS DE LEVEL DESIGN E OVERLAYS
+            try {
+                window.levelDesignSystem = new LevelDesignSystem();
+                console.log('✅ Level Design System inicializado');
+            } catch (error) {
+                console.error('❌ Erro ao inicializar Level Design System:', error);
+            }
+            
+            try {
+                window.gameOverlaySystem = new GameOverlaySystem();
+                console.log('✅ Overlay System inicializado');
+            } catch (error) {
+                console.error('❌ Erro ao inicializar Overlay System:', error);
+            }
+            
+            console.log('✅ Sistemas inicializados');
+        });
     </script>
 </body>
 </html>
+
