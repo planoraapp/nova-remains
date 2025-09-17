@@ -8798,7 +8798,7 @@ npm
                 
                 // Definir posição alvo da câmera (centrada no jogador)
                 camera.targetX = player.x - canvas.width / 2;
-                camera.targetY = player.y - canvas.height / 2;
+                camera.targetY = Math.max(0, player.y - canvas.height / 2); // Garantir que a câmera não vá muito para cima
                 
                 // Limitar movimento da câmera aos limites do mapa
                 camera.targetX = Math.max(0, Math.min(state.mapWidth - canvas.width, camera.targetX));
@@ -9577,6 +9577,11 @@ npm
                 state.platforms.forEach(platform => {
                     const platformX = platform.x - state.camera.x;
                     const platformY = platform.y - state.camera.y;
+                    
+                    // Debug: log da plataforma de chão
+                    if (platform.type === 'ground' && state.time % 1000 < 16) {
+                        console.log('🏠 Plataforma ground:', 'x:', platform.x, 'y:', platform.y, 'cameraX:', state.camera.x, 'cameraY:', state.camera.y, 'platformX:', platformX, 'platformY:', platformY);
+                    }
                     
                     // Só renderizar se estiver visível na tela
                     if (platformX + platform.width > 0 && platformX < canvas.width) {
