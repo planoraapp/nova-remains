@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Assets de Parallax - Nova Remains</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f0f23;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .layer {
+            margin: 20px 0;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .layer-header {
+            background: #1a1a2e;
+            padding: 10px;
+            font-weight: bold;
+        }
+        canvas {
+            display: block;
+            background: #0f0f23;
+        }
+        .controls {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .download-btn {
+            background: #2196F3;
+        }
+        .download-btn:hover {
+            background: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Gerador de Assets de Parallax - Nova Remains</h1>
+        <p>Sistema de geração automática de camadas de parallax para o jogo</p>
+        
+        <div class="controls">
+            <button onclick="generateAllLayers()">🔄 Gerar Todas as Camadas</button>
+            <button onclick="downloadAllAssets()" class="download-btn">💾 Baixar Todos os Assets</button>
+        </div>
+
+        <!-- Camada 1: Céu -->
+        <div class="layer">
+            <div class="layer-header">🌌 Camada 1: Céu (Sky Layer)</div>
+            <canvas id="skyCanvas" width="1920" height="400"></canvas>
+            <button onclick="downloadCanvas('skyCanvas', 'sky-layer.png')" class="download-btn">Baixar Céu</button>
+        </div>
+
+        <!-- Camada 2: Montanhas Distantes -->
+        <div class="layer">
+            <div class="layer-header">🏔️ Camada 2: Montanhas Distantes (Far Mountains)</div>
+            <canvas id="mountainsCanvas" width="1920" height="300"></canvas>
+            <button onclick="downloadCanvas('mountainsCanvas', 'mountains-far.png')" class="download-btn">Baixar Montanhas</button>
+        </div>
+
+        <!-- Camada 3: Árvores -->
+        <div class="layer">
+            <div class="layer-header">🌲 Camada 3: Árvores (Trees Layer)</div>
+            <canvas id="treesCanvas" width="1920" height="200"></canvas>
+            <button onclick="downloadCanvas('treesCanvas', 'trees-layer.png')" class="download-btn">Baixar Árvores</button>
+        </div>
+
+        <!-- Camada 4: Primeiro Plano -->
+        <div class="layer">
+            <div class="layer-header">🌿 Camada 4: Primeiro Plano (Foreground)</div>
+            <canvas id="foregroundCanvas" width="1920" height="150"></canvas>
+            <button onclick="downloadCanvas('foregroundCanvas', 'foreground-layer.png')" class="download-btn">Baixar Primeiro Plano</button>
+        </div>
+
+        <!-- Camada 5: Elementos Decorativos -->
+        <div class="layer">
+            <div class="layer-header">✨ Camada 5: Elementos Decorativos (Decorative Elements)</div>
+            <canvas id="decorativeCanvas" width="1920" height="100"></canvas>
+            <button onclick="downloadCanvas('decorativeCanvas', 'decorative-elements.png')" class="download-btn">Baixar Decorativos</button>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // GERADOR DE ASSETS DE PARALLAX
+        // Sistema baseado no commit 9e401c9
+        // ========================================
+
+        function generateSkyLayer() {
+            const canvas = document.getElementById('skyCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Gradiente do céu
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#1a1a2e');
+            gradient.addColorStop(0.3, '#16213e');
+            gradient.addColorStop(0.6, '#0f0f23');
+            gradient.addColorStop(1, '#0a0a1a');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Estrelas
+            ctx.fillStyle = '#ffffff';
+            for (let i = 0; i < 200; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height * 0.7;
+                const size = Math.random() * 2 + 0.5;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Nebulosa
+            ctx.fillStyle = 'rgba(138, 43, 226, 0.1)';
+            ctx.beginPath();
+            ctx.ellipse(canvas.width * 0.3, canvas.height * 0.2, 300, 150, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = 'rgba(75, 0, 130, 0.08)';
+            ctx.beginPath();
+            ctx.ellipse(canvas.width * 0.7, canvas.height * 0.3, 250, 120, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            console.log('✅ Camada do céu gerada');
+        }
+
+        function generateMountainsLayer() {
+            const canvas = document.getElementById('mountainsCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Fundo
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#2d3748');
+            gradient.addColorStop(1, '#1a202c');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Montanhas
+            ctx.fillStyle = '#4a5568';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height);
+            
+            // Criar silhuetas de montanhas
+            for (let x = 0; x <= canvas.width; x += 20) {
+                const height = Math.random() * 150 + 50;
+                const y = canvas.height - height;
+                ctx.lineTo(x, y);
+            }
+            
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Segunda camada de montanhas (mais distante)
+            ctx.fillStyle = '#2d3748';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height);
+            
+            for (let x = 0; x <= canvas.width; x += 30) {
+                const height = Math.random() * 100 + 30;
+                const y = canvas.height - height;
+                ctx.lineTo(x, y);
+            }
+            
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Detalhes das montanhas
+            ctx.fillStyle = '#718096';
+            for (let i = 0; i < 10; i++) {
+                const x = Math.random() * canvas.width;
+                const y = canvas.height - Math.random() * 100 - 50;
+                const width = Math.random() * 20 + 10;
+                const height = Math.random() * 30 + 10;
+                
+                ctx.fillRect(x, y, width, height);
+            }
+            
+            console.log('✅ Camada de montanhas gerada');
+        }
+
+        function generateTreesLayer() {
+            const canvas = document.getElementById('treesCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Fundo
+            ctx.fillStyle = '#2d5016';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Árvores
+            for (let i = 0; i < 25; i++) {
+                const x = Math.random() * canvas.width;
+                const treeHeight = Math.random() * 80 + 60;
+                const treeWidth = Math.random() * 20 + 15;
+                
+                // Tronco
+                ctx.fillStyle = '#4a3728';
+                ctx.fillRect(x - treeWidth/4, canvas.height - treeHeight, treeWidth/2, treeHeight);
+                
+                // Copa
+                ctx.fillStyle = '#2d5016';
+                ctx.beginPath();
+                ctx.ellipse(x, canvas.height - treeHeight, treeWidth, treeHeight * 0.6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Detalhes da copa
+                ctx.fillStyle = '#1a3d0a';
+                ctx.beginPath();
+                ctx.ellipse(x, canvas.height - treeHeight, treeWidth * 0.7, treeHeight * 0.4, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Arbustos menores
+            ctx.fillStyle = '#1a3d0a';
+            for (let i = 0; i < 15; i++) {
+                const x = Math.random() * canvas.width;
+                const y = canvas.height - Math.random() * 30 - 20;
+                const size = Math.random() * 15 + 10;
+                
+                ctx.beginPath();
+                ctx.ellipse(x, y, size, size * 0.7, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            console.log('✅ Camada de árvores gerada');
+        }
+
+        function generateForegroundLayer() {
+            const canvas = document.getElementById('foregroundCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Fundo
+            ctx.fillStyle = '#4a5568';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Pedras e rochas
+            ctx.fillStyle = '#6b7280';
+            for (let i = 0; i < 20; i++) {
+                const x = Math.random() * canvas.width;
+                const y = canvas.height - Math.random() * 40 - 20;
+                const width = Math.random() * 30 + 20;
+                const height = Math.random() * 25 + 15;
+                
+                ctx.fillRect(x, y, width, height);
+                
+                // Detalhes da pedra
+                ctx.fillStyle = '#9ca3af';
+                ctx.fillRect(x + 5, y + 5, width - 10, height - 10);
+                ctx.fillStyle = '#6b7280';
+            }
+            
+            // Grama
+            ctx.fillStyle = '#16a34a';
+            for (let i = 0; i < 30; i++) {
+                const x = Math.random() * canvas.width;
+                const y = canvas.height - Math.random() * 15 - 5;
+                const width = Math.random() * 20 + 10;
+                const height = Math.random() * 10 + 5;
+                
+                ctx.fillRect(x, y, width, height);
+            }
+            
+            // Flores pequenas
+            ctx.fillStyle = '#ec4899';
+            for (let i = 0; i < 15; i++) {
+                const x = Math.random() * canvas.width;
+                const y = canvas.height - Math.random() * 20 - 10;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            console.log('✅ Camada de primeiro plano gerada');
+        }
+
+        function generateDecorativeLayer() {
+            const canvas = document.getElementById('decorativeCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Fundo transparente
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Partículas flutuantes
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            for (let i = 0; i < 50; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const size = Math.random() * 3 + 1;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Brilhos mágicos
+            ctx.fillStyle = 'rgba(59, 130, 246, 0.4)';
+            for (let i = 0; i < 10; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const size = Math.random() * 8 + 4;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Efeitos de energia
+            ctx.fillStyle = 'rgba(168, 85, 247, 0.3)';
+            for (let i = 0; i < 8; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const width = Math.random() * 20 + 10;
+                const height = Math.random() * 4 + 2;
+                
+                ctx.fillRect(x, y, width, height);
+            }
+            
+            console.log('✅ Camada decorativa gerada');
+        }
+
+        function generateAllLayers() {
+            console.log('🎨 Iniciando geração de todas as camadas de parallax...');
+            
+            generateSkyLayer();
+            generateMountainsLayer();
+            generateTreesLayer();
+            generateForegroundLayer();
+            generateDecorativeLayer();
+            
+            console.log('🎉 Todas as camadas foram geradas com sucesso!');
+        }
+
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+            
+            console.log(`💾 ${filename} baixado com sucesso!`);
+        }
+
+        function downloadAllAssets() {
+            const assets = [
+                { canvasId: 'skyCanvas', filename: 'sky-layer.png' },
+                { canvasId: 'mountainsCanvas', filename: 'mountains-far.png' },
+                { canvasId: 'treesCanvas', filename: 'trees-layer.png' },
+                { canvasId: 'foregroundCanvas', filename: 'foreground-layer.png' },
+                { canvasId: 'decorativeCanvas', filename: 'decorative-elements.png' }
+            ];
+            
+            assets.forEach((asset, index) => {
+                setTimeout(() => {
+                    downloadCanvas(asset.canvasId, asset.filename);
+                }, index * 500); // Delay entre downloads
+            });
+            
+            console.log('💾 Todos os assets serão baixados em sequência...');
+        }
+
+        // Gerar automaticamente ao carregar a página
+        window.addEventListener('load', () => {
+            console.log('🚀 Gerador de Assets de Parallax carregado!');
+            generateAllLayers();
+        });
+    </script>
+</body>
+</html>

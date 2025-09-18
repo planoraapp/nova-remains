@@ -51,8 +51,8 @@ class Game {
         this.setupEventListeners();
         this.createPlatforms();
         this.initializeUI();
-        // this.gameLoop(); // Loop do jogo desabilitado por enquanto
-        console.log('Nova Remains - Sistema de menus inicializado - Jogo principal desabilitado');
+        this.gameLoop(); // Loop do jogo reativado
+        console.log('Nova Remains - Sistema inicializado com sucesso');
     }
     
     initializeUI() {
