@@ -289,18 +289,10 @@ class GameOverlaySystem {
     // ========================================
     
     handleKeyPress(event) {
-        // ESC para pausar/despausar
+        // ESC desabilitado para evitar conflitos
         if (event.key === 'Escape') {
-            if (this.activeOverlay) {
-                if (this.activeOverlay.classList.contains('pause-overlay')) {
-                    this.resumeGame();
-                } else {
-                    this.hideOverlay();
-                }
-            } else {
-                this.showPauseMenu();
-            }
-            event.preventDefault();
+            console.log('🚫 ESC no overlay-system desabilitado');
+            return; // Não fazer nada com ESC
         }
         
         // Enter para confirmar (se overlay ativo)
@@ -312,16 +304,16 @@ class GameOverlaySystem {
             event.preventDefault();
         }
         
-        // Escape para cancelar (se overlay ativo)
-        if (event.key === 'Escape' && this.activeOverlay) {
-            const cancelBtn = this.activeOverlay.querySelector('.overlay-btn.secondary');
-            if (cancelBtn) {
-                cancelBtn.click();
-            } else {
-                this.hideOverlay();
-            }
-            event.preventDefault();
-        }
+        // Escape desabilitado para evitar conflitos
+        // if (event.key === 'Escape' && this.activeOverlay) {
+        //     const cancelBtn = this.activeOverlay.querySelector('.overlay-btn.secondary');
+        //     if (cancelBtn) {
+        //         cancelBtn.click();
+        //     } else {
+        //         this.hideOverlay();
+        //     }
+        //     event.preventDefault();
+        // }
     }
 }
 
@@ -332,7 +324,8 @@ class GameOverlaySystem {
 window.GameOverlaySystem = GameOverlaySystem;
 window.gameOverlaySystem = new GameOverlaySystem();
 
-// Inicializar quando o DOM estiver pronto
+// Inicializar quando o DOM estiver pronto - DESABILITADO TEMPORARIAMENTE
+/*
 document.addEventListener('DOMContentLoaded', () => {
     window.gameOverlaySystem.initialize();
     
@@ -341,5 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.gameOverlaySystem.handleKeyPress(event);
     });
 });
+*/
 
 console.log('📱 Sistema de Overlays carregado com sucesso!');

@@ -102,3 +102,4 @@ __pycache__/
 dev-screen.html
 test-*.html
 debug-test.html
+.vercel

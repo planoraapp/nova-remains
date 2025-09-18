@@ -1092,7 +1092,8 @@
             text-align: center;
             box-shadow: 2px 2px 0px #000;
         }
-   E     
+   E
+         
         .exp-display {
             color: #00FF00;
         }
@@ -4412,7 +4413,7 @@ npm
            ======================================== */
         
         .mission-combat-container {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -5868,8 +5869,10 @@ npm
     <script src="js/mission-system.js"></script>
     <script src="js/lobby-system.js"></script>
             <script src="js/level-design-system.js"></script>
-            <script src="js/overlay-system.js"></script>
-            <script src="js/map-assets-system.js"></script>
+    <script src="js/overlay-system.js"></script>
+    <script src="js/map-assets-system.js"></script>
+    <script src="js/enhanced-platform-system.js"></script>
+    <script src="js/enhanced-physics-system.js"></script>
     
     <script>
         // Método initializeUI que estava faltando
@@ -7436,9 +7439,14 @@ npm
         // Event listeners para missões
         document.addEventListener('DOMContentLoaded', () => {
             // Botões de missão
-            document.querySelectorAll('.mission-select-btn').forEach(btn => {
+            const missionButtons = document.querySelectorAll('.mission-select-btn');
+            console.log('🔍 Botões de missão encontrados:', missionButtons.length);
+            
+            missionButtons.forEach(btn => {
+                console.log('🔍 Adicionando event listener para:', btn.getAttribute('data-mission'));
                 btn.addEventListener('click', (e) => {
                     const missionId = e.target.getAttribute('data-mission');
+                    console.log('🎯 Clique em missão detectado:', missionId);
                     startMission(missionId);
                 });
             });
@@ -7852,13 +7860,13 @@ npm
             }
         }
         
-        // Teclas de atalho
+        // Teclas de atalho - Event listener com alta prioridade
         document.addEventListener('keydown', (e) => {
+            // ESC desabilitado para evitar conflitos
             if (e.key === 'Escape') {
-                // Fechar todos os modais
-                document.querySelectorAll('.modal-overlay').forEach(modal => {
-                    modal.style.display = 'none';
-                });
+                console.log('🚫 ESC desabilitado para evitar conflitos');
+                // Não fazer nada com ESC
+                return;
             }
             
             // Ctrl + M para alternar interface
@@ -8216,42 +8224,10 @@ npm
                     </div>
                 </div>
                 <canvas class="mission-canvas" width="1200" height="600" id="missionCanvas"></canvas>
-                <div class="mission-controls-info">
-                    <div class="controls-title">🎮 Controles Grand Chase</div>
-                    <div class="controls-grid">
-                        <div class="control-item">
-                            <span>Movimento:</span>
-                            <span class="control-key">← →</span>
-                        </div>
-                        <div class="control-item">
-                            <span>Pulo:</span>
-                            <span class="control-key">↑</span>
-                        </div>
-                        <div class="control-item">
-                            <span>Descer Plataforma:</span>
-                            <span class="control-key">↓</span>
-                        </div>
-                        <div class="control-item">
-                            <span>Ataque:</span>
-                            <span class="control-key">Z</span>
-                        </div>
-                        <div class="control-item">
-                            <span>Carregar Habilidade:</span>
-                            <span class="control-key">Z (Segurar)</span>
-                        </div>
-                        <div class="control-item">
-                            <span>Pulo Duplo:</span>
-                            <span class="control-key">↑ ↑</span>
-                        </div>
-                        <div class="control-item">
-                            <span>Pausar:</span>
-                            <span class="control-key">ESC</span>
-                        </div>
-                    </div>
-                </div>
             `;
             
-            document.body.appendChild(combatContainer);
+            const gameWindow = document.querySelector('.game-window');
+            gameWindow.appendChild(combatContainer);
             combatContainer.style.display = 'block';
             
             initializeMissionCombat(mission, character);
@@ -8363,6 +8339,10 @@ npm
             const MAP_WIDTH = 3000; // Largura total do mapa
             const MAP_HEIGHT = 600; // Altura do mapa
             
+            // Inicializar sistemas aprimorados
+            const enhancedPlatformSystem = new EnhancedPlatformSystem();
+            const enhancedPhysicsSystem = new EnhancedPhysicsSystem();
+            
             const missionState = {
                 player: {
                     x: 200, y: 440, width: 40, height: 60,
@@ -8388,32 +8368,11 @@ npm
                 // APLICAR STATS DO PERSONAGEM SELECIONADO
                 character: character || 'juno',
                 enemies: [], projectiles: [], particles: [], effects: [],
-                platforms: [
-                    // Chão principal (toda a largura do mapa) - só o topo é piso
-                    { x: 0, y: 500, width: MAP_WIDTH, height: 100, type: 'ground', collisionTop: true, collisionSides: false },
-                    
-                    // Plataformas espalhadas pelo mapa - apenas o topo é piso
-                    { x: 300, y: 420, width: 120, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 500, y: 380, width: 100, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 700, y: 400, width: 150, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 950, y: 350, width: 120, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 1200, y: 420, width: 100, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 1400, y: 380, width: 130, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 1650, y: 400, width: 120, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 1900, y: 350, width: 150, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 2150, y: 420, width: 100, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 2400, y: 380, width: 120, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 2650, y: 400, width: 130, height: 30, type: 'platform', collisionTop: true, collisionSides: false },
-                    
-                    // Plataformas altas para desafio
-                    { x: 800, y: 280, width: 80, height: 25, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 1600, y: 250, width: 100, height: 25, type: 'platform', collisionTop: true, collisionSides: false },
-                    { x: 2300, y: 280, width: 90, height: 25, type: 'platform', collisionTop: true, collisionSides: false },
-                    
-                    // Plataformas móveis (exemplo)
-                    { x: 1000, y: 320, width: 80, height: 20, type: 'platform', collisionTop: true, collisionSides: false, moving: true, moveSpeed: 1, moveRange: 100 },
-                    { x: 1800, y: 300, width: 70, height: 20, type: 'platform', collisionTop: true, collisionSides: false, moving: true, moveSpeed: 0.8, moveRange: 80 }
-                ],
+                
+                // Sistemas aprimorados
+                enhancedPlatformSystem: enhancedPlatformSystem,
+                enhancedPhysicsSystem: enhancedPhysicsSystem,
+                platforms: [], // Será preenchido pelo sistema aprimorado
                 score: 0, enemiesDefeated: 0, totalEnemies: mission.enemies,
                 gameRunning: true, gravity: 0.9, friction: 0.85,
                 camera: { x: 0, y: 0, targetX: 0, targetY: 0 },
@@ -8427,6 +8386,14 @@ npm
             for (let i = 0; i < Math.min(2, mission.enemies); i++) {
                 createEnemy(missionState, mission.enemyTypes);
             }
+            
+            // Inicializar mapa gerado dinamicamente
+            const generatedPlatforms = enhancedPlatformSystem.generateHorizontalMap(0, MAP_WIDTH, 0.4);
+            missionState.platforms = generatedPlatforms;
+            enhancedPlatformSystem.platforms = generatedPlatforms;
+            
+            // Configurar física do personagem
+            enhancedPhysicsSystem.setCharacterPhysics(missionState.player, missionState.character);
             
             // APLICAR STATS DO PERSONAGEM SELECIONADO
             if (window.simpleCombatSystem) {
@@ -8472,7 +8439,10 @@ npm
                     keyStates.z.charging = false;
                     keyStates.z.holdTime = 0;
                 }
-                if (e.key === 'ArrowUp') keyStates.arrowUp.pressed = false;
+                if (e.key === 'ArrowUp') {
+                    keyStates.arrowUp.pressed = false;
+                    keyStates.arrowUp.justPressed = false;
+                }
                 if (e.key === 'ArrowDown') keyStates.arrowDown.pressed = false;
                 if (e.key === 'ArrowLeft') keyStates.arrowLeft.pressed = false;
                 if (e.key === 'ArrowRight') keyStates.arrowRight.pressed = false;
@@ -8541,56 +8511,30 @@ npm
                     }
                 }
                 
-                // Sistema de pulo (seta para cima) - pode ser usado duas vezes
-                if (keyStates.arrowUp.justPressed) {
-                    console.log('🦘 Pulo detectado! onGround:', state.player.onGround, 'jumpCount:', state.player.jumpCount);
-                    
-                    // Pulo normal (primeiro pulo)
-                    if (state.player.onGround && !state.player.grabbing) {
-                        console.log('🦘 Executando pulo normal');
-                        state.player.vy = -state.player.jumpPower;
-                        state.player.onGround = false;
-                        state.player.animationState = 'jump';
-                        state.player.jumpCount = 1;
-                        state.player.hasDoubleJumped = false;
-                        
-                        // Efeito de pulo
-                        for (let i = 0; i < 4; i++) {
-                            state.particles.push({
-                                x: state.player.x + Math.random() * state.player.width,
-                                y: state.player.y + state.player.height,
-                                vx: (Math.random() - 0.5) * 3,
-                                vy: Math.random() * 2,
-                                life: 15,
-                                color: '#87CEEB',
-                                size: Math.random() * 2 + 1
-                            });
-                        }
-                    }
-                    // Pulo duplo (segundo pulo) - apenas para personagens que têm
-                    else if (state.player.canDoubleJump && 
-                             !state.player.hasDoubleJumped && 
-                             state.player.jumpCount < state.player.maxJumps && 
-                             !state.player.grabbing) {
-                        state.player.vy = -state.player.jumpPower * 0.8; // Pulo duplo um pouco menor
-                        state.player.hasDoubleJumped = true;
-                        state.player.jumpCount++;
-                        state.player.animationState = 'jump';
-                        
-                        // Efeito de pulo duplo (azul)
-                        for (let i = 0; i < 6; i++) {
-                            state.particles.push({
-                                x: state.player.x + Math.random() * state.player.width,
-                                y: state.player.y + state.player.height/2,
-                                vx: (Math.random() - 0.5) * 4,
-                                vy: Math.random() * 3,
-                                life: 20,
-                                color: '#3b82f6',
-                                size: Math.random() * 3 + 2
-                            });
-                        }
-                    }
-                }
+                // ========================================
+                // SISTEMA DE FÍSICA APRIMORADO
+                // ========================================
+                
+                // Aplicar física aprimorada
+                const input = {
+                    left: keyStates.arrowLeft.pressed,
+                    right: keyStates.arrowRight.pressed,
+                    jumpPressed: keyStates.arrowUp.justPressed
+                };
+                
+                state.enhancedPhysicsSystem.updatePlayer(state.player, deltaTime, input);
+                
+                // Verificar colisões com plataformas aprimoradas
+                const collisionResult = state.enhancedPlatformSystem.update(deltaTime, state.player);
+                
+                // Aplicar resultado da colisão
+                state.player.onGround = collisionResult.onGround;
+                state.player.platformStanding = collisionResult.platformStanding;
+                
+                // Sistema de pulo agora é gerenciado pelo EnhancedPhysicsSystem
+                
+                // Reset do justPressed após uso do pulo
+                keyStates.arrowUp.justPressed = false;
                 
                 // Descer de plataforma (seta para baixo)
                 if (keyStates.arrowDown.justPressed && state.player.onGround && state.player.platformStanding) {
@@ -8598,6 +8542,7 @@ npm
                     state.player.y += 5; // Pequeno movimento para baixo
                     state.player.onGround = false;
                     state.player.platformStanding = null;
+                    keyStates.arrowDown.justPressed = false; // Reset após uso
                 }
                 
                 // Controles de combate - Z para ataque e habilidades
@@ -8617,9 +8562,7 @@ npm
                     state.player.skillLevel3 = false;
                 }
                 
-                // Reset do justPressed para evitar múltiplos pulos
-                keyStates.arrowUp.justPressed = false;
-                keyStates.arrowDown.justPressed = false;
+                // Reset do justPressed será feito após o uso específico
                 
                 // Atualizar animações do jogador
                 updatePlayerAnimation(state.player);
@@ -8632,56 +8575,45 @@ npm
                 // Limitar movimento horizontal dentro do mapa
                 state.player.x = Math.max(50, Math.min(state.mapWidth - state.player.width - 50, state.player.x));
                 
-                // Sistema de colisão melhorado com plataformas
-                state.player.onGround = false;
-                state.player.platformStanding = null;
-                
-                // Debug: verificar posição do jogador
-                if (state.time % 1000 < 16) { // Log a cada segundo
-                    console.log('🎮 Player pos:', state.player.x, state.player.y, 'onGround:', state.player.onGround, 'vy:', state.player.vy);
-                }
-                
+                // Atualizar plataformas móveis
                 state.platforms.forEach(platform => {
-                    // Atualizar plataformas móveis
                     if (platform.moving) {
                         if (!platform.originalX) platform.originalX = platform.x;
                         platform.x = platform.originalX + Math.sin(state.time * 0.001 * platform.moveSpeed) * platform.moveRange;
                     }
-                    
-                    // Verificar colisão apenas no topo das plataformas
-                    if (state.player.x + state.player.width > platform.x &&
+                });
+                
+                // Verificar se o jogador não está mais em uma plataforma
+                if (state.player.onGround && state.player.platformStanding) {
+                    const platform = state.player.platformStanding;
+                    const isStillOnPlatform = (
+                        state.player.x + state.player.width > platform.x &&
                         state.player.x < platform.x + platform.width &&
                         state.player.y + state.player.height >= platform.y &&
-                        state.player.y + state.player.height <= platform.y + 20 && // Só o topo é piso
-                        state.player.vy >= 0 && // Só colide se estiver caindo
-                        !state.player.onGround) { // Só colide se não estiver no chão
-                        
-                        console.log('🏠 Colisão com plataforma detectada!', platform.type, 'y:', platform.y, 'playerY:', state.player.y);
-                        state.player.y = platform.y - state.player.height;
-                        state.player.vy = 0;
-                        state.player.onGround = true;
-                        state.player.platformStanding = platform;
-                        
-                        // Reset do sistema de pulo quando pousar
-                        state.player.jumpCount = 0;
-                        state.player.hasDoubleJumped = false;
-                        
-                        // Efeito de pouso
-                        if (state.player.vy > 5) {
-                            for (let i = 0; i < 3; i++) {
-                                state.particles.push({
-                                    x: state.player.x + Math.random() * state.player.width,
-                                    y: state.player.y + state.player.height,
-                                    vx: (Math.random() - 0.5) * 2,
-                                    vy: Math.random() * 2,
-                                    life: 10,
-                                    color: '#d1d5db',
-                                    size: Math.random() * 2 + 1
-                                });
-                            }
-                        }
+                        state.player.y + state.player.height <= platform.y + 20
+                    );
+                    
+                    if (!isStillOnPlatform) {
+                        // console.log('🚀 Jogador saiu da plataforma!', 'playerY:', state.player.y, 'platformY:', platform.y);
+                        state.player.onGround = false;
+                        state.player.platformStanding = null;
                     }
-                });
+                }
+                        
+                // Efeito de pouso
+                if (state.player.vy > 5) {
+                    for (let i = 0; i < 3; i++) {
+                        state.particles.push({
+                            x: state.player.x + Math.random() * state.player.width,
+                            y: state.player.y + state.player.height,
+                            vx: (Math.random() - 0.5) * 2,
+                            vy: Math.random() * 2,
+                            life: 10,
+                            color: '#d1d5db',
+                            size: Math.random() * 2 + 1
+                        });
+                    }
+                }
                 
                 // Atualizar câmera para seguir o jogador
                 updateCamera(state);
@@ -9580,62 +9512,10 @@ npm
                 // RENDERIZAR SISTEMA DE LEVEL DESIGN
                 window.levelDesignSystem.render(ctx, state.camera);
                 
-                // Renderizar plataformas com visual melhorado
-                state.platforms.forEach(platform => {
-                    const platformX = platform.x - state.camera.x;
-                    const platformY = platform.y - state.camera.y;
-                    
-                    // Debug: log da plataforma de chão
-                    if (platform.type === 'ground' && state.time % 1000 < 16) {
-                        console.log('🏠 Plataforma ground:', 'x:', platform.x, 'y:', platform.y, 'cameraX:', state.camera.x, 'cameraY:', state.camera.y, 'platformX:', platformX, 'platformY:', platformY);
-                    }
-                    
-                    // Só renderizar se estiver visível na tela
-                    if (platformX + platform.width > 0 && platformX < canvas.width && platformY < canvas.height) {
-                        if (platform.type === 'ground') {
-                            // Chão principal - gradiente
-                            const gradient = ctx.createLinearGradient(platformX, platformY, platformX, platformY + platform.height);
-                            gradient.addColorStop(0, '#4a5568');
-                            gradient.addColorStop(1, '#2d3748');
-                            ctx.fillStyle = gradient;
-                            ctx.fillRect(platformX, platformY, platform.width, platform.height);
-                            
-                            // Debug: desenhar uma borda vermelha para verificar
-                            ctx.strokeStyle = '#ff0000';
-                            ctx.lineWidth = 3;
-                            ctx.strokeRect(platformX, platformY, platform.width, platform.height);
-                        } else {
-                            // Plataformas flutuantes - visual melhorado
-                            const gradient = ctx.createLinearGradient(platformX, platformY, platformX, platformY + platform.height);
-                            gradient.addColorStop(0, '#6b7280');
-                            gradient.addColorStop(0.3, '#4b5563');
-                            gradient.addColorStop(1, '#374151');
-                            ctx.fillStyle = gradient;
-                            ctx.fillRect(platformX, platformY, platform.width, platform.height);
-                            
-                            // Destaque do topo (piso)
-                            ctx.fillStyle = '#9ca3af';
-                            ctx.fillRect(platformX, platformY, platform.width, 3);
-                            
-                            // Sombra da plataforma
-                            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-                            ctx.fillRect(platformX + 2, platformY + 2, platform.width, platform.height);
-                            
-                            // Re-desenhar a plataforma sobre a sombra
-                            ctx.fillStyle = gradient;
-                            ctx.fillRect(platformX, platformY, platform.width, platform.height);
-                            
-                            // Topo destacado novamente
-                            ctx.fillStyle = '#d1d5db';
-                            ctx.fillRect(platformX, platformY, platform.width, 2);
-                        }
-                        
-                        // Borda das plataformas
-                        ctx.strokeStyle = platform.type === 'ground' ? '#374151' : '#1f2937';
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(platformX, platformY, platform.width, platform.height);
-                    }
-                });
+                // Renderizar plataformas com sistema aprimorado
+                if (state.enhancedPlatformSystem) {
+                    state.enhancedPlatformSystem.render(ctx, state.camera);
+                }
                 
                 // Renderizar jogador
                 const playerX = state.player.x - state.camera.x;
@@ -9850,28 +9730,146 @@ npm
             gameLoop();
         }
         
-        function pauseMission() {
-            if (window.gameOverlaySystem && window.gameOverlaySystem.showPauseMenu) {
-                window.gameOverlaySystem.showPauseMenu();
-            } else {
-                // Fallback simples
-                const canvas = document.getElementById('missionCanvas');
-                if (canvas) {
-                    alert('Missão pausada. Pressione OK para continuar.');
+
+        // Função para forçar re-inicialização do overlay system
+        function ensureOverlaySystemReady() {
+            // Não criar nova instância, apenas re-inicializar se necessário
+            if (window.gameOverlaySystem && !window.gameOverlaySystem.gameWindow) {
+                console.log('🔄 Re-inicializando gameOverlaySystem...');
+                window.gameOverlaySystem.initialize();
+                
+                // Se ainda não funcionar, tentar encontrar o game-window manualmente
+                if (!window.gameOverlaySystem.gameWindow) {
+                    console.log('🔍 Procurando game-window manualmente...');
+                    const gameWindow = document.querySelector('.game-window');
+                    if (gameWindow) {
+                        window.gameOverlaySystem.gameWindow = gameWindow;
+                        console.log('✅ gameWindow encontrado e atribuído!');
+                    } else {
+                        console.error('❌ game-window não encontrado!');
+                    }
                 }
             }
         }
+        // Função de pausa desabilitada para evitar conflitos
+        /*
+        function pauseMission() {
+            console.log('⏸️ pauseMission() chamada');
+            console.log('🔍 window.gameOverlaySystem:', window.gameOverlaySystem);
+            
+            // Garantir que o overlay system está pronto
+            ensureOverlaySystemReady();
+            
+            if (window.gameOverlaySystem && window.gameOverlaySystem.showPauseMenu) {
+                console.log('📱 Usando gameOverlaySystem.showPauseMenu()');
+                window.gameOverlaySystem.showPauseMenu();
+            } else {
+                console.log('🔄 Usando fallback showPauseModal()');
+                // Fallback com modal customizado
+                showPauseModal();
+            }
+        }
+        */
+        
+        // Funções de pausa desabilitadas para evitar conflitos
+        /*
+        function showPauseModal() {
+            console.log('🔄 showPauseModal() chamada');
+            
+            // Criar overlay de pausa
+            const pauseOverlay = document.createElement('div');
+            pauseOverlay.className = 'game-overlay pause-overlay active';
+            pauseOverlay.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(5px);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 1;
+                visibility: visible;
+            `;
+            pauseOverlay.innerHTML = `
+                <div class="overlay-content">
+                    <div class="overlay-title">⏸️ Jogo Pausado</div>
+                    <div class="overlay-message">O que você gostaria de fazer?</div>
+                    <div class="overlay-buttons">
+                        <button class="overlay-btn secondary" onclick="resumeMission()">▶️ Continuar</button>
+                        <button class="overlay-btn danger" onclick="confirmExitMission()">🚪 Sair da Missão</button>
+                    </div>
+                </div>
+            `;
+            
+            // Adicionar ao game-window
+            const gameWindow = document.querySelector('.game-window');
+            console.log('🔍 Game window encontrado:', gameWindow);
+            
+            if (gameWindow) {
+                gameWindow.appendChild(pauseOverlay);
+                console.log('✅ Modal de pausa adicionado ao game-window');
+            } else {
+                console.error('❌ Game window não encontrado!');
+                // Fallback: adicionar ao body
+                document.body.appendChild(pauseOverlay);
+                console.log('🔄 Modal adicionado ao body como fallback');
+            }
+            
+            // Pausar o jogo
+            if (window.missionState) {
+                window.missionState.gameRunning = false;
+                console.log('⏸️ Jogo pausado via missionState');
+            }
+        }
+        
+        function resumeMission() {
+            // Remover overlay de pausa
+            const pauseOverlay = document.querySelector('.pause-overlay');
+            if (pauseOverlay) {
+                pauseOverlay.remove();
+            }
+            
+            // Retomar o jogo
+            if (window.missionState) {
+                window.missionState.gameRunning = true;
+            }
+        }
+        
+        function confirmExitMission() {
+            // Remover overlay de pausa
+            const pauseOverlay = document.querySelector('.pause-overlay');
+            if (pauseOverlay) {
+                pauseOverlay.remove();
+            }
+            
+            // Chamar função de sair da missão
+            exitMission();
+        }
+        */
         
         function exitMission() {
+            console.log('🚪 exitMission() chamada');
+            console.log('🔍 window.gameOverlaySystem:', window.gameOverlaySystem);
+            
             if (window.gameOverlaySystem && window.gameOverlaySystem.showExitConfirmation) {
+                console.log('📱 Usando gameOverlaySystem.showExitConfirmation()');
                 window.gameOverlaySystem.showExitConfirmation();
             } else {
+                console.log('🔄 Usando fallback com confirm()');
                 // Fallback simples
                 if (confirm('Tem certeza que deseja sair da missão? Todo o progresso será perdido.')) {
+                    console.log('✅ Usuário confirmou saída da missão');
                     const combatContainer = document.querySelector('.mission-combat-container');
                     if (combatContainer) {
                         combatContainer.remove();
+                        console.log('🗑️ Container de missão removido');
                     }
+                } else {
+                    console.log('❌ Usuário cancelou saída da missão');
                 }
             }
         }
@@ -9894,12 +9892,16 @@ npm
                 console.error('❌ Erro ao inicializar Map Assets System:', error);
             }
             
+            // Overlay System desabilitado temporariamente para evitar conflitos
+            /*
             try {
                 window.gameOverlaySystem = new GameOverlaySystem();
+                window.gameOverlaySystem.initialize();
                 console.log('✅ Overlay System inicializado');
             } catch (error) {
                 console.error('❌ Erro ao inicializar Overlay System:', error);
             }
+            */
             
             console.log('✅ Sistemas inicializados');
         });
