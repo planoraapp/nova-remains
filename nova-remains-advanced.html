@@ -1,0 +1,595 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Remains - Design Ultra Avançado</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a1a, #1a1a2e, #16213e, #0f172a);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Fundo Estrelado Animado */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+            25% { opacity: 0.8; transform: scale(1.2) rotate(90deg); }
+            50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
+            75% { opacity: 0.6; transform: scale(1.1) rotate(270deg); }
+        }
+
+        /* Container Principal */
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Sistema de Interface Ultra Avançado */
+        .ui-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .ui-element {
+            pointer-events: all;
+            position: absolute;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(30, 58, 138, 0.95) 0%,
+                    rgba(59, 130, 246, 0.9) 25%,
+                    rgba(96, 165, 250, 0.85) 50%,
+                    rgba(147, 197, 253, 0.8) 75%,
+                    rgba(191, 219, 254, 0.75) 100%);
+            border: 3px solid transparent;
+            border-radius: 25px;
+            backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 
+                0 25px 50px rgba(96, 165, 250, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .ui-element::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #60a5fa, #34d399, #f59e0b);
+            border-radius: 25px;
+            z-index: -1;
+            animation: elementBorder 4s infinite linear;
+        }
+
+        @keyframes elementBorder {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        /* Botões Ultra Avançados com Efeito 3D */
+        .ui-button {
+            background: 
+                linear-gradient(145deg, 
+                    #1e3a8a 0%,
+                    #3b82f6 15%,
+                    #60a5fa 35%,
+                    #93c5fd 55%,
+                    #dbeafe 75%,
+                    #60a5fa 85%,
+                    #3b82f6 95%,
+                    #1e3a8a 100%);
+            border: 3px solid transparent;
+            border-radius: 18px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 900;
+            text-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.8),
+                0 0 10px rgba(96, 165, 250, 0.5),
+                0 0 20px rgba(96, 165, 250, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                0 15px 35px rgba(96, 165, 250, 0.4),
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                inset 2px 0 0 rgba(255, 255, 255, 0.1),
+                inset -2px 0 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transform-style: preserve-3d;
+        }
+
+        .ui-button::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #60a5fa, #34d399, #f59e0b, #ef4444);
+            border-radius: 18px;
+            z-index: -1;
+            animation: buttonBorder 2s infinite linear;
+        }
+
+        .ui-button::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            height: 40%;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.4) 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                transparent 100%);
+            border-radius: 15px 15px 0 0;
+            pointer-events: none;
+        }
+
+        @keyframes buttonBorder {
+            0% { filter: hue-rotate(0deg) brightness(1.2); }
+            100% { filter: hue-rotate(360deg) brightness(1.5); }
+        }
+
+        .ui-button .shine {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%,
+                rgba(255, 255, 255, 0.4) 50%,
+                transparent 100%);
+            transition: left 0.6s ease;
+        }
+
+        .ui-button:hover .shine {
+            left: 100%;
+        }
+
+        .ui-button:hover {
+            transform: translateY(-5px) rotateX(10deg) scale(1.05);
+            box-shadow: 
+                0 25px 50px rgba(96, 165, 250, 0.7),
+                inset 0 3px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -3px 0 rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(96, 165, 250, 0.8);
+            background: 
+                linear-gradient(145deg, 
+                    #3b82f6 0%,
+                    #60a5fa 25%,
+                    #93c5fd 50%,
+                    #dbeafe 75%,
+                    #60a5fa 100%);
+        }
+
+        .ui-button:active {
+            transform: translateY(-2px) rotateX(5deg) scale(0.98);
+            box-shadow: 
+                0 10px 25px rgba(96, 165, 250, 0.5),
+                inset 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Botões de Menu com Efeitos Especiais */
+        .menu-button {
+            padding: 22px 40px;
+            font-size: 20px;
+            margin: 12px 0;
+            width: 100%;
+            position: relative;
+        }
+
+        .menu-button .text {
+            position: relative;
+            z-index: 2;
+        }
+
+        .menu-button .bg-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #34d399, #10b981);
+            border-radius: 15px;
+            transition: width 0.4s ease;
+            z-index: 1;
+        }
+
+        .menu-button:hover .bg-effect {
+            width: 100%;
+        }
+
+        /* Botões de Controle Ultra Compactos */
+        .control-button {
+            width: 38px;
+            height: 38px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .control-button .icon {
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 0 5px rgba(96, 165, 250, 0.8));
+        }
+
+        /* Menu Principal Estilizado */
+        .main-menu {
+            top: 25px;
+            left: 25px;
+            width: 300px;
+            padding: 30px;
+        }
+
+        .menu-title {
+            font-size: 3em;
+            color: #60a5fa;
+            text-align: center;
+            margin-bottom: 35px;
+            text-shadow: 
+                0 0 20px #60a5fa,
+                0 0 40px #60a5fa,
+                0 0 60px #60a5fa;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: titlePulse 3s infinite alternate;
+        }
+
+        @keyframes titlePulse {
+            0% { 
+                text-shadow: 
+                    0 0 20px #60a5fa,
+                    0 0 40px #60a5fa,
+                    0 0 60px #60a5fa;
+            }
+            100% { 
+                text-shadow: 
+                    0 0 30px #34d399,
+                    0 0 60px #34d399,
+                    0 0 90px #34d399;
+            }
+        }
+
+        /* Botões de Controle Organizados */
+        .control-buttons {
+            bottom: 25px;
+            left: 25px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            max-width: 170px;
+        }
+
+        /* Estados dos painéis */
+        .panel-hidden {
+            display: none !important;
+        }
+
+        .panel-visible {
+            display: block !important;
+            animation: panelAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes panelAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fundo Estrelado -->
+    <div class="starfield" id="starfield"></div>
+
+    <div class="game-container">
+        <!-- Sistema de Interface -->
+        <div class="ui-system" id="uiSystem">
+            <!-- Menu Principal -->
+            <div class="ui-element main-menu panel-visible" id="mainMenu">
+                <h2 class="menu-title">NOVA<br>REMAINS</h2>
+                <button class="ui-button menu-button" onclick="startGame()">
+                    <div class="shine"></div>
+                    <div class="bg-effect"></div>
+                    <span class="text">START GAME</span>
+                </button>
+                <button class="ui-button menu-button" onclick="showMissions()">
+                    <div class="shine"></div>
+                    <div class="bg-effect"></div>
+                    <span class="text">MISSIONS</span>
+                </button>
+                <button class="ui-button menu-button" onclick="showInventory()">
+                    <div class="shine"></div>
+                    <div class="bg-effect"></div>
+                    <span class="text">INVENTORY</span>
+                </button>
+                <button class="ui-button menu-button" onclick="showShop()">
+                    <div class="shine"></div>
+                    <div class="bg-effect"></div>
+                    <span class="text">SHOP</span>
+                </button>
+                <button class="ui-button menu-button" onclick="showOptions()">
+                    <div class="shine"></div>
+                    <div class="bg-effect"></div>
+                    <span class="text">OPTIONS</span>
+                </button>
+                <button class="ui-button menu-button" onclick="showExitDialog()">
+                    <div class="shine"></div>
+                    <div class="bg-effect"></div>
+                    <span class="text">EXIT</span>
+                </button>
+            </div>
+
+            <!-- Botões de Controle -->
+            <div class="control-buttons" id="controlButtons">
+                <!-- Primeira linha - Direcionais -->
+                <button class="ui-button control-button" onclick="moveUp()">
+                    <div class="shine"></div>
+                    <span class="icon">↑</span>
+                </button>
+                <button class="ui-button control-button" onclick="moveDown()">
+                    <div class="shine"></div>
+                    <span class="icon">↓</span>
+                </button>
+                <button class="ui-button control-button" onclick="moveLeft()">
+                    <div class="shine"></div>
+                    <span class="icon">←</span>
+                </button>
+                <button class="ui-button control-button" onclick="moveRight()">
+                    <div class="shine"></div>
+                    <span class="icon">→</span>
+                </button>
+                
+                <!-- Segunda linha - Navegação -->
+                <button class="ui-button control-button" onclick="goHome()">
+                    <div class="shine"></div>
+                    <span class="icon">🏠</span>
+                </button>
+                <button class="ui-button control-button" onclick="showMainMenu()">
+                    <div class="shine"></div>
+                    <span class="icon">☰</span>
+                </button>
+                <button class="ui-button control-button" onclick="showOptions()">
+                    <div class="shine"></div>
+                    <span class="icon">⚙</span>
+                </button>
+                <button class="ui-button control-button" onclick="refresh()">
+                    <div class="shine"></div>
+                    <span class="icon">🔄</span>
+                </button>
+                
+                <!-- Terceira linha - Ações -->
+                <button class="ui-button control-button" onclick="increase()">
+                    <div class="shine"></div>
+                    <span class="icon">+</span>
+                </button>
+                <button class="ui-button control-button" onclick="decrease()">
+                    <div class="shine"></div>
+                    <span class="icon">-</span>
+                </button>
+                <button class="ui-button control-button" onclick="close()">
+                    <div class="shine"></div>
+                    <span class="icon">✕</span>
+                </button>
+                <button class="ui-button control-button" onclick="showStats()">
+                    <div class="shine"></div>
+                    <span class="icon">📊</span>
+                </button>
+                
+                <!-- Quarta linha - Informações -->
+                <button class="ui-button control-button" onclick="showInfo()">
+                    <div class="shine"></div>
+                    <span class="icon">ℹ</span>
+                </button>
+                <button class="ui-button control-button" onclick="showCurrency()">
+                    <div class="shine"></div>
+                    <span class="icon">$</span>
+                </button>
+                <button class="ui-button control-button" onclick="toggleSound()">
+                    <div class="shine"></div>
+                    <span class="icon">🔊</span>
+                </button>
+                <button class="ui-button control-button" onclick="toggleMusic()">
+                    <div class="shine"></div>
+                    <span class="icon">🎵</span>
+                </button>
+                
+                <!-- Quinta linha - Controles -->
+                <button class="ui-button control-button" onclick="confirm()">
+                    <div class="shine"></div>
+                    <span class="icon">✓</span>
+                </button>
+                <button class="ui-button control-button" onclick="showHelp()">
+                    <div class="shine"></div>
+                    <span class="icon">?</span>
+                </button>
+                <button class="ui-button control-button" onclick="pause()">
+                    <div class="shine"></div>
+                    <span class="icon">⏸</span>
+                </button>
+                <button class="ui-button control-button" onclick="play()">
+                    <div class="shine"></div>
+                    <span class="icon">▶</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Ultra Avançado -->
+    <script>
+        // Sistema de Navegação Ultra Avançado
+        class AdvancedNavigationSystem {
+            constructor() {
+                this.currentPanel = 'mainMenu';
+                this.stars = [];
+                this.init();
+            }
+
+            init() {
+                console.log('🚀 Sistema Ultra Avançado Iniciado');
+                this.createStarfield();
+                this.startAnimations();
+            }
+
+            createStarfield() {
+                const starfield = document.getElementById('starfield');
+                for (let i = 0; i < 200; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.width = Math.random() * 4 + 1 + 'px';
+                    star.style.height = star.style.width;
+                    star.style.animationDelay = Math.random() * 3 + 's';
+                    star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    starfield.appendChild(star);
+                    this.stars.push(star);
+                }
+            }
+
+            showPanel(panelId) {
+                document.querySelectorAll('.ui-element').forEach(el => {
+                    el.classList.add('panel-hidden');
+                    el.classList.remove('panel-visible');
+                });
+                
+                const panel = document.getElementById(panelId);
+                if (panel) {
+                    panel.classList.remove('panel-hidden');
+                    panel.classList.add('panel-visible');
+                    this.currentPanel = panelId;
+                }
+            }
+
+            startAnimations() {
+                setInterval(() => {
+                    this.stars.forEach(star => {
+                        if (Math.random() < 0.1) {
+                            star.style.animation = 'none';
+                            star.offsetHeight;
+                            star.style.animation = null;
+                        }
+                    });
+                }, 5000);
+            }
+        }
+
+        // Funções Globais Ultra Avançadas
+        function startGame() {
+            console.log('🎮 Iniciando jogo com efeitos especiais...');
+        }
+
+        function showMissions() {
+            console.log('🎯 Mostrando missões...');
+        }
+
+        function showInventory() {
+            console.log('📦 Mostrando inventário...');
+        }
+
+        function showShop() {
+            console.log('🛒 Mostrando loja...');
+        }
+
+        function showOptions() {
+            console.log('⚙️ Mostrando opções...');
+        }
+
+        function showExitDialog() {
+            console.log('🚪 Mostrando diálogo de saída...');
+        }
+
+        function showMainMenu() {
+            console.log('🏠 Voltando ao menu principal...');
+            navigation.showPanel('mainMenu');
+        }
+
+        // Funções dos botões de controle
+        function moveUp() { console.log('⬆️ Movimento: Cima'); }
+        function moveDown() { console.log('⬇️ Movimento: Baixo'); }
+        function moveLeft() { console.log('⬅️ Movimento: Esquerda'); }
+        function moveRight() { console.log('➡️ Movimento: Direita'); }
+        function goHome() { showMainMenu(); }
+        function showOptions() { console.log('⚙️ Opções'); }
+        function refresh() { console.log('🔄 Atualizando...'); }
+        function increase() { console.log('➕ Aumentar'); }
+        function decrease() { console.log('➖ Diminuir'); }
+        function close() { console.log('❌ Fechar'); }
+        function showStats() { console.log('📊 Estatísticas'); }
+        function showInfo() { console.log('ℹ️ Informações'); }
+        function showCurrency() { console.log('💰 Moedas'); }
+        function toggleSound() { console.log('🔊 Som'); }
+        function toggleMusic() { console.log('🎵 Música'); }
+        function confirm() { console.log('✅ Confirmar'); }
+        function showHelp() { console.log('❓ Ajuda'); }
+        function pause() { console.log('⏸ Pausar'); }
+        function play() { console.log('▶ Reproduzir'); }
+
+        // Inicializar Sistema Ultra Avançado
+        let navigation;
+        document.addEventListener('DOMContentLoaded', () => {
+            navigation = new AdvancedNavigationSystem();
+            console.log('🚀 SISTEMA ULTRA AVANÇADO CARREGADO!');
+            console.log('✨ Efeitos especiais ativados');
+            console.log('🎮 Interface de próxima geração pronta!');
+        });
+    </script>
+</body>
+</html>

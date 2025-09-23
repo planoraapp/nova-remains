@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Remains - Sistema de Navegação Completo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a1a, #1a1a2e, #16213e);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Fundo Estrelado */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Container Principal */
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Canvas do Jogo */
+        #gameCanvas {
+            border: 3px solid #4ecdc4;
+            border-radius: 15px;
+            background: #0f0f23;
+            box-shadow: 0 0 40px rgba(78, 205, 196, 0.4);
+            display: none;
+        }
+
+        /* Sistema de Interface Principal */
+        .ui-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .ui-element {
+            pointer-events: all;
+            position: absolute;
+            background: rgba(26, 26, 46, 0.95);
+            border: 3px solid #4ecdc4;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(78, 205, 196, 0.4);
+            backdrop-filter: blur(15px);
+        }
+
+        /* Estilo dos Botões baseado na imagem uitest.png */
+        .ui-button {
+            background: linear-gradient(145deg, #1e3a8a, #3b82f6);
+            border: 3px solid #60a5fa;
+            border-radius: 12px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ui-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .ui-button:hover:before {
+            left: 100%;
+        }
+
+        .ui-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(96, 165, 250, 0.5);
+            background: linear-gradient(145deg, #3b82f6, #1e3a8a);
+        }
+
+        .ui-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Botões Específicos baseados na imagem */
+        .menu-button {
+            padding: 18px 35px;
+            font-size: 18px;
+            margin: 10px 0;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control-button {
+            width: 35px;
+            height: 35px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dialog-button {
+            padding: 15px 30px;
+            font-size: 16px;
+            margin: 0 15px;
+            text-transform: uppercase;
+        }
+
+        .dialog-button.danger {
+            background: linear-gradient(145deg, #dc2626, #ef4444);
+            border-color: #f87171;
+        }
+
+        .dialog-button.danger:hover {
+            background: linear-gradient(145deg, #ef4444, #dc2626);
+        }
+
+        /* Menu Principal */
+        .main-menu {
+            top: 20px;
+            left: 20px;
+            width: 280px;
+            padding: 25px;
+        }
+
+        .menu-title {
+            font-size: 2.8em;
+            color: #60a5fa;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px #60a5fa;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Painel de Níveis/Missões */
+        .level-panel {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            padding: 25px;
+        }
+
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .level-item {
+            background: rgba(30, 58, 138, 0.6);
+            border: 3px solid #60a5fa;
+            border-radius: 18px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-item:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .level-item:hover:before {
+            left: 100%;
+        }
+
+        .level-item:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(96, 165, 250, 0.5);
+        }
+
+        .level-number {
+            font-size: 3em;
+            color: #60a5fa;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #60a5fa;
+        }
+
+        .level-progress {
+            color: #93c5fd;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .star-shape {
+            width: 30px;
+            height: 30px;
+            background: #fbbf24;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            box-shadow: 0 0 15px #fbbf24;
+            filter: drop-shadow(0 0 5px #fbbf24);
+        }
+
+        .star-shape.empty {
+            background: #374151;
+            box-shadow: none;
+            filter: none;
+        }
+
+        /* Painel de Loja */
+        .shop-panel {
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            padding: 25px;
+        }
+
+        .currency {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(30, 58, 138, 0.6);
+            border-radius: 18px;
+            border: 3px solid #60a5fa;
+        }
+
+        .coin {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(145deg, #f59e0b, #fbbf24);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 20px;
+            box-shadow: 0 0 15px #fbbf24;
+            border: 2px solid #f59e0b;
+        }
+
+        .shop-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px;
+            margin: 15px 0;
+            background: rgba(30, 58, 138, 0.6);
+            border-radius: 15px;
+            border: 3px solid #60a5fa;
+            transition: all 0.3s ease;
+        }
+
+        .shop-item:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);
+        }
+
+        .item-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #dc2626, #ef4444);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 0 15px #ef4444;
+            border: 2px solid #dc2626;
+        }
+
+        .buy-button {
+            padding: 12px 20px;
+            background: linear-gradient(145deg, #059669, #10b981);
+            border: 2px solid #34d399;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .buy-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.5);
+        }
+
+        /* Painel de Inventário */
+        .inventory-panel {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            padding: 25px;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .inventory-slot {
+            width: 90px;
+            height: 90px;
+            background: rgba(30, 58, 138, 0.6);
+            border: 3px solid #60a5fa;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 28px;
+        }
+
+        .inventory-slot:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+        }
+
+        .inventory-slot.occupied {
+            background: rgba(59, 130, 246, 0.5);
+            box-shadow: inset 0 0 15px rgba(96, 165, 250, 0.3);
+        }
+
+        /* Painel de Opções */
+        .options-panel {
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            padding: 25px;
+        }
+
+        .option-group {
+            margin: 25px 0;
+        }
+
+        .option-label {
+            color: #60a5fa;
+            margin-bottom: 15px;
+            display: block;
+            font-weight: bold;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider {
+            flex: 1;
+            height: 30px;
+            background: rgba(30, 58, 138, 0.6);
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            border: 3px solid #60a5fa;
+        }
+
+        .slider-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            border-radius: 12px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+        }
+
+        .slider-button {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(145deg, #1e3a8a, #3b82f6);
+            border: 3px solid #60a5fa;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .slider-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(96, 165, 250, 0.6);
+        }
+
+        /* Botões de Controle */
+        .control-buttons {
+            bottom: 20px;
+            left: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            max-width: 160px;
+        }
+
+        /* UI de Combate */
+        .combat-ui {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 450px;
+            padding: 20px;
+            display: none;
+        }
+
+        .health-bar, .mana-bar {
+            margin: 15px 0;
+        }
+
+        .bar-label {
+            color: #60a5fa;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 30px;
+            background: rgba(30, 58, 138, 0.6);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 3px solid #60a5fa;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.3s ease;
+        }
+
+        .health-fill {
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+            box-shadow: 0 0 15px #ef4444;
+        }
+
+        .mana-fill {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+            box-shadow: 0 0 15px #3b82f6;
+        }
+
+        /* Diálogos */
+        .dialog {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .dialog-title {
+            font-size: 3em;
+            color: #60a5fa;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px #60a5fa;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        /* Painel de Vitória */
+        .victory-panel {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .victory-title {
+            font-size: 4em;
+            color: #fbbf24;
+            margin-bottom: 30px;
+            text-shadow: 0 0 30px #fbbf24;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .rewards {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+        }
+
+        .reward-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .reward-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(145deg, #f59e0b, #fbbf24);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 0 20px #fbbf24;
+            border: 3px solid #f59e0b;
+        }
+
+        .reward-text {
+            color: #60a5fa;
+            font-size: 22px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #60a5fa;
+        }
+
+        /* Barra de Carregamento */
+        .loading-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(30, 58, 138, 0.6);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 30px 0;
+            border: 3px solid #60a5fa;
+        }
+
+        .loading-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Animações */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(96, 165, 250, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(96, 165, 250, 0.6); }
+        }
+
+        .glow {
+            animation: glow 2s infinite;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .main-menu, .level-panel, .shop-panel, .options-panel, .inventory-panel {
+                width: 90%;
+                left: 5%;
+                right: 5%;
+            }
+            
+            .level-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .inventory-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Estados dos painéis */
+        .panel-hidden {
+            display: none !important;
+        }
+
+        .panel-visible {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fundo Estrelado -->
+    <div class="starfield" id="starfield"></div>
+
+    <div class="game-container">
+        <!-- Canvas do Jogo -->
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+        <!-- Sistema de Interface -->
+        <div class="ui-system" id="uiSystem">
+            <!-- Menu Principal -->
+            <div class="ui-element main-menu panel-visible" id="mainMenu">
+                <h2 class="menu-title">MENU</h2>
+                <button class="ui-button menu-button" onclick="startGame()">START</button>
+                <button class="ui-button menu-button" onclick="showMissions()">MISSIONS</button>
+                <button class="ui-button menu-button" onclick="showInventory()">INVENTORY</button>
+                <button class="ui-button menu-button" onclick="showShop()">SHOP</button>
+                <button class="ui-button menu-button" onclick="showOptions()">OPTIONS</button>
+                <button class="ui-button menu-button" onclick="showExitDialog()">EXIT</button>
+                <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+                    <button class="ui-button control-button" onclick="toggleSound()">🔊</button>
+                    <button class="ui-button control-button" onclick="nextPage()">▶</button>
+                </div>
+            </div>
+
+            <!-- Painel de Missões -->
+            <div class="ui-element level-panel panel-hidden" id="missionsPanel">
+                <h2 class="menu-title">MISSIONS</h2>
+                <div class="level-grid" id="levelGrid">
+                    <!-- Níveis serão gerados dinamicamente -->
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+                    <button class="ui-button control-button" onclick="showInfo()">ℹ</button>
+                    <button class="ui-button control-button" onclick="closePanel('missionsPanel')">✕</button>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px;">
+                    <button class="ui-button control-button" onclick="prevPage()">◀</button>
+                    <button class="ui-button control-button" onclick="showStats()">📊</button>
+                    <button class="ui-button control-button" onclick="showMainMenu()">☰</button>
+                    <button class="ui-button control-button" onclick="refresh()">🔄</button>
+                    <button class="ui-button control-button" onclick="nextPage()">▶</button>
+                </div>
+            </div>
+
+            <!-- Painel de Inventário -->
+            <div class="ui-element inventory-panel panel-hidden" id="inventoryPanel">
+                <h2 class="menu-title">INVENTORY</h2>
+                <div class="inventory-grid" id="inventoryGrid">
+                    <!-- Slots de inventário serão gerados dinamicamente -->
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+                    <button class="ui-button control-button" onclick="showInfo()">ℹ</button>
+                    <button class="ui-button control-button" onclick="closePanel('inventoryPanel')">✕</button>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px;">
+                    <button class="ui-button control-button" onclick="prevPage()">◀</button>
+                    <button class="ui-button control-button" onclick="showStats()">📊</button>
+                    <button class="ui-button control-button" onclick="showMainMenu()">☰</button>
+                    <button class="ui-button control-button" onclick="refresh()">🔄</button>
+                    <button class="ui-button control-button" onclick="nextPage()">▶</button>
+                </div>
+            </div>
+
+            <!-- Painel de Loja -->
+            <div class="ui-element shop-panel panel-hidden" id="shopPanel">
+                <div class="currency">
+                    <div class="coin">$</div>
+                    <span style="font-size: 20px; font-weight: bold; color: #fbbf24;">999</span>
+                    <div class="coin">🪙</div>
+                </div>
+                <div id="shopItems">
+                    <!-- Itens da loja serão gerados dinamicamente -->
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+                    <button class="ui-button control-button" onclick="prevPage()">◀</button>
+                    <button class="ui-button control-button" onclick="showHelp()">?</button>
+                    <button class="ui-button control-button" onclick="showOptions()">⚙</button>
+                    <button class="ui-button control-button" onclick="showMainMenu()">☰</button>
+                    <button class="ui-button control-button" onclick="nextPage()">▶</button>
+                </div>
+                <button class="ui-button control-button" onclick="closePanel('shopPanel')" style="position: absolute; top: 20px; right: 20px;">✕</button>
+            </div>
+
+            <!-- Painel de Opções -->
+            <div class="ui-element options-panel panel-hidden" id="optionsPanel">
+                <h2 class="menu-title">OPTIONS</h2>
+                <div class="option-group">
+                    <label class="option-label">SOUND</label>
+                    <div class="slider-container">
+                        <button class="slider-button" onclick="adjustVolume('sound', -10)">-</button>
+                        <div class="slider" onclick="adjustVolume('sound', 0)">
+                            <div class="slider-fill" id="soundSlider" style="width: 70%;"></div>
+                        </div>
+                        <button class="slider-button" onclick="adjustVolume('sound', 10)">+</button>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <label class="option-label">SFX</label>
+                    <div class="slider-container">
+                        <button class="slider-button" onclick="adjustVolume('sfx', -10)">-</button>
+                        <div class="slider" onclick="adjustVolume('sfx', 0)">
+                            <div class="slider-fill" id="sfxSlider" style="width: 80%;"></div>
+                        </div>
+                        <button class="slider-button" onclick="adjustVolume('sfx', 10)">+</button>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <label class="option-label">SPEED</label>
+                    <div class="slider-container">
+                        <button class="slider-button" onclick="adjustVolume('speed', -10)">-</button>
+                        <div class="slider" onclick="adjustVolume('speed', 0)">
+                            <div class="slider-fill" id="speedSlider" style="width: 60%;"></div>
+                        </div>
+                        <button class="slider-button" onclick="adjustVolume('speed', 10)">+</button>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 30px; margin-top: 40px;">
+                    <button class="ui-button control-button" onclick="confirmOptions()">✓</button>
+                    <button class="ui-button control-button" onclick="showHelp()">?</button>
+                    <button class="ui-button control-button" onclick="cancelOptions()">✕</button>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px;">
+                    <button class="ui-button control-button" onclick="prevPage()">◀</button>
+                    <button class="ui-button control-button" onclick="nextPage()">▶</button>
+                </div>
+                <button class="ui-button control-button" onclick="closePanel('optionsPanel')" style="position: absolute; top: 20px; right: 20px;">✕</button>
+            </div>
+
+            <!-- Botões de Controle -->
+            <div class="control-buttons" id="controlButtons">
+                <!-- Primeira linha - Direcionais -->
+                <button class="ui-button control-button" onclick="moveUp()">↑</button>
+                <button class="ui-button control-button" onclick="moveDown()">↓</button>
+                <button class="ui-button control-button" onclick="moveLeft()">←</button>
+                <button class="ui-button control-button" onclick="moveRight()">→</button>
+                
+                <!-- Segunda linha - Navegação -->
+                <button class="ui-button control-button" onclick="goHome()">🏠</button>
+                <button class="ui-button control-button" onclick="showMainMenu()">☰</button>
+                <button class="ui-button control-button" onclick="showOptions()">⚙</button>
+                <button class="ui-button control-button" onclick="refresh()">🔄</button>
+                
+                <!-- Terceira linha - Ações -->
+                <button class="ui-button control-button" onclick="increase()">+</button>
+                <button class="ui-button control-button" onclick="decrease()">-</button>
+                <button class="ui-button control-button" onclick="close()">✕</button>
+                <button class="ui-button control-button" onclick="showStats()">📊</button>
+                
+                <!-- Quarta linha - Informações -->
+                <button class="ui-button control-button" onclick="showInfo()">ℹ</button>
+                <button class="ui-button control-button" onclick="showCurrency()">$</button>
+                <button class="ui-button control-button" onclick="toggleSound()">🔊</button>
+                <button class="ui-button control-button" onclick="toggleMusic()">🎵</button>
+                
+                <!-- Quinta linha - Controles -->
+                <button class="ui-button control-button" onclick="confirm()">✓</button>
+                <button class="ui-button control-button" onclick="showHelp()">?</button>
+                <button class="ui-button control-button" onclick="rewind()">⏪</button>
+                <button class="ui-button control-button" onclick="previous()">⏮</button>
+                
+                <!-- Sexta linha - Mídia -->
+                <button class="ui-button control-button" onclick="pause()">⏸</button>
+                <button class="ui-button control-button" onclick="play()">▶</button>
+                <button class="ui-button control-button" onclick="next()">⏭</button>
+                <button class="ui-button control-button" onclick="forward()">⏩</button>
+            </div>
+
+            <!-- UI de Combate -->
+            <div class="ui-element combat-ui panel-hidden" id="combatUI">
+                <div class="health-bar">
+                    <div class="bar-label">HP: <span id="playerHP">100/100</span></div>
+                    <div class="bar-container">
+                        <div class="bar-fill health-fill" id="playerHPBar" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="mana-bar">
+                    <div class="bar-label">MP: <span id="playerMP">50/50</span></div>
+                    <div class="bar-container">
+                        <div class="bar-fill mana-fill" id="playerMPBar" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                    <span style="color: #60a5fa; font-weight: bold;">Inimigos: <span id="enemyCount">0</span></span>
+                    <span style="color: #60a5fa; font-weight: bold;">Score: <span id="gameScore">0</span></span>
+                </div>
+            </div>
+
+            <!-- Diálogo de Saída -->
+            <div class="ui-element dialog panel-hidden" id="exitDialog">
+                <h2 class="dialog-title">EXIT ?</h2>
+                <div class="dialog-buttons">
+                    <button class="ui-button dialog-button danger" onclick="confirmExit()">YES</button>
+                    <button class="ui-button dialog-button" onclick="closeDialog('exitDialog')">NO</button>
+                </div>
+            </div>
+
+            <!-- Painel de Vitória -->
+            <div class="ui-element victory-panel panel-hidden" id="victoryPanel">
+                <h2 class="victory-title">WIN!</h2>
+                <div class="rewards">
+                    <div class="reward-item">
+                        <div class="reward-icon">⚡</div>
+                        <div class="reward-text">+25</div>
+                    </div>
+                    <div class="reward-item">
+                        <div class="reward-icon">⭐</div>
+                        <div class="reward-text">+2</div>
+                    </div>
+                </div>
+                <button class="ui-button menu-button" onclick="restartGame()">RESTART</button>
+                <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px;">
+                    <button class="ui-button control-button" onclick="prevPage()">◀</button>
+                    <button class="ui-button control-button" onclick="showStats()">📊</button>
+                    <button class="ui-button control-button" onclick="showMainMenu()">☰</button>
+                    <button class="ui-button control-button" onclick="nextPage()">▶</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Sistema de Navegação
+        class NavigationSystem {
+            constructor() {
+                this.currentPanel = 'mainMenu';
+                this.gameData = {
+                    currency: 999,
+                    playerStats: {
+                        hp: 100,
+                        maxHp: 100,
+                        mp: 50,
+                        maxMp: 50
+                    },
+                    levels: [],
+                    inventory: [],
+                    shopItems: [
+                        { id: 1, name: 'Poção de Vida', price: 50, icon: '💊' },
+                        { id: 2, name: 'Espada de Ferro', price: 150, icon: '⚔️' },
+                        { id: 3, name: 'Escudo Mágico', price: 200, icon: '🛡️' },
+                        { id: 4, name: 'Poção de Mana', price: 75, icon: '🧪' },
+                        { id: 5, name: 'Armadura Leve', price: 300, icon: '👕' },
+                        { id: 6, name: 'Anel de Força', price: 120, icon: '💍' }
+                    ]
+                };
+                this.init();
+            }
+
+            init() {
+                console.log('🎮 Sistema de Navegação Iniciado');
+                this.createStarfield();
+                this.generateLevels();
+                this.generateInventory();
+                this.generateShopItems();
+                this.updateUI();
+            }
+
+            createStarfield() {
+                const starfield = document.getElementById('starfield');
+                for (let i = 0; i < 100; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.width = Math.random() * 3 + 1 + 'px';
+                    star.style.height = star.style.width;
+                    star.style.animationDelay = Math.random() * 2 + 's';
+                    starfield.appendChild(star);
+                }
+            }
+
+            generateLevels() {
+                const levelGrid = document.getElementById('levelGrid');
+                levelGrid.innerHTML = '';
+                
+                for (let i = 1; i <= 9; i++) {
+                    const levelItem = document.createElement('div');
+                    levelItem.className = 'level-item';
+                    
+                    const progress = Math.floor(Math.random() * 101);
+                    const stars = Math.floor(Math.random() * 4);
+                    
+                    levelItem.innerHTML = `
+                        <div class="level-number">${i}</div>
+                        <div class="level-progress">${progress}%</div>
+                        <div class="stars">
+                            ${Array.from({length: 3}, (_, j) => 
+                                `<div class="star-shape ${j < stars ? '' : 'empty'}"></div>`
+                            ).join('')}
+                        </div>
+                    `;
+                    
+                    levelItem.onclick = () => this.selectLevel(i);
+                    levelGrid.appendChild(levelItem);
+                }
+            }
+
+            generateInventory() {
+                const inventoryGrid = document.getElementById('inventoryGrid');
+                inventoryGrid.innerHTML = '';
+                
+                const items = ['⚔️', '🛡️', '💊', '🧪', '💍', '👑', '🏹', '🗡️'];
+                
+                for (let i = 0; i < 30; i++) {
+                    const slot = document.createElement('div');
+                    slot.className = 'inventory-slot';
+                    
+                    if (Math.random() < 0.3) { // 30% chance de ter item
+                        slot.classList.add('occupied');
+                        slot.textContent = items[Math.floor(Math.random() * items.length)];
+                    }
+                    
+                    slot.onclick = () => this.selectInventorySlot(i);
+                    inventoryGrid.appendChild(slot);
+                }
+            }
+
+            generateShopItems() {
+                const shopItemsContainer = document.getElementById('shopItems');
+                shopItemsContainer.innerHTML = '';
+                
+                this.gameData.shopItems.forEach(item => {
+                    const shopItem = document.createElement('div');
+                    shopItem.className = 'shop-item';
+                    
+                    shopItem.innerHTML = `
+                        <div class="item-icon">${item.icon}</div>
+                        <div style="flex: 1; margin: 0 15px;">
+                            <div style="font-weight: bold; color: #60a5fa;">${item.name}</div>
+                            <div style="color: #93c5fd; font-size: 14px;">${item.price} coins</div>
+                        </div>
+                        <button class="buy-button" onclick="navigation.buyItem(${item.id})">BUY</button>
+                    `;
+                    
+                    shopItemsContainer.appendChild(shopItem);
+                });
+            }
+
+            showPanel(panelId) {
+                // Esconder todos os painéis
+                document.querySelectorAll('.ui-element').forEach(el => {
+                    el.classList.add('panel-hidden');
+                    el.classList.remove('panel-visible');
+                });
+                
+                // Mostrar o painel selecionado
+                const panel = document.getElementById(panelId);
+                if (panel) {
+                    panel.classList.remove('panel-hidden');
+                    panel.classList.add('panel-visible');
+                    this.currentPanel = panelId;
+                }
+            }
+
+            selectLevel(levelNum) {
+                console.log(`🎯 Nível ${levelNum} selecionado`);
+                this.showPanel('combatUI');
+                // Aqui você pode iniciar o jogo
+            }
+
+            selectInventorySlot(slotNum) {
+                console.log(`📦 Slot de inventário ${slotNum} selecionado`);
+            }
+
+            buyItem(itemId) {
+                const item = this.gameData.shopItems.find(i => i.id === itemId);
+                if (item && this.gameData.currency >= item.price) {
+                    this.gameData.currency -= item.price;
+                    console.log(`🛒 Item comprado: ${item.name}`);
+                    this.updateUI();
+                } else {
+                    console.log('💸 Moedas insuficientes!');
+                }
+            }
+
+            updateUI() {
+                // Atualizar display de moedas
+                const currencyDisplay = document.querySelector('.currency span');
+                if (currencyDisplay) {
+                    currencyDisplay.textContent = this.gameData.currency;
+                }
+                
+                // Atualizar barras de HP/MP
+                document.getElementById('playerHP').textContent = 
+                    `${this.gameData.playerStats.hp}/${this.gameData.playerStats.maxHp}`;
+                document.getElementById('playerMP').textContent = 
+                    `${this.gameData.playerStats.mp}/${this.gameData.playerStats.maxMp}`;
+                    
+                const hpPercent = (this.gameData.playerStats.hp / this.gameData.playerStats.maxHp) * 100;
+                const mpPercent = (this.gameData.playerStats.mp / this.gameData.playerStats.maxMp) * 100;
+                
+                document.getElementById('playerHPBar').style.width = hpPercent + '%';
+                document.getElementById('playerMPBar').style.width = mpPercent + '%';
+            }
+        }
+
+        // Funções Globais de Navegação
+        function startGame() {
+            console.log('🎮 Iniciando jogo...');
+            navigation.showPanel('combatUI');
+        }
+
+        function showMissions() {
+            console.log('🎯 Mostrando missões...');
+            navigation.showPanel('missionsPanel');
+        }
+
+        function showInventory() {
+            console.log('📦 Mostrando inventário...');
+            navigation.showPanel('inventoryPanel');
+        }
+
+        function showShop() {
+            console.log('🛒 Mostrando loja...');
+            navigation.showPanel('shopPanel');
+        }
+
+        function showOptions() {
+            console.log('⚙️ Mostrando opções...');
+            navigation.showPanel('optionsPanel');
+        }
+
+        function showMainMenu() {
+            console.log('🏠 Voltando ao menu principal...');
+            navigation.showPanel('mainMenu');
+        }
+
+        function showExitDialog() {
+            console.log('🚪 Mostrando diálogo de saída...');
+            navigation.showPanel('exitDialog');
+        }
+
+        function closePanel(panelId) {
+            console.log(`❌ Fechando painel: ${panelId}`);
+            navigation.showPanel('mainMenu');
+        }
+
+        function closeDialog(dialogId) {
+            console.log(`❌ Fechando diálogo: ${dialogId}`);
+            navigation.showPanel('mainMenu');
+        }
+
+        function confirmExit() {
+            console.log('👋 Saindo do jogo...');
+            window.close();
+        }
+
+        function adjustVolume(type, value) {
+            console.log(`🔊 Ajustando ${type}: ${value}`);
+        }
+
+        function confirmOptions() {
+            console.log('✅ Opções confirmadas');
+            navigation.showPanel('mainMenu');
+        }
+
+        function cancelOptions() {
+            console.log('❌ Opções canceladas');
+            navigation.showPanel('mainMenu');
+        }
+
+        function restartGame() {
+            console.log('🔄 Reiniciando jogo...');
+            navigation.showPanel('mainMenu');
+        }
+
+        // Funções dos botões de controle
+        function moveUp() { console.log('⬆️ Movimento: Cima'); }
+        function moveDown() { console.log('⬇️ Movimento: Baixo'); }
+        function moveLeft() { console.log('⬅️ Movimento: Esquerda'); }
+        function moveRight() { console.log('➡️ Movimento: Direita'); }
+        function goHome() { showMainMenu(); }
+        function refresh() { console.log('🔄 Atualizando...'); }
+        function increase() { console.log('➕ Aumentar'); }
+        function decrease() { console.log('➖ Diminuir'); }
+        function close() { console.log('❌ Fechar'); }
+        function showStats() { console.log('📊 Mostrando estatísticas'); }
+        function showInfo() { console.log('ℹ️ Mostrando informações'); }
+        function showCurrency() { console.log('💰 Mostrando moedas'); }
+        function toggleSound() { console.log('🔊 Alternando som'); }
+        function toggleMusic() { console.log('🎵 Alternando música'); }
+        function confirm() { console.log('✅ Confirmar'); }
+        function showHelp() { console.log('❓ Mostrando ajuda'); }
+        function prevPage() { console.log('◀ Página anterior'); }
+        function nextPage() { console.log('▶ Próxima página'); }
+        function rewind() { console.log('⏪ Rebobinar'); }
+        function previous() { console.log('⏮ Anterior'); }
+        function pause() { console.log('⏸ Pausar'); }
+        function play() { console.log('▶ Reproduzir'); }
+        function next() { console.log('⏭ Próximo'); }
+        function forward() { console.log('⏩ Avançar'); }
+
+        // Inicializar Sistema
+        let navigation;
+        document.addEventListener('DOMContentLoaded', () => {
+            navigation = new NavigationSystem();
+            console.log('🚀 Sistema de Navegação Carregado!');
+        });
+    </script>
+</body>
+</html>
