@@ -1,0 +1,418 @@
+/* Enhanced Character Styling - Baseado no Manual de Estilo Visual */
+/* Implementa a estética dos heróis seguindo os princípios do manual */
+
+/* Paleta de Cores Baseada no Manual de Estilo Visual */
+:root {
+    --primary-indigo: #1a1a2e;
+    --secondary-navy: #16213e;
+    --accent-cyan: #00d4ff;
+    --highlight-magenta: #ff00ff;
+    --glow-violet: #9370db;
+    --crystal-teal: #4ecdc4;
+    --organic-green: #2d5016;
+    
+    /* Atmosférica e Humor */
+    --mysterious-dark: rgba(26, 26, 46, 0.9);
+    --ethereal-glow: rgba(0, 212, 255, 0.3);
+    --ancient-stone: rgba(45, 80, 22, 0.8);
+}
+
+/* Background Principal Melancolia Maravilhosa */
+body {
+    background: linear-gradient(135deg, var(--primary-indigo) 0%, var(--secondary-navy) 50%, var(--primary-indigo) 100%);
+    background-attachment: fixed;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Efeito de Névoa Etérea de Fundo */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 70%, var(--ethereal-glow) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(255, 0, 255, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Cards de Personagens - Dualidade Personagem-Ambiente */
+.character-card {
+    position: relative;
+    background: linear-gradient(135deg, var(--mysterious-dark) 0%, rgba(22, 33, 62, 0.7) 100%);
+    border: 2px solid var(--crystal-teal);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 20px var(--ethereal-glow);
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+
+.character-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--accent-cyan), var(--highlight-magenta), var(--glow-violet), var(--accent-cyan));
+    border-radius: 15px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.character-card:hover::before {
+    opacity: 0.7;
+    animation: borderGlow 2s infinite;
+}
+
+@keyframes borderGlow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.character-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 30px var(--accent-cyan);
+}
+
+/* Preview de Personagem - Renderização Ilustrativa */
+.character-preview {
+    position: relative;
+    min-height: 200px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--secondary-navy) 0%, var(--primary-indigo) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Sprites de Personagem seguindo estética dos heróis */
+.character-preview::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 120px;
+    background: linear-gradient(180deg, var(--glow-violet) 0%, var(--accent-cyan) 100%);
+    border-radius: 40px 40px 20px 20px;
+    opacity: 0.6;
+    animation: characterGlow 3s infinite;
+}
+
+@keyframes characterGlow {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+/* Personagens Específicos - Baseado na estética existente */
+.character-card[data-character="vega"] .character-preview {
+    background: linear-gradient(135deg, var(--glow-violet) 0%, var(--highlight-magenta) 50%, var(--primary-indigo) 100%);
+}
+
+.character-card[data-character="vega"] .character-preview::after {
+    background: linear-gradient(180deg, var(--highlight-magenta) 0%, var(--glow-violet) 100%);
+    animation: vegaFloat 4s infinite ease-in-out;
+}
+
+@keyframes vegaFloat {
+    0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+    50% { transform: translate(-50%, -50%) translateY(-10px); }
+}
+
+.character-card[data-character="juno"] .character-preview {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, var(--primary-indigo) 100%);
+}
+
+.character-card[data-character="atlas"] .character-preview {
+    background: linear-gradient(135deg, var(--crystal-teal) 0%, var(--accent-cyan) 50%, var(--primary-indigo) 100%);
+}
+
+.character-card[data-character="kai"] .character-preview {
+    background: linear-gradient(135deg, #708090 0%, #2F4F4F 50%, var(--primary-indigo) 100%);
+}
+
+/* Títulos dos Heróis - Linhas Limpas e Expressivas */
+.character-card h3 {
+    color: #FFD700;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.8),
+                 2px 2px 4px rgba(0, 0, 0, 0.8);
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 15px 0 10px 0;
+    text-align: center;
+    position: relative;
+    z-index: 3;
+}
+
+/* Descrições - Texto Legível sobre Background Pictórico */
+.character-description {
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    font-size: 0.95em;
+    line-height: 1.4;
+    margin: 10px 0;
+    text-align: center;
+    position: relative;
+    z-index: 3;
+}
+
+/* Stats dos Personagens - Estética Cristalina */
+.character-stats {
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--crystal-teal);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px 0;
+    position: relative;
+    z-index: 3;
+}
+
+.character-stats::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+}
+
+.stat {
+    margin: 8px 0;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Skills - Elementos Bioluminescentes */
+.character-skills {
+    margin: 15px 0;
+    text-align: center;
+    position: relative;
+    z-index: 3;
+}
+
+.skill-tag {
+    background: linear-gradient(135deg, var(--glow-violet), var(--highlight-magenta)) !important;
+    color: white !important;
+    border: 1px solid var(--accent-cyan);
+    border-radius: 20px;
+    padding: 6px 12px;
+    margin: 4px;
+    display: inline-block;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    animation: skillGlow 3s infinite;
+}
+
+@keyframes skillGlow {
+    0%, 100% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+    50% { box-shadow: 0 2px 8px rgba(0, 212, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+}
+
+.skill-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Botões de Seleção - Estética de Cristal */
+.select-character {
+    background: linear-gradient(135deg, var(--crystal-teal), var(--accent-cyan)) !important;
+    color: white !important;
+    border: 2px solid var(--glow-violet) !important;
+    border-radius: 25px;
+    padding: 12px 24px;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 3;
+    overflow: hidden;
+}
+
+.select-character::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.select-character:hover::before {
+    left: 100%;
+}
+
+.select-character:hover {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--highlight-magenta)) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+    border-color: var(--highlight-magenta) !important;
+}
+
+/* Headers - Estética Cósmica */
+.game-header, header {
+    background: linear-gradient(135deg, var(--mysterious-dark) 0%, rgba(22, 33, 62, 0.8) 100%) !important;
+    border-bottom: 3px solid var(--crystal-teal);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 30px var(--ethereal-glow);
+    position: relative;
+}
+
+.game-header::before, header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--highlight-magenta), var(--glow-violet), var(--accent-cyan));
+    animation: headerFlow 4s infinite;
+}
+
+@keyframes headerFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Background do Mapa do Mundo - Vista Cósmica */
+.world-map {
+    background: radial-gradient(circle at center, var(--primary-indigo) 0%, var(--secondary-navy) 50%, #000 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.world-map::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, var(--accent-cyan), transparent),
+        radial-gradient(2px 2px at 40px 70px, var(--highlight-magenta), transparent),
+        radial-gradient(1px 1px at 90px 40px, var(--glow-violet), transparent),
+        radial-gradient(1px 1px at 130px 80px, var(--crystal-teal), transparent),
+        radial-gradient(2px 2px at 160px 30px, var(--accent-cyan), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: starfield 20s linear infinite;
+    opacity: 0.6;
+}
+
+@keyframes starfield {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-100px); }
+}
+
+/* Elementos Flutuantes - Cristais Bioluminescentes */
+.floating-crystal {
+    position: absolute;
+    width: 20px;
+    height: 30px;
+    background: linear-gradient(45deg, var(--crystal-teal), var(--accent-cyan));
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    animation: floatCrystal 6s infinite ease-in-out;
+    opacity: 0.7;
+    box-shadow: 0 0 15px var(--accent-cyan);
+}
+
+@keyframes floatCrystal {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+/* Partículas Mágicas */
+.magic-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--highlight-magenta);
+    border-radius: 50%;
+    animation: magicDance 4s infinite;
+    box-shadow: 0 0 10px var(--highlight-magenta);
+}
+
+@keyframes magicDance {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    25% { transform: translate(10px, -10px) scale(1.2); opacity: 0.8; }
+    50% { transform: translate(-5px, -20px) scale(0.8); opacity: 0.6; }
+    75% { transform: translate(-15px, -10px) scale(1.1); opacity: 0.9; }
+    100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .character-card {
+        margin: 10px;
+        padding: 15px;
+    }
+    
+    .character-preview {
+        min-height: 150px;
+    }
+    
+    .character-card h3 {
+        font-size: 1.5em;
+    }
+    
+    .character-description {
+        font-size: 0.9em;
+    }
+}
+
+/* Melhorias de Acessibilidade */
+.character-card:focus-within {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 2px;
+}
+
+.select-character:focus {
+    outline: 2px solid var(--highlight-magenta);
+    outline-offset: 2px;
+}
+
+/* Animações de Entrada */
+.character-card {
+    animation: cardAppear 1s ease-out forwards;
+}
+
+@keyframes cardAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

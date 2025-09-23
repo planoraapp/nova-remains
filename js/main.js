@@ -99,10 +99,39 @@ window.togglePause = function() {
     }
 };
 
+// Função para debug da câmera
+window.debugCamera = function() {
+    if (window.game && game.player) {
+        console.log('📷 Debug da Câmera:');
+        console.log('- Câmera X:', Math.round(game.camera.x));
+        console.log('- Câmera Y:', Math.round(game.camera.y));
+        console.log('- Jogador X:', Math.round(game.player.x));
+        console.log('- Jogador Y:', Math.round(game.player.y));
+        console.log('- Canvas Width:', game.width);
+        console.log('- Canvas Height:', game.height);
+        console.log('- Jogador visível:', game.player.x > game.camera.x && game.player.x < game.camera.x + game.width);
+    } else {
+        console.log('❌ Jogo ou jogador não inicializado');
+    }
+};
+
+// Função para centralizar câmera no jogador
+window.centerCamera = function() {
+    if (window.game && game.player) {
+        game.camera.x = game.player.x - game.width / 2;
+        game.camera.y = game.player.y - game.height / 2;
+        console.log('📷 Câmera centralizada no jogador');
+    } else {
+        console.log('❌ Jogo ou jogador não inicializado');
+    }
+};
+
 // Log de inicialização
 console.log('📁 Grand Chase Web - Sistema carregado');
 console.log('🔧 Comandos de debug disponíveis:');
 console.log('  - debugGame() - Mostrar estado do jogo');
+console.log('  - debugCamera() - Debug da câmera');
+console.log('  - centerCamera() - Centralizar câmera no jogador');
 console.log('  - spawnEnemy(type) - Spawnar inimigo');
 console.log('  - giveExp(amount) - Dar experiência');
 console.log('  - healPlayer(amount) - Curar jogador');

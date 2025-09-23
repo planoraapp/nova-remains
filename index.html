@@ -8,6 +8,8 @@
     <meta name="keywords" content="jogo, ação, 2d, nova remains, combate, rpg, heróis, aventura">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/visual-design.css">
+    <link rel="stylesheet" href="css/character-cards.css">
+    <link rel="stylesheet" href="css/enhanced-character-styling.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -4522,6 +4524,63 @@ npm
             border-radius: 4px;
             font-weight: bold;
         }
+        
+        /* Botões de Interface */
+        .interface-buttons {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 999;
+        }
+        
+        .interface-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 2px solid #4ecdc4;
+            color: #00d4ff;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .interface-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+            border-color: #00d4ff;
+            background: linear-gradient(135deg, #16213e, #1a1a2e);
+        }
+        
+        .interface-btn:active {
+            transform: translateY(-1px) scale(1.05);
+        }
+        
+        .inventory-btn:hover {
+            box-shadow: 0 8px 25px rgba(147, 112, 219, 0.4);
+            border-color: #9370db;
+        }
+        
+        .map-btn:hover {
+            box-shadow: 0 8px 25px rgba(255, 0, 255, 0.4);
+            border-color: #ff00ff;
+        }
+        
+        .character-btn:hover {
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+            border-color: #ffd700;
+        }
+        
+        .mission-btn:hover {
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            border-color: #ff6b6b;
+        }
     </style>
 </head>
 <body>
@@ -4530,6 +4589,22 @@ npm
     <button class="editor-toggle" id="editorToggle" title="Abrir Editor de Jogo">
         ⚙️
     </button>
+
+    <!-- Botões de Interface -->
+    <div class="interface-buttons">
+        <button class="interface-btn inventory-btn" onclick="toggleInventory()" title="Abrir Inventário">
+            🎒
+        </button>
+        <button class="interface-btn map-btn" onclick="showWorldMap()" title="Mapa do Mundo">
+            🗺️
+        </button>
+        <button class="interface-btn character-btn" onclick="showCharacterSelect()" title="Seleção de Personagens">
+            👥
+        </button>
+        <button class="interface-btn mission-btn" onclick="showMissions()" title="Missões">
+            🎯
+        </button>
+    </div>
 
     <div class="game-editor" id="gameEditor">
         <div class="editor-header">
@@ -4947,7 +5022,7 @@ npm
             
             
             <!-- Mapa Mundo -->
-            <div id="worldMap" class="submenu" style="display: block;">
+            <div id="worldMap" class="submenu" style="display: none;">
             <!-- Fundo de Estrelas para o Mapa -->
             <div class="world-map-starfield">
                 <canvas class="world-map-starfield-canvas" id="worldMapStarfieldCanvas"></canvas>
@@ -5864,15 +5939,54 @@ npm
         </div>
         
     <!-- Scripts otimizados com carregamento assíncrono -->
+    <!-- Scripts principais do jogo -->
+    <script src="js/sprite-manager.js"></script>
+    <script src="js/animation-system.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/combat.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    
+    <!-- Scripts de sistemas -->
     <script src="js/shop-system.js"></script>
     <script src="js/inventory-system.js"></script>
     <script src="js/mission-system.js"></script>
     <script src="js/lobby-system.js"></script>
-            <script src="js/level-design-system.js"></script>
+    <script src="js/level-design-system.js"></script>
     <script src="js/overlay-system.js"></script>
     <script src="js/map-assets-system.js"></script>
     <script src="js/enhanced-platform-system.js"></script>
     <script src="js/enhanced-physics-system.js"></script>
+    
+    <!-- Script principal -->
+    <!-- Sistemas de Sprites e Animação -->
+    <script src="js/advanced-animation-system.js"></script>
+    <script src="js/vega-sprite-system.js"></script>
+    <script src="js/visual-assets-system.js"></script>
+    <script src="js/game-decoration-system.js"></script>
+    <script src="js/image-generator-system.js"></script>
+    <script src="js/inventory-interface-system.js"></script>
+    <script src="js/ui-elements-generator.js"></script>
+    <script src="js/visual-integration-system.js"></script>
+    <script src="js/advanced-world-map-generator.js"></script>
+    <script src="js/advanced-background-generator.js"></script>
+    <script src="js/master-visual-generator.js"></script>
+    <script src="js/character-debug-fix.js"></script>
+    
+    <!-- Scripts existentes limpos -->
+    <script src="js/vega-sprites-simple.js"></script>
+    <script src="js/player-vega-simple.js"></script>
+    <script src="js/vega-debug.js"></script>
+    <script src="js/init-fix.js"></script>
+    <script src="js/vega-preview.js"></script>
+    <script src="js/character-debug.js"></script>
+    <script src="js/character-images.js"></script>
+    <script src="js/vega-card-image.js"></script>
+    
+    <!-- Script principal -->
+    <script src="js/main.js"></script>
     
     <script>
         // Método initializeUI que estava faltando
@@ -5889,7 +6003,8 @@ npm
             if (expValue) expValue.textContent = '0/100';
         }
         
-        // Sistema de carregamento otimizado
+        // Sistema de carregamento otimizado (COMENTADO PARA EVITAR DUPLICAÇÃO)
+        /*
         class GameLoader {
             constructor() {
                 this.scripts = [
@@ -5985,9 +6100,11 @@ npm
             return true;
         }
         
-        // Inicializar carregamento
+        // Inicializar carregamento (COMENTADO PARA EVITAR DUPLICAÇÃO)
+        /*
         const loader = new GameLoader();
         loader.loadAllScripts();
+        */
         
         // Gerenciar carregamento de imagens dos heróis
         function setupHeroImageFallbacks() {
@@ -5995,9 +6112,8 @@ npm
             
             heroImages.forEach(hero => {
                 const img = document.getElementById(`${hero}-preview`);
-                const fallback = img.nextElementSibling;
-                
                 if (img) {
+                    const fallback = img.nextElementSibling;
                     img.onerror = () => {
                         console.warn(`⚠️ Erro ao carregar imagem do ${hero}, usando fallback`);
                         img.style.display = 'none';
@@ -6015,7 +6131,8 @@ npm
         // Configurar fallbacks quando a página carregar
         document.addEventListener('DOMContentLoaded', setupHeroImageFallbacks);
         
-        // Verificação adicional após carregamento
+        // Verificação adicional após carregamento (COMENTADO PARA EVITAR ERROS)
+        /*
         setTimeout(() => {
             if (!ensureClassesLoaded()) {
                 console.log('🔄 Tentando recarregar classes faltantes...');
@@ -6025,6 +6142,7 @@ npm
                 }
             }
         }, 1000);
+        */
         
         // Sistema de performance monitoring
         class PerformanceMonitor {
@@ -6167,7 +6285,7 @@ npm
     <script>
         // Verificar se MissionSystem já existe antes de declarar
         if (typeof MissionSystem === 'undefined') {
-            // Sistema de Missões
+            // Sistema de Missões (versão simplificada para compatibilidade)
             class MissionSystem {
                 constructor() {
                     this.currentMission = null;
@@ -6533,10 +6651,60 @@ npm
             }
         }
 
-        // Inicializar sistema de missões apenas se não existir
-        if (typeof missionSystem === 'undefined') {
-            const missionSystem = new MissionSystem();
-        }
+        // Inicializar sistema de missões após carregamento completo
+        window.addEventListener('load', function() {
+            console.log('🔍 Verificando sistema de missões após carregamento...');
+            console.log('- MissionSystem class:', typeof MissionSystem);
+            console.log('- window.missionSystem:', typeof window.missionSystem);
+            
+            if (typeof window.missionSystem === 'undefined') {
+                try {
+                    window.missionSystem = new MissionSystem();
+                    console.log('✅ Sistema de Missões inicializado com sucesso!');
+                    console.log('- Missões disponíveis:', window.missionSystem.getAllMissions ? window.missionSystem.getAllMissions().length : 'Método não encontrado');
+                } catch (error) {
+                    console.error('❌ Erro ao inicializar sistema de missões:', error);
+                }
+            } else {
+                console.log('ℹ️ Sistema de missões já inicializado');
+            }
+
+            // Inicializar animações da Vega
+            if (typeof window.initVegaSprites === 'function') {
+                window.initVegaSprites();
+            }
+            if (typeof window.setupVegaAnimations === 'function') {
+                console.log('🎭 Inicializando animações da Vega...');
+                window.setupVegaAnimations();
+            }
+        });
+
+        // Função de debug para sistema de missões
+        window.debugMissions = function() {
+            console.log('🎯 Debug do Sistema de Missões:');
+            console.log('- MissionSystem disponível:', typeof MissionSystem !== 'undefined');
+            console.log('- missionSystem instanciado:', typeof window.missionSystem !== 'undefined');
+            if (window.missionSystem) {
+                console.log('- Missões disponíveis:', window.missionSystem.getAllMissions ? window.missionSystem.getAllMissions() : 'Método não encontrado');
+                console.log('- Missão atual:', window.missionSystem.currentMission);
+                console.log('- Progresso:', window.missionSystem.missionProgress);
+            }
+        };
+
+        // Função para iniciar missão tutorial
+        window.startTutorialMission = function() {
+            if (window.missionSystem) {
+                const tutorialMission = window.missionSystem.getMission('tutorial');
+                if (tutorialMission) {
+                    window.missionSystem.startMission('tutorial');
+                    console.log('🎓 Missão tutorial iniciada!');
+                } else {
+                    console.log('❌ Missão tutorial não encontrada');
+                }
+            } else {
+                console.log('❌ Sistema de missões não inicializado');
+            }
+        };
 
             // Sistema de Editor de Jogo
             class GameEditor {
@@ -6879,8 +7047,9 @@ npm
             }
 
             // Interceptar derrota de inimigos no sistema existente
-            const originalEnemyUpdate = Enemy.prototype.update;
-            Enemy.prototype.update = function(deltaTime) {
+            if (typeof Enemy !== 'undefined') {
+                const originalEnemyUpdate = Enemy.prototype.update;
+                Enemy.prototype.update = function(deltaTime) {
                 const result = originalEnemyUpdate.call(this, deltaTime);
                 
                 // Verificar se inimigo foi derrotado
@@ -6890,7 +7059,8 @@ npm
                 }
                 
                 return result;
-            };
+                };
+            }
 
             // Interceptar coleta de itens (se existir)
             if (typeof Item !== 'undefined') {
@@ -8461,7 +8631,8 @@ npm
             }
             
             function updateGame(state, keys) {
-                state.time += 16;
+                const deltaTime = 16; // 60 FPS
+                state.time += deltaTime;
                 
                 // ATUALIZAR SISTEMA DE LEVEL DESIGN
                 window.levelDesignSystem.update(state, keys, 16);
@@ -9874,6 +10045,73 @@ npm
             }
         }
         
+        // Funções de Controle das Interfaces
+        function showWorldMap() {
+            console.log('🗺️ Abrindo Mapa do Mundo');
+            const worldMap = document.querySelector('.world-map');
+            if (worldMap) {
+                worldMap.style.display = 'block';
+                // Aplicar background gerado se disponível
+                if (window.imageGeneratorSystem) {
+                    const bgImage = window.imageGeneratorSystem.generatedImages.get('world-map-bg');
+                    if (bgImage) {
+                        worldMap.style.backgroundImage = `url(${bgImage})`;
+                        worldMap.style.backgroundSize = 'cover';
+                        worldMap.style.backgroundPosition = 'center';
+                    }
+                }
+            }
+        }
+        
+        function showCharacterSelect() {
+            console.log('👥 Abrindo Seleção de Personagens');
+            const characterSelect = document.querySelector('.character-selection');
+            if (characterSelect) {
+                characterSelect.style.display = 'block';
+                // Aplicar background gerado se disponível
+                if (window.imageGeneratorSystem) {
+                    const bgImage = window.imageGeneratorSystem.generatedImages.get('hero-select-bg');
+                    if (bgImage) {
+                        characterSelect.style.backgroundImage = `url(${bgImage})`;
+                        characterSelect.style.backgroundSize = 'cover';
+                        characterSelect.style.backgroundPosition = 'center';
+                    }
+                }
+            }
+        }
+        
+        function showMissions() {
+            console.log('🎯 Abrindo Missões');
+            const missionScreen = document.querySelector('.mission-screen');
+            if (missionScreen) {
+                missionScreen.style.display = 'block';
+            }
+        }
+        
+        // Atalhos de teclado para interfaces
+        document.addEventListener('keydown', (event) => {
+            if (event.ctrlKey || event.metaKey) {
+                switch (event.key) {
+                    case 'i':
+                        event.preventDefault();
+                        toggleInventory();
+                        break;
+                    case 'm':
+                        event.preventDefault();
+                        showWorldMap();
+                        break;
+                    case 'c':
+                        event.preventDefault();
+                        showCharacterSelect();
+                        break;
+                    case 'j':
+                        event.preventDefault();
+                        showMissions();
+                        break;
+                }
+            }
+        });
+        
         document.addEventListener('DOMContentLoaded', () => {
             initializeMissionIcons();
             
@@ -9903,7 +10141,99 @@ npm
             }
             */
             
-            console.log('✅ Sistemas inicializados');
+            // INICIALIZAR NOVOS SISTEMAS DE SPRITES E DECORAÇÃO
+            try {
+                // Sistema avançado de animação já é inicializado automaticamente
+                if (window.advancedAnimationSystem) {
+                    console.log('✅ Sistema Avançado de Animação inicializado');
+                }
+                
+                // Sistema de sprites da Vega já é inicializado automaticamente
+                if (window.vegaSpriteSystem) {
+                    console.log('✅ Sistema de Sprites da Vega inicializado');
+                }
+                
+                // Sistema de assets visuais já é inicializado automaticamente
+                if (window.visualAssetsSystem) {
+                    console.log('✅ Sistema de Assets Visuais inicializado');
+                }
+                
+                // Sistema de decoração do jogo já é inicializado automaticamente
+                if (window.gameDecorationSystem) {
+                    console.log('✅ Sistema de Decoração do Jogo inicializado');
+                }
+                
+                // Sistema de interface de inventário já é inicializado automaticamente
+                if (window.inventoryInterfaceSystem) {
+                    console.log('✅ Sistema de Interface de Inventário inicializado');
+                }
+                
+                // Gerador de elementos de UI já é inicializado automaticamente
+                if (window.uiElementsGenerator) {
+                    console.log('✅ Gerador de Elementos de UI inicializado');
+                }
+                
+                // Sistema de integração visual já é inicializado automaticamente
+                if (window.visualIntegrationSystem) {
+                    console.log('✅ Sistema de Integração Visual inicializado');
+                }
+                
+                // Geradores avançados já são inicializados automaticamente
+                if (window.advancedWorldMapGenerator) {
+                    console.log('✅ Gerador Avançado de Mapa do Mundo inicializado');
+                }
+                if (window.advancedBackgroundGenerator) {
+                    console.log('✅ Gerador Avançado de Backgrounds inicializado');
+                }
+                
+                // Gerador mestre já é inicializado automaticamente
+                if (window.masterVisualGenerator) {
+                    console.log('✅ Gerador Mestre Visual inicializado');
+                }
+                
+                // Sistema de debug do personagem já é inicializado automaticamente
+                if (window.characterDebugFix) {
+                    console.log('✅ Character Debug Fix inicializado');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro ao verificar novos sistemas:', error);
+            }
+            
+            // INICIALIZAR SISTEMA DE GERAÇÃO DE IMAGENS
+            try {
+                if (window.imageGeneratorSystem) {
+                    console.log('✅ Sistema de Geração de Imagens inicializado');
+                    
+                    // Gerar e aplicar todos os assets usando o gerador mestre
+                    setTimeout(() => {
+                        if (window.masterVisualGenerator) {
+                            window.generateAllMasterAssets();
+                            console.log('🎨 Todos os assets mestres gerados e aplicados!');
+                        }
+                        
+                        // Garantir que o personagem seja visível
+                        if (window.characterDebugFix) {
+                            setTimeout(() => {
+                                window.ensureCharacterVisible();
+                                console.log('🔧 Personagem verificado e corrigido!');
+                            }, 500);
+                        }
+                    }, 1000);
+                    
+                    // Aplicar todos os elementos visuais usando o sistema de integração
+                    setTimeout(() => {
+                        if (window.visualIntegrationSystem) {
+                            window.applyAllVisualElements();
+                            console.log('🎨 Todos os elementos visuais aplicados ao jogo!');
+                        }
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('❌ Erro ao inicializar Sistema de Geração de Imagens:', error);
+            }
+            
+            console.log('✅ Todos os sistemas inicializados');
         });
     </script>
 </body>

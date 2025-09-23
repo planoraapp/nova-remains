@@ -2,6 +2,10 @@ class Game {
     constructor() {
         // Canvas e contexto
         this.canvas = document.getElementById('gameCanvas');
+        if (!this.canvas) {
+            console.error('❌ Canvas gameCanvas não encontrado!');
+            return;
+        }
         this.ctx = this.canvas.getContext('2d');
         this.width = this.canvas.width;
         this.height = this.canvas.height;
@@ -383,8 +387,15 @@ class Game {
     }
     
     selectCharacter(character) {
-        // Criar jogador com o personagem selecionado
-        this.player = new Player(100, this.height - 100, character);
+        // Criar jogador com o personagem selecionado (centralizado)
+        const playerX = this.width / 2;
+        const playerY = this.height - 150; // Mais alto para melhor visibilidade
+        this.player = new Player(playerX, playerY, character);
+        
+        // Inicializar câmera no jogador
+        this.camera.x = playerX - this.width / 2;
+        this.camera.y = playerY - this.height / 2;
+        
         this.gameState = 'worldMap';
         this.hideAllMenus();
         
@@ -407,7 +418,7 @@ class Game {
     }
     
     update(deltaTime) {
-        if (this.gameState !== 'playing') return;
+        if (this.gameState !== 'playing' && this.gameState !== 'worldMap') return;
         
         // Atualizar jogador
         if (this.player) {
@@ -444,12 +455,23 @@ class Game {
     
     updateCamera() {
         if (this.player) {
-            this.camera.x = this.player.x - this.width / 2;
-            this.camera.y = this.player.y - this.height / 2;
+            // Centralizar câmera no jogador com suavização
+            const targetX = this.player.x - this.width / 2;
+            const targetY = this.player.y - this.height / 2;
             
-            // Limitar câmera
-            this.camera.x = Math.max(0, this.camera.x);
-            this.camera.y = Math.max(0, this.camera.y);
+            // Suavização da câmera (lerp)
+            const lerpFactor = 0.1;
+            this.camera.x += (targetX - this.camera.x) * lerpFactor;
+            this.camera.y += (targetY - this.camera.y) * lerpFactor;
+            
+            // Limitar câmera para não sair dos limites do mundo
+            this.camera.x = Math.max(0, Math.min(this.camera.x, 2000 - this.width));
+            this.camera.y = Math.max(0, Math.min(this.camera.y, 1000 - this.height));
+            
+            // Debug da câmera
+            if (window.debugCamera) {
+                console.log(`Camera: (${Math.round(this.camera.x)}, ${Math.round(this.camera.y)}) | Player: (${Math.round(this.player.x)}, ${Math.round(this.player.y)})`);
+            }
         }
     }
     
@@ -558,23 +580,47 @@ class Game {
     }
     
     updateHealthBar() {
+        if (!this.player) return;
+        
         const healthPercent = (this.player.health / this.player.maxHealth) * 100;
-        document.getElementById('healthFill').style.width = healthPercent + '%';
-        document.getElementById('healthText').textContent = 
-            Math.round(this.player.health) + '/' + this.player.maxHealth;
+        const healthFill = document.getElementById('healthFill');
+        const healthText = document.getElementById('healthText');
+        
+        if (healthFill) {
+            healthFill.style.width = healthPercent + '%';
+        }
+        if (healthText) {
+            healthText.textContent = Math.round(this.player.health) + '/' + this.player.maxHealth;
+        }
     }
     
     updateManaBar() {
+        if (!this.player) return;
+        
         const manaPercent = (this.player.mana / this.player.maxMana) * 100;
-        document.getElementById('manaFill').style.width = manaPercent + '%';
-        document.getElementById('manaText').textContent = 
-            Math.round(this.player.mana) + '/' + this.player.maxMana;
+        const manaFill = document.getElementById('manaFill');
+        const manaText = document.getElementById('manaText');
+        
+        if (manaFill) {
+            manaFill.style.width = manaPercent + '%';
+        }
+        if (manaText) {
+            manaText.textContent = Math.round(this.player.mana) + '/' + this.player.maxMana;
+        }
     }
     
     updateLevel() {
-        document.getElementById('levelValue').textContent = this.player.level;
-        document.getElementById('expValue').textContent = 
-            this.player.exp + '/' + this.player.expToNext;
+        if (!this.player) return;
+        
+        const levelValue = document.getElementById('levelValue');
+        const expValue = document.getElementById('expValue');
+        
+        if (levelValue) {
+            levelValue.textContent = this.player.level;
+        }
+        if (expValue) {
+            expValue.textContent = this.player.exp + '/' + this.player.expToNext;
+        }
     }
     
     showMainMenu() {

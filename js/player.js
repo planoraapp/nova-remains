@@ -540,9 +540,19 @@ class Player {
     }
     
     renderBasic(ctx) {
-        // Desenhar jogador
+        // Usar sistema de animações se disponível
+        if (window.animationSystem && this.character === 'vega') {
+            this.updateAnimation();
+            window.animationSystem.render(ctx, this.x + this.width/2, this.y + this.height/2, 'vega');
+            return;
+        }
+
+        // Fallback para renderização básica
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
         ctx.fillStyle = this.attacking ? '#ff6b6b' : this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
         
         // Olhos
         ctx.fillStyle = 'white';
@@ -554,12 +564,41 @@ class Player {
         ctx.fillRect(this.x + 12, this.y + 17, 4, 4);
         ctx.fillRect(this.x + 24, this.y + 17, 4, 4);
         
+        // Indicador de direção
+        ctx.fillStyle = '#333';
+        if (this.facingRight) {
+            ctx.fillRect(this.x + this.width - 5, this.y + 5, 3, 3);
+        } else {
+            ctx.fillRect(this.x + 2, this.y + 5, 3, 3);
+        }
+        
         // Arma (quando atacando)
         if (this.attacking) {
             ctx.fillStyle = '#8B4513';
             const weaponX = this.facingRight ? this.x + this.width : this.x - 20;
             ctx.fillRect(weaponX, this.y + 20, 20, 5);
         }
+    }
+
+    updateAnimation() {
+        if (!window.animationSystem) return;
+
+        // Determinar animação baseada no estado do jogador
+        let animationName = 'idle';
+        
+        if (this.attacking) {
+            animationName = 'attack';
+        } else if (this.jumping) {
+            animationName = 'jump';
+        } else if (this.velocityX !== 0) {
+            animationName = 'walk';
+        } else {
+            animationName = 'idle';
+        }
+
+        // Aplicar animação
+        window.animationSystem.setAnimation(animationName);
+        window.animationSystem.update(16); // 60 FPS
     }
 }
 
