@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Remains - Menu Principal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a1a, #1a1a2e, #16213e, #0f172a);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Fundo Estrelado Animado */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+            25% { opacity: 0.8; transform: scale(1.2) rotate(90deg); }
+            50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
+            75% { opacity: 0.6; transform: scale(1.1) rotate(270deg); }
+        }
+
+        /* Container Principal */
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Canvas do Jogo */
+        .game-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: #1a1a2e;
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 30px #00ff00;
+        }
+
+        /* Menu Principal */
+        .main-menu {
+            position: relative;
+            z-index: 10;
+            background: rgba(124, 58, 237, 0.1);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #7c3aed;
+            text-shadow: 0 0 30px #7c3aed;
+            margin-bottom: 40px;
+            letter-spacing: 3px;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .ui-button {
+            position: relative;
+            background: linear-gradient(45deg, #4c1d95, #7c3aed);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+            overflow: hidden;
+            min-width: 250px;
+        }
+
+        .ui-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(124, 58, 237, 0.4);
+            background: linear-gradient(45deg, #5b21b6, #8b5cf6);
+        }
+
+        .ui-button:active {
+            transform: translateY(-1px);
+        }
+
+        .ui-button.white {
+            background: linear-gradient(45deg, #ffffff, #f3f4f6);
+            color: #1f2937;
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .ui-button.white:hover {
+            background: linear-gradient(45deg, #f9fafb, #e5e7eb);
+            box-shadow: 0 12px 35px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Botões de Controle */
+        .control-buttons {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .control-button {
+            background: rgba(124, 58, 237, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        .control-button:hover {
+            background: rgba(124, 58, 237, 1);
+            transform: translateY(-1px);
+        }
+
+        /* Status do Canvas */
+        .canvas-status {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            z-index: 1000;
+            border: 1px solid #00ff00;
+        }
+
+        /* Animações */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fundo Estrelado -->
+    <div class="starfield" id="starfield"></div>
+    
+    <!-- Canvas do Jogo -->
+    <canvas id="gameCanvas" class="game-canvas"></canvas>
+    
+    <!-- Container Principal -->
+    <div class="game-container">
+        <!-- Menu Principal -->
+        <div class="main-menu">
+            <h1 class="menu-title pulse">NOVA<br>REMAINS</h1>
+            
+            <div class="menu-buttons">
+                <button class="ui-button" onclick="startGame()">
+                    🎮 START GAME
+                </button>
+                
+                <button class="ui-button" onclick="showMissions()">
+                    🗺️ MISSIONS
+                </button>
+                
+                <button class="ui-button" onclick="showInventory()">
+                    🎒 INVENTORY
+                </button>
+                
+                <button class="ui-button" onclick="showShop()">
+                    🛒 SHOP
+                </button>
+                
+                <button class="ui-button" onclick="showOptions()">
+                    ⚙️ OPTIONS
+                </button>
+                
+                <button class="ui-button white" onclick="showAnimations()">
+                    🎭 ANIMAÇÕES
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botões de Controle -->
+    <div class="control-buttons">
+        <button class="control-button" onclick="toggleCanvas()">🔧 Canvas</button>
+        <button class="control-button" onclick="debugGame()">🔍 Debug</button>
+        <button class="control-button" onclick="clearCache()">🧹 Cache</button>
+        <button class="control-button" onclick="reloadPage()">🔄 Reload</button>
+    </div>
+    
+    <!-- Status do Canvas -->
+    <div class="canvas-status" id="canvasStatus">
+        Canvas: Carregando...
+    </div>
+
+    <script>
+        // Inicializar fundo estrelado
+        function createStarfield() {
+            const starfield = document.getElementById('starfield');
+            const stars = 100;
+            
+            for (let i = 0; i < stars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starfield.appendChild(star);
+            }
+        }
+        
+        // Inicializar canvas do jogo
+        function initGameCanvas() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Definir dimensões
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Desenhar fundo
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Desenhar grade sutil
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 100) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 100) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Desenhar texto central
+            ctx.fillStyle = '#7c3aed';
+            ctx.font = '48px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText('NOVA REMAINS', canvas.width / 2, canvas.height / 2 - 50);
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '24px Orbitron';
+            ctx.fillText('Menu Principal', canvas.width / 2, canvas.height / 2 + 20);
+            
+            // Atualizar status
+            document.getElementById('canvasStatus').textContent = 
+                `Canvas: ${canvas.width}x${canvas.height} - Funcionando`;
+            
+            console.log('✅ Canvas inicializado:', canvas.width, 'x', canvas.height);
+        }
+        
+        // Funções do menu
+        function startGame() {
+            console.log('🎮 Iniciando jogo...');
+            
+            // Mostrar mensagem de carregamento
+            const loadingMessage = document.createElement('div');
+            loadingMessage.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(124, 58, 237, 0.9);
+                color: white;
+                padding: 30px;
+                border-radius: 15px;
+                font-family: Orbitron, sans-serif;
+                font-size: 18px;
+                z-index: 9999;
+                backdrop-filter: blur(10px);
+                border: 2px solid #7c3aed;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                text-align: center;
+            `;
+            loadingMessage.innerHTML = `
+                <div style="margin-bottom: 15px;">🎮 INICIANDO JOGO</div>
+                <div style="font-size: 14px; opacity: 0.8;">Carregando recursos...</div>
+            `;
+            document.body.appendChild(loadingMessage);
+            
+            setTimeout(() => {
+                window.location.href = 'index.html?character=default&mission=tutorial';
+            }, 1000);
+        }
+        
+        function showMissions() {
+            console.log('🗺️ Mostrando missões...');
+            alert('Sistema de missões em desenvolvimento!');
+        }
+        
+        function showInventory() {
+            console.log('🎒 Mostrando inventário...');
+            alert('Sistema de inventário em desenvolvimento!');
+        }
+        
+        function showShop() {
+            console.log('🛒 Mostrando loja...');
+            alert('Sistema de loja em desenvolvimento!');
+        }
+        
+        function showOptions() {
+            console.log('⚙️ Mostrando opções...');
+            alert('Sistema de opções em desenvolvimento!');
+        }
+        
+        function showAnimations() {
+            console.log('🎭 Mostrando animações...');
+            window.open('nova-remains-advanced.html', '_blank');
+        }
+        
+        // Funções de controle
+        function toggleCanvas() {
+            const canvas = document.getElementById('gameCanvas');
+            const status = document.getElementById('canvasStatus');
+            
+            if (canvas.style.display === 'none') {
+                canvas.style.display = 'block';
+                status.textContent = 'Canvas: Visível';
+                console.log('✅ Canvas mostrado');
+            } else {
+                canvas.style.display = 'none';
+                status.textContent = 'Canvas: Oculto';
+                console.log('❌ Canvas oculto');
+            }
+        }
+        
+        function debugGame() {
+            console.log('🔍 Debug do jogo:');
+            console.log('- Canvas:', document.getElementById('gameCanvas'));
+            console.log('- Dimensões:', canvas.width, 'x', canvas.height);
+            console.log('- Context:', canvas.getContext('2d'));
+        }
+        
+        function clearCache() {
+            localStorage.clear();
+            sessionStorage.clear();
+            console.log('🧹 Cache limpo');
+            alert('Cache limpo! Recarregue a página.');
+        }
+        
+        function reloadPage() {
+            location.reload();
+        }
+        
+        // Inicializar quando a página carregar
+        window.addEventListener('load', () => {
+            createStarfield();
+            initGameCanvas();
+            
+            // Redimensionar canvas quando a janela mudar
+            window.addEventListener('resize', () => {
+                initGameCanvas();
+            });
+            
+            console.log('🚀 Menu principal carregado!');
+        });
+        
+        // Referência global do canvas
+        const canvas = document.getElementById('gameCanvas');
+    </script>
+</body>
+</html>

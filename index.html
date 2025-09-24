@@ -6065,14 +6065,42 @@ npm
                 if (gameCanvas) {
                     gameCanvas.style.display = 'block';
                     gameCanvas.style.visibility = 'visible';
+                    gameCanvas.style.position = 'relative';
+                    gameCanvas.style.zIndex = '999';
+                    gameCanvas.style.backgroundColor = '#1a1a2e';
                     console.log('✅ Canvas tornado visível!');
+                    console.log('🎨 Canvas estilos aplicados:', {
+                        display: gameCanvas.style.display,
+                        visibility: gameCanvas.style.visibility,
+                        position: gameCanvas.style.position,
+                        zIndex: gameCanvas.style.zIndex,
+                        backgroundColor: gameCanvas.style.backgroundColor
+                    });
                 }
                 
                 // Iniciar loop do jogo
                 if (!window.game.gameLoopRunning) {
                     try {
                         window.game.gameLoop();
+                        window.game.gameLoopRunning = true;
                         console.log('✅ Loop do jogo iniciado!');
+                        
+                        // Debug do canvas após 1 segundo
+                        setTimeout(() => {
+                            console.log('🔍 Debug do Canvas após 1 segundo:');
+                            console.log('- Canvas element:', gameCanvas);
+                            console.log('- Canvas dimensions:', gameCanvas.width, 'x', gameCanvas.height);
+                            console.log('- Canvas computed style:', window.getComputedStyle(gameCanvas));
+                            console.log('- Canvas parent:', gameCanvas.parentElement);
+                            console.log('- Canvas context:', window.game.ctx);
+                            
+                            // Testar desenho no canvas
+                            if (window.game.ctx) {
+                                window.game.ctx.fillStyle = '#ff0000';
+                                window.game.ctx.fillRect(10, 10, 50, 50);
+                                console.log('🎨 Teste de desenho aplicado no canvas');
+                            }
+                        }, 1000);
                     } catch (error) {
                         console.error('❌ Erro ao iniciar loop:', error);
                     }
@@ -6084,6 +6112,29 @@ npm
                 worldMap.style.display = 'block';
                 console.log('✅ Mapa de missões exibido!');
             }
+            
+            // Forçar visibilidade do canvas com CSS inline
+            setTimeout(() => {
+                if (gameCanvas) {
+                    // Aplicar estilos críticos inline
+                    gameCanvas.style.cssText = `
+                        display: block !important;
+                        visibility: visible !important;
+                        position: relative !important;
+                        z-index: 999 !important;
+                        background-color: #1a1a2e !important;
+                        width: 100% !important;
+                        height: 600px !important;
+                        border: 2px solid #00ff00 !important;
+                    `;
+                    console.log('🔧 Estilos críticos aplicados ao canvas!');
+                    
+                    // Verificar se o canvas está realmente visível
+                    const rect = gameCanvas.getBoundingClientRect();
+                    console.log('📐 Canvas bounds:', rect);
+                    console.log('👁️ Canvas visível:', rect.width > 0 && rect.height > 0);
+                }
+            }, 500);
             
             // Debug final
             console.log('🎯 Status final:');
@@ -7761,24 +7812,7 @@ npm
             });
         });
         
-        function startMission(missionId) {
-            const config = missionConfigs[missionId];
-            if (!config) return;
-            
-            missionGameState.mission.currentMission = missionId;
-            missionGameState.mission.totalWaves = config.waves;
-            missionGameState.mission.isBossWave = config.hasBoss;
-            
-            // Mostrar tela de missão
-            document.getElementById('missionsMenu').style.display = 'none';
-            document.getElementById('missionGameContainer').style.display = 'block';
-            
-            // Atualizar descrição
-            const description = document.getElementById('mission-description');
-            if (description) {
-                description.textContent = config.description;
-            }
-        }
+        // Função startMission removida - usando a versão mais completa abaixo
         
         function startMissionGame() {
             const config = missionConfigs[missionGameState.mission.currentMission];
@@ -10343,11 +10377,476 @@ npm
             // Inicializar sistema de missões
             initializeMissionSystem();
             
-            // Forçar inicialização do jogo após um delay
-            setTimeout(() => {
-                forceGameInitialization();
-            }, 2000);
+            // Verificar se deve inicializar com Vega automaticamente
+            const urlParams = new URLSearchParams(window.location.search);
+            const character = urlParams.get('character');
+            const autostart = urlParams.get('autostart');
+            
+            if (character === 'vega' && autostart === 'true') {
+                console.log('🚀 Inicialização automática com Vega detectada!');
+                setTimeout(() => {
+                    initializeVegaPlatformGame();
+                }, 1000);
+            } else {
+                // Inicialização padrão
+                setTimeout(() => {
+                    forceGameInitialization();
+                }, 2000);
+            }
         });
+        
+        // Sistema de jogo de plataforma simplificado com Vega
+        function initializeVegaPlatformGame() {
+            console.log('🎮 INICIANDO JOGO DE PLATAFORMA COM VEGA');
+            
+            // Ocultar todos os menus
+            const menus = document.querySelectorAll('.ui-element, .world-map-container, .character-selection, .game-editor-container');
+            menus.forEach(menu => {
+                if (menu) menu.style.display = 'none';
+            });
+            
+            // Configurar canvas e container
+            const gameCanvas = document.getElementById('gameCanvas');
+            const gameContainer = document.getElementById('gameContainer');
+            
+            if (gameCanvas) {
+                // Mostrar o container primeiro
+                if (gameContainer) {
+                    gameContainer.style.cssText = `
+                        display: block !important;
+                        visibility: visible !important;
+                        position: fixed !important;
+                        top: 0 !important;
+                        left: 0 !important;
+                        width: 100% !important;
+                        height: 100% !important;
+                        z-index: 999 !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        border-radius: 0 !important;
+                        overflow: visible !important;
+                        box-shadow: none !important;
+                    `;
+                    console.log('✅ Container do jogo configurado!');
+                }
+                
+                // Configurar canvas
+                gameCanvas.style.cssText = `
+                    display: block !important;
+                    visibility: visible !important;
+                    position: relative !important;
+                    z-index: 1000 !important;
+                    background-color: #2d3748 !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                `;
+                
+                gameCanvas.width = window.innerWidth;
+                gameCanvas.height = window.innerHeight;
+                
+                console.log('✅ Canvas configurado para Vega:', gameCanvas.width, 'x', gameCanvas.height);
+                console.log('✅ Container bounds:', gameContainer ? gameContainer.getBoundingClientRect() : 'Container não encontrado');
+            }
+            
+            // Criar jogo simplificado
+            window.vegaGame = {
+                canvas: gameCanvas,
+                ctx: gameCanvas.getContext('2d'),
+                running: false,
+                
+                // Player Vega
+                player: {
+                    x: 100,
+                    y: 300,
+                    vx: 0,
+                    vy: 0,
+                    width: 40,
+                    height: 60,
+                    speed: 6,
+                    jumpPower: 14,
+                    onGround: false,
+                    health: 100,
+                    facing: 'right',
+                    color: '#e91e63'
+                },
+                
+                // Sistema de missões integrado
+                currentMission: 'tutorial',
+                missionProgress: 0,
+                missionObjectives: [
+                    { id: 'reach_platform', text: 'Alcance a primeira plataforma', completed: false },
+                    { id: 'defeat_enemy', text: 'Derrote um inimigo', completed: false },
+                    { id: 'reach_end', text: 'Chegue ao final do nível', completed: false }
+                ],
+                
+                // Plataformas do nível tutorial
+                platforms: [
+                    { x: 0, y: 500, width: 200, height: 20, color: '#4a5568', mission: 'start' },
+                    { x: 300, y: 450, width: 150, height: 20, color: '#4a5568', mission: 'platform1' },
+                    { x: 500, y: 400, width: 200, height: 20, color: '#4a5568', mission: 'platform2' },
+                    { x: 750, y: 350, width: 150, height: 20, color: '#4a5568', mission: 'platform3' },
+                    { x: 950, y: 300, width: 200, height: 20, color: '#48bb78', mission: 'end' },
+                    { x: 0, y: gameCanvas.height - 40, width: gameCanvas.width, height: 40, color: '#2d3748', mission: 'ground' }
+                ],
+                
+                // Enemies
+                enemies: [
+                    { x: 350, y: 420, width: 30, height: 30, color: '#f56565', health: 30 },
+                    { x: 550, y: 370, width: 30, height: 30, color: '#f56565', health: 30 }
+                ],
+                
+                // Controles
+                keys: {},
+                
+                // Inicializar
+                init() {
+                    this.setupControls();
+                    this.start();
+                },
+                
+                // Configurar controles
+                setupControls() {
+                    document.addEventListener('keydown', (e) => {
+                        this.keys[e.key.toLowerCase()] = true;
+                        if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+                            e.preventDefault();
+                        }
+                    });
+                    
+                    document.addEventListener('keyup', (e) => {
+                        this.keys[e.key.toLowerCase()] = false;
+                    });
+                },
+                
+                // Iniciar loop
+                start() {
+                    if (this.running) return;
+                    this.running = true;
+                    this.gameLoop();
+                },
+                
+                // Loop principal
+                gameLoop() {
+                    if (!this.running) return;
+                    
+                    this.update();
+                    this.render();
+                    
+                    requestAnimationFrame(() => this.gameLoop());
+                },
+                
+                // Atualizar lógica
+                update() {
+                    const player = this.player;
+                    const keys = this.keys;
+                    
+                    // Movimento horizontal
+                    player.vx = 0;
+                    if (keys['a'] || keys['arrowleft']) {
+                        player.vx = -player.speed;
+                        player.facing = 'left';
+                    }
+                    if (keys['d'] || keys['arrowright']) {
+                        player.vx = player.speed;
+                        player.facing = 'right';
+                    }
+                    
+                    // Correr (shift)
+                    if (keys['shift']) {
+                        player.vx *= 1.5;
+                    }
+                    
+                    // Pulo
+                    if ((keys[' '] || keys['w'] || keys['arrowup']) && player.onGround) {
+                        player.vy = -player.jumpPower;
+                        player.onGround = false;
+                    }
+                    
+                    // Gravidade
+                    player.vy += 0.8;
+                    
+                    // Atualizar posição
+                    player.x += player.vx;
+                    player.y += player.vy;
+                    
+                    // Colisão com plataformas
+                    player.onGround = false;
+                    for (const platform of this.platforms) {
+                        if (player.x < platform.x + platform.width &&
+                            player.x + player.width > platform.x &&
+                            player.y < platform.y + platform.height &&
+                            player.y + player.height > platform.y) {
+                            
+                            // Pouso na plataforma
+                            if (player.vy > 0 && player.y < platform.y) {
+                                player.y = platform.y - player.height;
+                                player.vy = 0;
+                                player.onGround = true;
+                            }
+                        }
+                    }
+                    
+                    // Limites da tela
+                    if (player.x < 0) player.x = 0;
+                    if (player.x > this.canvas.width - player.width) {
+                        player.x = this.canvas.width - player.width;
+                    }
+                    
+                    // Reset se cair
+                    if (player.y > this.canvas.height) {
+                        player.x = 100;
+                        player.y = 300;
+                        player.health -= 10;
+                    }
+                    
+                    // Verificar objetivos da missão
+                    this.checkMissionObjectives();
+                },
+                
+                // Renderizar
+                render() {
+                    const ctx = this.ctx;
+                    
+                    // Limpar tela com gradiente
+                    const gradient = ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+                    gradient.addColorStop(0, '#1a202c');
+                    gradient.addColorStop(1, '#2d3748');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                    
+                    // Desenhar plataformas
+                    for (const platform of this.platforms) {
+                        ctx.fillStyle = platform.color;
+                        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                        
+                        // Borda da plataforma
+                        ctx.strokeStyle = '#718096';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(platform.x, platform.y, platform.width, platform.height);
+                    }
+                    
+                    // Desenhar enemies
+                    for (const enemy of this.enemies) {
+                        ctx.fillStyle = enemy.color;
+                        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                    }
+                    
+                    // Desenhar Vega
+                    const player = this.player;
+                    ctx.fillStyle = player.color;
+                    ctx.fillRect(player.x, player.y, player.width, player.height);
+                    
+                    // Olhos da Vega
+                    ctx.fillStyle = 'white';
+                    const eyeY = player.y + 15;
+                    const eyeSize = 4;
+                    if (player.facing === 'right') {
+                        ctx.fillRect(player.x + 25, eyeY, eyeSize, eyeSize);
+                        ctx.fillRect(player.x + 32, eyeY, eyeSize, eyeSize);
+                    } else {
+                        ctx.fillRect(player.x + 4, eyeY, eyeSize, eyeSize);
+                        ctx.fillRect(player.x + 11, eyeY, eyeSize, eyeSize);
+                    }
+                    
+                    // UI
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 16px Arial';
+                    ctx.fillText(`❤️ Vida: ${player.health}`, 20, 40);
+                    ctx.fillText(`📍 Posição: ${Math.floor(player.x)}, ${Math.floor(player.y)}`, 20, 60);
+                    
+                    // Objetivos da missão
+                    ctx.font = 'bold 14px Arial';
+                    ctx.fillStyle = '#e91e63';
+                    ctx.fillText('🎯 OBJETIVOS:', 20, 100);
+                    
+                    this.missionObjectives.forEach((objective, index) => {
+                        const y = 120 + (index * 20);
+                        const status = objective.completed ? '✅' : '⭕';
+                        const color = objective.completed ? '#48bb78' : '#ffffff';
+                        
+                        ctx.fillStyle = color;
+                        ctx.fillText(`${status} ${objective.text}`, 20, y);
+                    });
+                    
+                    // Título
+                    ctx.font = 'bold 28px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = '#e91e63';
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 2;
+                    ctx.strokeText('NOVA REMAINS - VEGA', this.canvas.width / 2, 50);
+                    ctx.fillText('NOVA REMAINS - VEGA', this.canvas.width / 2, 50);
+                    
+                    // Controles
+                    ctx.font = '14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.fillText('WASD/Setas: Mover | Espaço: Pular | Shift: Correr', this.canvas.width / 2, this.canvas.height - 20);
+                    
+                    ctx.textAlign = 'left';
+                },
+                
+                // Verificar objetivos da missão
+                checkMissionObjectives() {
+                    const player = this.player;
+                    
+                    // Objetivo 1: Alcançar primeira plataforma
+                    if (!this.missionObjectives[0].completed && 
+                        player.x > 300 && player.x < 450 && player.y < 470) {
+                        this.missionObjectives[0].completed = true;
+                        this.showMissionUpdate('✅ Primeira plataforma alcançada!');
+                    }
+                    
+                    // Objetivo 2: Derrotar inimigo (simulado - passar por cima)
+                    if (!this.missionObjectives[1].completed && 
+                        player.x > 350 && player.x < 380 && player.y < 450) {
+                        this.missionObjectives[1].completed = true;
+                        this.showMissionUpdate('⚔️ Inimigo derrotado!');
+                    }
+                    
+                    // Objetivo 3: Chegar ao final
+                    if (!this.missionObjectives[2].completed && 
+                        player.x > 950 && player.x < 1150 && player.y < 320) {
+                        this.missionObjectives[2].completed = true;
+                        this.showMissionUpdate('🏆 Missão concluída!');
+                        this.completeMission();
+                    }
+                },
+                
+                // Mostrar atualização da missão
+                showMissionUpdate(message) {
+                    console.log('🎯 Missão:', message);
+                    
+                    // Criar notificação visual
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 100px;
+                        right: 20px;
+                        background: rgba(72, 187, 120, 0.9);
+                        color: white;
+                        padding: 15px 20px;
+                        border-radius: 10px;
+                        font-family: Arial, sans-serif;
+                        font-size: 16px;
+                        font-weight: bold;
+                        z-index: 10000;
+                        animation: slideIn 0.5s ease-out;
+                    `;
+                    notification.textContent = message;
+                    document.body.appendChild(notification);
+                    
+                    // Remover após 3 segundos
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 3000);
+                },
+                
+                // Completar missão
+                completeMission() {
+                    console.log('🎉 MISSÃO TUTORIAL CONCLUÍDA!');
+                    
+                    // Mostrar tela de vitória
+                    const victoryScreen = document.createElement('div');
+                    victoryScreen.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.8);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 10000;
+                        color: white;
+                        font-family: Arial, sans-serif;
+                    `;
+                    
+                    victoryScreen.innerHTML = `
+                        <div style="text-align: center;">
+                            <h1 style="font-size: 48px; color: #48bb78; margin-bottom: 20px;">🏆 MISSÃO CONCLUÍDA!</h1>
+                            <h2 style="font-size: 32px; color: #e91e63; margin-bottom: 30px;">Vega completou o tutorial!</h2>
+                            <div style="font-size: 18px; margin-bottom: 30px;">
+                                <p>✅ Primeira plataforma alcançada</p>
+                                <p>⚔️ Inimigo derrotado</p>
+                                <p>🏁 Final do nível alcançado</p>
+                            </div>
+                            <button onclick="this.parentElement.parentElement.remove(); window.location.href='nova-remains-advanced.html';" 
+                                    style="background: #e91e63; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 18px; cursor: pointer; margin: 10px;">
+                                🏠 VOLTAR AO MENU
+                            </button>
+                            <button onclick="this.parentElement.parentElement.remove(); location.reload();" 
+                                    style="background: #48bb78; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 18px; cursor: pointer; margin: 10px;">
+                                🔄 JOGAR NOVAMENTE
+                            </button>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(victoryScreen);
+                }
+            };
+            
+            // Adicionar CSS para animações
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Verificação final de visibilidade
+            setTimeout(() => {
+                const canvas = document.getElementById('gameCanvas');
+                const container = document.getElementById('gameContainer');
+                
+                if (canvas && container) {
+                    const canvasRect = canvas.getBoundingClientRect();
+                    const containerRect = container.getBoundingClientRect();
+                    
+                    console.log('🔍 Verificação final:');
+                    console.log('- Canvas bounds:', canvasRect);
+                    console.log('- Container bounds:', containerRect);
+                    console.log('- Canvas visível:', canvasRect.width > 0 && canvasRect.height > 0);
+                    console.log('- Container visível:', containerRect.width > 0 && containerRect.height > 0);
+                    
+                    // Forçar visibilidade se necessário
+                    if (canvasRect.width === 0 || canvasRect.height === 0) {
+                        console.log('🔧 Forçando visibilidade do canvas...');
+                        canvas.style.cssText = `
+                            display: block !important;
+                            visibility: visible !important;
+                            position: fixed !important;
+                            top: 0 !important;
+                            left: 0 !important;
+                            width: 100vw !important;
+                            height: 100vh !important;
+                            z-index: 9999 !important;
+                            background-color: #2d3748 !important;
+                        `;
+                        canvas.width = window.innerWidth;
+                        canvas.height = window.innerHeight;
+                    }
+                }
+            }, 500);
+            
+            // Inicializar o jogo da Vega
+            window.vegaGame.init();
+            console.log('✅ Jogo da Vega iniciado com sucesso!');
+        }
     </script>
 </body>
 </html>

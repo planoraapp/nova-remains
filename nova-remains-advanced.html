@@ -405,6 +405,16 @@
             animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
+        /* Painel de Animações */
+        .animations-panel {
+            display: none;
+        }
+
+        .animations-panel.visible {
+            display: block;
+            animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
         /* Estados dos painéis */
         .panel-hidden {
             display: none !important;
@@ -966,6 +976,11 @@
                     <div class="bg-effect"></div>
                     <span class="text">🔍 DIAGNÓSTICO</span>
                 </button>
+                <button class="ui-button menu-button" onclick="clearCacheAndFixIssues()" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                    <div class="shine"></div>
+                    <div class="bg-effect"></div>
+                    <span class="text">🔧 LIMPAR CACHE</span>
+                </button>
                 <button class="ui-button menu-button" onclick="showExitDialog()">
                     <div class="shine"></div>
                     <div class="bg-effect"></div>
@@ -1203,7 +1218,7 @@
                     <div class="hero-animation-card" onclick="selectHero('vega')">
                         <h3>⚔️ Vega</h3>
                         <div class="hero-sprite" id="vegaSprite">
-                            <img src="assets/images/characters/heroes/vega/vega.png" alt="Vega" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjN2MzYTdlIi8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlZFR0E8L3RleHQ+Cjwvc3ZnPgo='">
+                            <img src="assets/images/characters/heroes/vega/vegaT.png" alt="Vega" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjN2MzYTdlIi8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlZFR0E8L3RleHQ+Cjwvc3ZnPgo='">
                         </div>
                         <div class="animation-controls" onclick="event.stopPropagation()">
                             <button class="btn" onclick="startHeroAnimation('vega', 'breathing')">🫁</button>
@@ -1358,12 +1373,9 @@
 
         // Funções Globais Ultra Avançadas
         function startGame() {
-            console.log('🎮 Iniciando jogo com personagem padrão...');
+            console.log('🎮 Iniciando jogo com Vega...');
             
             try {
-                // Verificar se o arquivo index.html existe
-                console.log('🔍 Verificando arquivos do jogo...');
-                
                 // Mostrar mensagem de carregamento
                 const loadingMessage = document.createElement('div');
                 loadingMessage.style.cssText = `
@@ -1384,55 +1396,58 @@
                     text-align: center;
                 `;
                 loadingMessage.innerHTML = `
-                    <div style="margin-bottom: 15px;">🎮 INICIANDO JOGO</div>
-                    <div style="font-size: 14px; opacity: 0.8;">Carregando recursos...</div>
+                    <div style="margin-bottom: 15px;">🎮 CARREGANDO NOVA REMAINS</div>
+                    <div style="font-size: 14px; opacity: 0.8;">Preparando Vega para a aventura...</div>
                 `;
                 document.body.appendChild(loadingMessage);
                 
                 // Delay para mostrar a mensagem e depois redirecionar
                 setTimeout(() => {
-                    console.log('🚀 Redirecionando para o jogo...');
+                    console.log('🚀 Iniciando jogo com Vega...');
                     
-                    // Tentar diferentes URLs caso uma falhe
-                    const gameUrls = [
-                        'index.html?character=default&mission=tutorial',
-                        'index.html',
-                        'nova-remains-auto.html',
-                        window.location.href.replace('nova-remains-advanced.html', 'index.html')
-                    ];
+                    // Configurar parâmetros do jogo
+                    const gameUrl = `vega-test.html`;
+                    console.log('🎯 Carregando jogo da Vega:', gameUrl);
                     
-                    let urlIndex = 0;
-                    function tryNextUrl() {
-                        if (urlIndex < gameUrls.length) {
-                            const url = gameUrls[urlIndex];
-                            console.log(`🎯 Tentando URL ${urlIndex + 1}: ${url}`);
-                            
-                            // Remover mensagem de carregamento
-                            document.body.removeChild(loadingMessage);
-                            
-                            // Redirecionar
-                            window.location.href = url;
-                        } else {
-                            // Se todas as URLs falharam, mostrar erro
-                            loadingMessage.innerHTML = `
-                                <div style="color: #ef4444; margin-bottom: 15px;">❌ ERRO</div>
-                                <div style="font-size: 14px; margin-bottom: 15px;">Não foi possível carregar o jogo.</div>
-                                <button onclick="this.parentElement.parentElement.remove(); location.reload();" 
-                                        style="background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
-                                    Tentar Novamente
-                                </button>
-                            `;
-                        }
-                        urlIndex++;
-                    }
+                    // Remover mensagem de carregamento
+                    document.body.removeChild(loadingMessage);
                     
-                    tryNextUrl();
+                    // Redirecionar para o jogo da Vega
+                    window.location.href = gameUrl;
                     
                 }, 1000);
                 
             } catch (error) {
                 console.error('❌ Erro ao iniciar jogo:', error);
-                alert('Erro ao iniciar o jogo: ' + error.message + '\n\nVerifique se o servidor está rodando em http://localhost:8001');
+                
+                // Mostrar erro amigável
+                const errorMessage = document.createElement('div');
+                errorMessage.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(239, 68, 68, 0.9);
+                    color: white;
+                    padding: 30px;
+                    border-radius: 15px;
+                    font-family: Orbitron, sans-serif;
+                    font-size: 18px;
+                    z-index: 9999;
+                    backdrop-filter: blur(10px);
+                    border: 2px solid #ef4444;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                    text-align: center;
+                `;
+                errorMessage.innerHTML = `
+                    <div style="margin-bottom: 15px;">❌ ERRO AO CARREGAR</div>
+                    <div style="font-size: 14px; margin-bottom: 15px;">Verifique se o servidor está rodando</div>
+                    <button onclick="location.reload();" 
+                            style="background: #ffffff; color: #ef4444; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        🔄 TENTAR NOVAMENTE
+                    </button>
+                `;
+                document.body.appendChild(errorMessage);
             }
         }
 
@@ -1469,6 +1484,61 @@
             if (!window.heroAnimationSystem) {
                 window.heroAnimationSystem = new HeroAnimationSystem();
             }
+        }
+
+        // Função para limpar cache e corrigir problemas
+        function clearCacheAndFixIssues() {
+            console.log('🔧 Limpando cache e corrigindo problemas...');
+            
+            // Limpar localStorage
+            try {
+                localStorage.clear();
+                console.log('✅ LocalStorage limpo');
+            } catch(e) {
+                console.warn('⚠️ Erro ao limpar localStorage:', e);
+            }
+            
+            // Limpar sessionStorage
+            try {
+                sessionStorage.clear();
+                console.log('✅ SessionStorage limpo');
+            } catch(e) {
+                console.warn('⚠️ Erro ao limpar sessionStorage:', e);
+            }
+            
+            // Forçar recarga do sprite-manager
+            if (window.spriteManager) {
+                console.log('🔄 Recarregando sprite manager...');
+                window.spriteManager.loadHeroImages();
+            }
+            
+            // Verificar imagens da Vega
+            const vegaImages = [
+                'assets/images/characters/heroes/vega/vegaT.png',
+                'assets/images/characters/heroes/vega/vegawalk.png',
+                'assets/images/characters/heroes/vega/vegarun.png'
+            ];
+            
+            vegaImages.forEach(imgPath => {
+                const img = new Image();
+                img.onload = () => {
+                    console.log('✅ Imagem da Vega carregada:', imgPath);
+                };
+                img.onerror = () => {
+                    console.error('❌ Erro ao carregar imagem da Vega:', imgPath);
+                };
+                img.src = imgPath + '?v=' + Date.now();
+            });
+            
+            // Forçar recarga de todas as imagens da Vega no DOM
+            const vegaImagesInDOM = document.querySelectorAll('img[src*="vega"]');
+            vegaImagesInDOM.forEach(img => {
+                const originalSrc = img.src.split('?')[0];
+                img.src = originalSrc + '?v=' + Date.now();
+                console.log('🔄 Recarregando imagem da Vega no DOM:', originalSrc);
+            });
+            
+            alert('🔧 Cache limpo! Recarregue a página (F5) para ver as correções.');
         }
 
         // Sistema de Animações de Heróis
@@ -1604,7 +1674,7 @@
                 vega: {
                     name: '⚔️ Vega',
                     description: 'Guerreiro destemido com espada mágica',
-                    image: 'assets/images/characters/heroes/vega/vega.png',
+                    image: 'assets/images/characters/heroes/vega/vegaT.png',
                     stats: {
                         attack: 95,
                         defense: 80,
@@ -1905,6 +1975,44 @@
             console.log('🚀 SISTEMA ULTRA AVANÇADO CARREGADO!');
             console.log('✨ Efeitos especiais ativados');
             console.log('🎮 Interface de próxima geração pronta!');
+            
+            // Correção de Canvas
+            setTimeout(() => {
+                const gameCanvas = document.getElementById('gameCanvas');
+                if (gameCanvas) {
+                    gameCanvas.style.cssText = `
+                        display: block !important;
+                        visibility: visible !important;
+                        position: fixed !important;
+                        top: 0 !important;
+                        left: 0 !important;
+                        z-index: 9999 !important;
+                        background-color: #1a1a2e !important;
+                        width: 100% !important;
+                        height: 100% !important;
+                        border: 3px solid #00ff00 !important;
+                        box-shadow: 0 0 30px #00ff00 !important;
+                    `;
+                    console.log('🔧 Canvas corrigido e visível!');
+                    
+                    // Teste de desenho
+                    const ctx = gameCanvas.getContext('2d');
+                    if (ctx) {
+                        ctx.fillStyle = '#1a1a2e';
+                        ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+                        
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '32px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('NOVA REMAINS', gameCanvas.width / 2, gameCanvas.height / 2);
+                        ctx.fillText('Menu Principal', gameCanvas.width / 2, gameCanvas.height / 2 + 40);
+                        
+                        console.log('🎨 Teste de desenho aplicado no canvas');
+                    }
+                } else {
+                    console.log('⚠️ Canvas não encontrado no menu principal');
+                }
+            }, 1000);
         });
     </script>
 </body>

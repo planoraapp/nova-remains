@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Nova Remains - Correção de Canvas</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #00ff88;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px #00ff88;
+        }
+        
+        .status {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0000;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #4c1d95, #7c3aed);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+        }
+        
+        .canvas-test {
+            border: 3px solid #00ff00;
+            background: #1a1a2e;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 0 30px #00ff00;
+        }
+        
+        .log {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+        
+        .log-item {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        
+        .log-success { background: rgba(0, 255, 0, 0.1); }
+        .log-error { background: rgba(255, 0, 0, 0.1); }
+        .log-info { background: rgba(0, 0, 255, 0.1); }
+        .log-warning { background: rgba(255, 255, 0, 0.1); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Nova Remains - Correção de Canvas</h1>
+        
+        <div class="status">
+            <h3>📊 Status do Sistema</h3>
+            <div id="systemStatus">Verificando...</div>
+        </div>
+        
+        <div class="error" id="errorPanel" style="display: none;">
+            <h3>❌ Problemas Encontrados</h3>
+            <div id="errorList"></div>
+        </div>
+        
+        <div style="text-align: center;">
+            <button onclick="checkCanvas()">🔍 Verificar Canvas</button>
+            <button onclick="fixCanvas()">🔧 Corrigir Canvas</button>
+            <button onclick="createTestCanvas()">🎨 Criar Canvas de Teste</button>
+            <button onclick="openGame()">🎮 Abrir Jogo</button>
+        </div>
+        
+        <div id="testCanvasContainer" style="text-align: center; margin: 20px 0;"></div>
+        
+        <div class="log" id="logContainer">
+            <h3>📝 Log de Atividades</h3>
+            <div id="logContent"></div>
+        </div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logContent = document.getElementById('logContent');
+            const logItem = document.createElement('div');
+            logItem.className = `log-item log-${type}`;
+            logItem.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContent.appendChild(logItem);
+            logContent.scrollTop = logContent.scrollHeight;
+            console.log(message);
+        }
+        
+        function checkCanvas() {
+            log('🔍 Verificando canvas do jogo...', 'info');
+            
+            const gameCanvas = document.getElementById('gameCanvas');
+            const systemStatus = document.getElementById('systemStatus');
+            const errorPanel = document.getElementById('errorPanel');
+            const errorList = document.getElementById('errorList');
+            
+            let statusHTML = '';
+            let errors = [];
+            
+            // Verificar canvas
+            if (gameCanvas) {
+                const rect = gameCanvas.getBoundingClientRect();
+                const computedStyle = window.getComputedStyle(gameCanvas);
+                
+                statusHTML += '<p>✅ Canvas encontrado</p>';
+                statusHTML += `<p>📐 Dimensões: ${gameCanvas.width}x${gameCanvas.height}</p>`;
+                statusHTML += `<p>📏 Posição: x=${rect.x}, y=${rect.y}</p>`;
+                statusHTML += `<p>👁️ Visível: ${rect.width > 0 && rect.height > 0 ? 'Sim' : 'Não'}</p>`;
+                statusHTML += `<p>🎨 Display: ${computedStyle.display}</p>`;
+                statusHTML += `<p>👀 Visibility: ${computedStyle.visibility}</p>`;
+                statusHTML += `<p>📍 Position: ${computedStyle.position}</p>`;
+                statusHTML += `<p>🔢 Z-index: ${computedStyle.zIndex}</p>`;
+                
+                log(`Canvas encontrado: ${gameCanvas.width}x${gameCanvas.height}`, 'success');
+                log(`Posição: x=${rect.x}, y=${rect.y}`, 'info');
+                log(`Visível: ${rect.width > 0 && rect.height > 0}`, rect.width > 0 && rect.height > 0 ? 'success' : 'error');
+                
+                if (rect.width === 0 || rect.height === 0) {
+                    errors.push('Canvas não está visível (dimensões zero)');
+                }
+                
+                if (computedStyle.display === 'none') {
+                    errors.push('Canvas está com display: none');
+                }
+                
+                if (computedStyle.visibility === 'hidden') {
+                    errors.push('Canvas está com visibility: hidden');
+                }
+                
+            } else {
+                statusHTML += '<p>❌ Canvas não encontrado</p>';
+                errors.push('Canvas gameCanvas não existe no DOM');
+                log('Canvas não encontrado!', 'error');
+            }
+            
+            // Verificar jogo
+            if (window.game) {
+                statusHTML += '<p>✅ Instância do jogo encontrada</p>';
+                log('Instância do jogo encontrada', 'success');
+                
+                if (window.game.ctx) {
+                    statusHTML += '<p>✅ Contexto do canvas encontrado</p>';
+                    log('Contexto do canvas encontrado', 'success');
+                } else {
+                    statusHTML += '<p>❌ Contexto do canvas não encontrado</p>';
+                    errors.push('Contexto do canvas não está disponível');
+                    log('Contexto do canvas não encontrado!', 'error');
+                }
+            } else {
+                statusHTML += '<p>❌ Instância do jogo não encontrada</p>';
+                errors.push('Instância do jogo não foi criada');
+                log('Instância do jogo não encontrada!', 'error');
+            }
+            
+            systemStatus.innerHTML = statusHTML;
+            
+            if (errors.length > 0) {
+                errorPanel.style.display = 'block';
+                errorList.innerHTML = errors.map(error => `<p>• ${error}</p>`).join('');
+                log(`Encontrados ${errors.length} problemas`, 'error');
+            } else {
+                errorPanel.style.display = 'none';
+                log('Nenhum problema encontrado!', 'success');
+            }
+        }
+        
+        function fixCanvas() {
+            log('🔧 Aplicando correções no canvas...', 'info');
+            
+            const gameCanvas = document.getElementById('gameCanvas');
+            
+            if (!gameCanvas) {
+                log('❌ Canvas não encontrado para correção', 'error');
+                return;
+            }
+            
+            // Aplicar estilos críticos
+            gameCanvas.style.cssText = `
+                display: block !important;
+                visibility: visible !important;
+                position: fixed !important;
+                top: 50px !important;
+                left: 50px !important;
+                z-index: 9999 !important;
+                background-color: #1a1a2e !important;
+                width: 800px !important;
+                height: 600px !important;
+                border: 3px solid #00ff00 !important;
+                box-shadow: 0 0 30px #00ff00 !important;
+            `;
+            
+            log('✅ Estilos críticos aplicados', 'success');
+            
+            // Mover canvas para o body se necessário
+            if (gameCanvas.parentElement !== document.body) {
+                document.body.appendChild(gameCanvas);
+                log('✅ Canvas movido para o body', 'success');
+            }
+            
+            // Testar desenho
+            if (window.game && window.game.ctx) {
+                const ctx = window.game.ctx;
+                
+                // Limpar canvas
+                ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+                
+                // Desenhar fundo
+                ctx.fillStyle = '#1a1a2e';
+                ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+                
+                // Desenhar teste de cores
+                ctx.fillStyle = '#ff0000';
+                ctx.fillRect(10, 10, 100, 100);
+                ctx.fillStyle = '#00ff00';
+                ctx.fillRect(120, 10, 100, 100);
+                ctx.fillStyle = '#0000ff';
+                ctx.fillRect(230, 10, 100, 100);
+                
+                // Desenhar texto
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '24px Arial';
+                ctx.fillText('NOVA REMAINS', 10, 150);
+                ctx.fillText('Canvas Funcionando!', 10, 180);
+                
+                log('✅ Teste de desenho aplicado', 'success');
+            }
+            
+            // Verificar resultado
+            setTimeout(() => {
+                const rect = gameCanvas.getBoundingClientRect();
+                log(`Canvas após correção: ${rect.width}x${rect.height}`, 'info');
+                log(`Posição: x=${rect.x}, y=${rect.y}`, 'info');
+                
+                if (rect.width > 0 && rect.height > 0) {
+                    log('🎉 Canvas corrigido com sucesso!', 'success');
+                } else {
+                    log('❌ Canvas ainda não está visível', 'error');
+                }
+            }, 100);
+        }
+        
+        function createTestCanvas() {
+            log('🎨 Criando canvas de teste...', 'info');
+            
+            const container = document.getElementById('testCanvasContainer');
+            container.innerHTML = '';
+            
+            const testCanvas = document.createElement('canvas');
+            testCanvas.width = 400;
+            testCanvas.height = 300;
+            testCanvas.className = 'canvas-test';
+            testCanvas.id = 'testCanvas';
+            
+            const ctx = testCanvas.getContext('2d');
+            
+            // Desenhar fundo
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, 400, 300);
+            
+            // Desenhar bordas coloridas
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 5;
+            ctx.strokeRect(5, 5, 390, 290);
+            
+            // Desenhar círculos coloridos
+            ctx.fillStyle = '#ff0000';
+            ctx.beginPath();
+            ctx.arc(100, 100, 50, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.fillStyle = '#00ff00';
+            ctx.beginPath();
+            ctx.arc(200, 100, 50, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.fillStyle = '#0000ff';
+            ctx.beginPath();
+            ctx.arc(300, 100, 50, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Desenhar texto
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '20px Arial';
+            ctx.fillText('CANVAS DE TESTE', 100, 200);
+            ctx.fillText('Nova Remains', 120, 230);
+            
+            container.appendChild(testCanvas);
+            log('✅ Canvas de teste criado', 'success');
+        }
+        
+        function openGame() {
+            log('🎮 Abrindo jogo principal...', 'info');
+            window.open('index.html', '_blank');
+        }
+        
+        // Verificação automática ao carregar
+        window.addEventListener('load', () => {
+            log('🚀 Sistema de correção carregado', 'success');
+            setTimeout(checkCanvas, 1000);
+        });
+        
+        // Verificar se estamos no contexto correto
+        if (window.location.href.includes('index.html')) {
+            log('⚠️ Este arquivo deve ser executado separadamente', 'warning');
+            log('Abra este arquivo em uma nova aba', 'info');
+        }
+    </script>
+</body>
+</html>

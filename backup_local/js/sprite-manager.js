@@ -42,9 +42,19 @@ class SpriteManager {
             });
             
             this.loadingPromises.push(promise);
-            // Corrigir caminho do Kai que está na pasta juno
-            const heroPath = hero === 'kai' ? 'juno' : hero;
-            img.src = `assets/images/characters/heroes/${heroPath}/${hero}.png`;
+            // Corrigir caminhos específicos dos heróis
+            let heroPath, heroFile;
+            if (hero === 'kai') {
+                heroPath = 'juno';
+                heroFile = 'kai.png';
+            } else if (hero === 'vega') {
+                heroPath = 'vega';
+                heroFile = 'vegaT.png';
+            } else {
+                heroPath = hero;
+                heroFile = `${hero}.png`;
+            }
+            img.src = `assets/images/characters/heroes/${heroPath}/${heroFile}`;
         });
     }
     

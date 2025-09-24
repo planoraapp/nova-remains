@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Nova Remains - Teste de Canvas</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #00ff88;
+            text-shadow: 0 0 20px #00ff88;
+            margin-bottom: 30px;
+        }
+        
+        .game-canvas {
+            border: 3px solid #00ff00;
+            background: #1a1a2e;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 0 30px #00ff00;
+            border-radius: 10px;
+        }
+        
+        .controls {
+            margin: 20px 0;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #4c1d95, #7c3aed);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+        }
+        
+        .status {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .player {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: #4a90e2;
+            border-radius: 50%;
+            transition: all 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Nova Remains - Teste de Canvas</h1>
+        
+        <div class="status">
+            <h3>📊 Status do Sistema</h3>
+            <div id="status">Inicializando...</div>
+        </div>
+        
+        <canvas id="gameCanvas" class="game-canvas" width="800" height="600"></canvas>
+        
+        <div class="controls">
+            <button onclick="startGame()">🚀 Iniciar Jogo</button>
+            <button onclick="testDrawing()">🎨 Teste de Desenho</button>
+            <button onclick="addPlayer()">👤 Adicionar Jogador</button>
+            <button onclick="clearCanvas()">🧹 Limpar Canvas</button>
+        </div>
+        
+        <div class="status">
+            <h3>🎮 Controles</h3>
+            <p>• WASD ou Setas - Mover jogador</p>
+            <p>• Espaço - Pular</p>
+            <p>• Shift - Correr</p>
+        </div>
+    </div>
+
+    <script>
+        class SimpleGame {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+                
+                this.player = {
+                    x: this.width / 2,
+                    y: this.height - 100,
+                    width: 32,
+                    height: 32,
+                    speed: 5,
+                    color: '#4a90e2'
+                };
+                
+                this.keys = {};
+                this.gameRunning = false;
+                
+                this.setupEventListeners();
+                this.updateStatus('Sistema inicializado');
+            }
+            
+            setupEventListeners() {
+                document.addEventListener('keydown', (e) => {
+                    this.keys[e.key.toLowerCase()] = true;
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    this.keys[e.key.toLowerCase()] = false;
+                });
+            }
+            
+            update() {
+                if (!this.gameRunning) return;
+                
+                // Movimento do jogador
+                if (this.keys['a'] || this.keys['arrowleft']) {
+                    this.player.x -= this.player.speed;
+                }
+                if (this.keys['d'] || this.keys['arrowright']) {
+                    this.player.x += this.player.speed;
+                }
+                if (this.keys['w'] || this.keys['arrowup']) {
+                    this.player.y -= this.player.speed;
+                }
+                if (this.keys['s'] || this.keys['arrowdown']) {
+                    this.player.y += this.player.speed;
+                }
+                
+                // Limitar movimento dentro do canvas
+                this.player.x = Math.max(0, Math.min(this.width - this.player.width, this.player.x));
+                this.player.y = Math.max(0, Math.min(this.height - this.player.height, this.player.y));
+            }
+            
+            render() {
+                // Limpar canvas
+                this.ctx.clearRect(0, 0, this.width, this.height);
+                
+                // Desenhar fundo
+                this.ctx.fillStyle = '#1a1a2e';
+                this.ctx.fillRect(0, 0, this.width, this.height);
+                
+                // Desenhar grade
+                this.ctx.strokeStyle = '#333';
+                this.ctx.lineWidth = 1;
+                for (let x = 0; x < this.width; x += 50) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(x, 0);
+                    this.ctx.lineTo(x, this.height);
+                    this.ctx.stroke();
+                }
+                for (let y = 0; y < this.height; y += 50) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(0, y);
+                    this.ctx.lineTo(this.width, y);
+                    this.ctx.stroke();
+                }
+                
+                // Desenhar jogador
+                this.ctx.fillStyle = this.player.color;
+                this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
+                
+                // Desenhar borda do jogador
+                this.ctx.strokeStyle = '#ffffff';
+                this.ctx.lineWidth = 2;
+                this.ctx.strokeRect(this.player.x, this.player.y, this.player.width, this.player.height);
+                
+                // Desenhar informações
+                this.ctx.fillStyle = '#ffffff';
+                this.ctx.font = '16px Arial';
+                this.ctx.fillText(`Posição: ${Math.round(this.player.x)}, ${Math.round(this.player.y)}`, 10, 30);
+                this.ctx.fillText(`FPS: ${this.fps || 0}`, 10, 50);
+            }
+            
+            gameLoop() {
+                const now = performance.now();
+                const deltaTime = now - (this.lastTime || now);
+                this.lastTime = now;
+                
+                this.fps = Math.round(1000 / deltaTime);
+                
+                this.update();
+                this.render();
+                
+                if (this.gameRunning) {
+                    requestAnimationFrame(() => this.gameLoop());
+                }
+            }
+            
+            start() {
+                this.gameRunning = true;
+                this.gameLoop();
+                this.updateStatus('Jogo iniciado');
+            }
+            
+            stop() {
+                this.gameRunning = false;
+                this.updateStatus('Jogo pausado');
+            }
+            
+            updateStatus(message) {
+                const status = document.getElementById('status');
+                status.innerHTML += `<p>[${new Date().toLocaleTimeString()}] ${message}</p>`;
+            }
+        }
+        
+        // Inicializar jogo
+        const game = new SimpleGame();
+        
+        // Funções globais
+        function startGame() {
+            game.start();
+        }
+        
+        function testDrawing() {
+            const ctx = game.ctx;
+            
+            // Limpar canvas
+            ctx.clearRect(0, 0, game.width, game.height);
+            
+            // Desenhar fundo
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, game.width, game.height);
+            
+            // Desenhar círculos coloridos
+            ctx.fillStyle = '#ff0000';
+            ctx.beginPath();
+            ctx.arc(100, 100, 50, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.fillStyle = '#00ff00';
+            ctx.beginPath();
+            ctx.arc(200, 100, 50, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.fillStyle = '#0000ff';
+            ctx.beginPath();
+            ctx.arc(300, 100, 50, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Desenhar texto
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '32px Arial';
+            ctx.fillText('NOVA REMAINS', 200, 200);
+            ctx.fillText('Canvas Funcionando!', 180, 250);
+            
+            game.updateStatus('Teste de desenho aplicado');
+        }
+        
+        function addPlayer() {
+            game.player.x = Math.random() * (game.width - game.player.width);
+            game.player.y = Math.random() * (game.height - game.player.height);
+            game.updateStatus('Jogador reposicionado');
+        }
+        
+        function clearCanvas() {
+            game.ctx.clearRect(0, 0, game.width, game.height);
+            game.ctx.fillStyle = '#1a1a2e';
+            game.ctx.fillRect(0, 0, game.width, game.height);
+            game.updateStatus('Canvas limpo');
+        }
+        
+        // Iniciar automaticamente
+        setTimeout(() => {
+            game.start();
+        }, 1000);
+    </script>
+</body>
+</html>

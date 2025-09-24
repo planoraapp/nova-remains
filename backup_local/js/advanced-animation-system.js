@@ -951,7 +951,15 @@ window.initAdvancedAnimations = function() {
             window.advancedAnimationSystem.addCharacter(charName, img);
             console.log(`✅ ${charName} adicionado ao sistema avançado!`);
         };
-        img.src = `assets/images/characters/heroes/${charName}/${charName}.png`;
+        // Corrigir caminhos específicos dos heróis
+        let heroFile;
+        if (charName === 'kai') {
+            img.src = `assets/images/characters/heroes/juno/kai.png`;
+        } else if (charName === 'vega') {
+            img.src = `assets/images/characters/heroes/vega/vegaT.png`;
+        } else {
+            img.src = `assets/images/characters/heroes/${charName}/${charName}.png`;
+        }
     });
 };
 

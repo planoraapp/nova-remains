@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vega Test - Nova Remains</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a2e;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        #gameCanvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #2d3748;
+            border: 3px solid #00ff00;
+            z-index: 999;
+        }
+        
+        .ui-overlay {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 16px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            font-size: 14px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .menu-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(233, 30, 99, 0.9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+        }
+        
+        .menu-button:hover {
+            background: rgba(233, 30, 99, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+        }
+        
+        .menu-button:active {
+            transform: translateY(0);
+        }
+        
+        .pause-button {
+            position: fixed;
+            top: 20px;
+            right: 200px;
+            background: rgba(72, 187, 120, 0.9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+        
+        .pause-button:hover {
+            background: rgba(72, 187, 120, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+        }
+        
+        .pause-button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    
+    <!-- Botões de Controle -->
+    <button class="pause-button" onclick="togglePause()">
+        ⏸️ PAUSAR
+    </button>
+    
+    <button class="menu-button" onclick="window.location.href='nova-remains-advanced.html'">
+        🏠 MENU PRINCIPAL
+    </button>
+    
+    <div class="ui-overlay">
+        <div>❤️ Vida: <span id="health">100</span></div>
+        <div>📍 Posição: <span id="position">100, 300</span></div>
+        <div>🎯 Objetivos:</div>
+        <div id="objectives">
+            <div>⭕ Alcance a primeira plataforma</div>
+            <div>⭕ Derrote um inimigo</div>
+            <div>⭕ Chegue ao final do nível</div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <div>WASD/Setas: Mover | Espaço: Pular | Shift: Correr</div>
+    </div>
+
+    <script>
+        // Configurar canvas
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        console.log('✅ Canvas configurado:', canvas.width, 'x', canvas.height);
+        
+        // Jogo da Vega
+        const game = {
+            player: {
+                x: 100,
+                y: 300,
+                vx: 0,
+                vy: 0,
+                width: 40,
+                height: 60,
+                speed: 6,
+                jumpPower: 14,
+                onGround: false,
+                health: 100,
+                facing: 'right',
+                color: '#e91e63'
+            },
+            
+            platforms: [
+                { x: 0, y: 500, width: 200, height: 20, color: '#4a5568' },
+                { x: 300, y: 450, width: 150, height: 20, color: '#4a5568' },
+                { x: 500, y: 400, width: 200, height: 20, color: '#4a5568' },
+                { x: 750, y: 350, width: 150, height: 20, color: '#4a5568' },
+                { x: 950, y: 300, width: 200, height: 20, color: '#48bb78' },
+                { x: 0, y: canvas.height - 40, width: canvas.width, height: 40, color: '#2d3748' }
+            ],
+            
+            enemies: [
+                { x: 350, y: 420, width: 30, height: 30, color: '#f56565', health: 30 },
+                { x: 550, y: 370, width: 30, height: 30, color: '#f56565', health: 30 }
+            ],
+            
+            objectives: [
+                { id: 'platform', text: 'Alcance a primeira plataforma', completed: false },
+                { id: 'enemy', text: 'Derrote um inimigo', completed: false },
+                { id: 'end', text: 'Chegue ao final do nível', completed: false }
+            ],
+            
+            keys: {},
+            paused: false,
+            
+            init() {
+                this.setupControls();
+                this.gameLoop();
+            },
+            
+            setupControls() {
+                document.addEventListener('keydown', (e) => {
+                    // Controle de pausa com ESC
+                    if (e.key === 'Escape') {
+                        this.togglePause();
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    this.keys[e.key.toLowerCase()] = true;
+                    if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    this.keys[e.key.toLowerCase()] = false;
+                });
+            },
+            
+            togglePause() {
+                this.paused = !this.paused;
+                const pauseButton = document.querySelector('.pause-button');
+                if (pauseButton) {
+                    pauseButton.textContent = this.paused ? '▶️ CONTINUAR' : '⏸️ PAUSAR';
+                }
+                console.log(this.paused ? '⏸️ Jogo pausado' : '▶️ Jogo despausado');
+            },
+            
+            update() {
+                if (this.paused) return;
+                
+                const player = this.player;
+                const keys = this.keys;
+                
+                // Movimento horizontal
+                player.vx = 0;
+                if (keys['a'] || keys['arrowleft']) {
+                    player.vx = -player.speed;
+                    player.facing = 'left';
+                }
+                if (keys['d'] || keys['arrowright']) {
+                    player.vx = player.speed;
+                    player.facing = 'right';
+                }
+                
+                // Correr
+                if (keys['shift']) {
+                    player.vx *= 1.5;
+                }
+                
+                // Pulo
+                if ((keys[' '] || keys['w'] || keys['arrowup']) && player.onGround) {
+                    player.vy = -player.jumpPower;
+                    player.onGround = false;
+                }
+                
+                // Gravidade
+                player.vy += 0.8;
+                
+                // Atualizar posição
+                player.x += player.vx;
+                player.y += player.vy;
+                
+                // Colisão com plataformas
+                player.onGround = false;
+                for (const platform of this.platforms) {
+                    if (player.x < platform.x + platform.width &&
+                        player.x + player.width > platform.x &&
+                        player.y < platform.y + platform.height &&
+                        player.y + player.height > platform.y) {
+                        
+                        if (player.vy > 0 && player.y < platform.y) {
+                            player.y = platform.y - player.height;
+                            player.vy = 0;
+                            player.onGround = true;
+                        }
+                    }
+                }
+                
+                // Limites da tela
+                if (player.x < 0) player.x = 0;
+                if (player.x > canvas.width - player.width) {
+                    player.x = canvas.width - player.width;
+                }
+                
+                // Reset se cair
+                if (player.y > canvas.height) {
+                    player.x = 100;
+                    player.y = 300;
+                    player.health -= 10;
+                }
+                
+                // Verificar objetivos
+                this.checkObjectives();
+                
+                // Atualizar UI
+                this.updateUI();
+            },
+            
+            checkObjectives() {
+                const player = this.player;
+                
+                // Objetivo 1: Primeira plataforma
+                if (!this.objectives[0].completed && 
+                    player.x > 300 && player.x < 450 && player.y < 470) {
+                    this.objectives[0].completed = true;
+                    this.showNotification('✅ Primeira plataforma alcançada!');
+                }
+                
+                // Objetivo 2: Derrotar inimigo
+                if (!this.objectives[1].completed && 
+                    player.x > 350 && player.x < 380 && player.y < 450) {
+                    this.objectives[1].completed = true;
+                    this.showNotification('⚔️ Inimigo derrotado!');
+                }
+                
+                // Objetivo 3: Final
+                if (!this.objectives[2].completed && 
+                    player.x > 950 && player.x < 1150 && player.y < 320) {
+                    this.objectives[2].completed = true;
+                    this.showNotification('🏆 Missão concluída!');
+                    this.showVictory();
+                }
+            },
+            
+            showNotification(message) {
+                console.log('🎯', message);
+                
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 100px;
+                    right: 20px;
+                    background: rgba(72, 187, 120, 0.9);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    font-family: Arial, sans-serif;
+                    font-size: 16px;
+                    font-weight: bold;
+                    z-index: 10000;
+                `;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 3000);
+            },
+            
+            showVictory() {
+                const victory = document.createElement('div');
+                victory.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 10000;
+                    color: white;
+                    font-family: Arial, sans-serif;
+                `;
+                
+                victory.innerHTML = `
+                    <div style="text-align: center;">
+                        <h1 style="font-size: 48px; color: #48bb78; margin-bottom: 20px;">🏆 MISSÃO CONCLUÍDA!</h1>
+                        <h2 style="font-size: 32px; color: #e91e63; margin-bottom: 30px;">Vega completou o tutorial!</h2>
+                        <div style="font-size: 18px; margin-bottom: 30px;">
+                            <p>✅ Primeira plataforma alcançada</p>
+                            <p>⚔️ Inimigo derrotado</p>
+                            <p>🏁 Final do nível alcançado</p>
+                        </div>
+                        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                            <button onclick="location.href='nova-remains-advanced.html';" 
+                                    style="background: #e91e63; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 18px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
+                                🏠 MENU PRINCIPAL
+                            </button>
+                            <button onclick="location.reload();" 
+                                    style="background: #48bb78; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 18px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
+                                🔄 JOGAR NOVAMENTE
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(victory);
+            },
+            
+            updateUI() {
+                document.getElementById('health').textContent = this.player.health;
+                document.getElementById('position').textContent = `${Math.floor(this.player.x)}, ${Math.floor(this.player.y)}`;
+                
+                const objectivesDiv = document.getElementById('objectives');
+                objectivesDiv.innerHTML = this.objectives.map(obj => 
+                    `<div>${obj.completed ? '✅' : '⭕'} ${obj.text}</div>`
+                ).join('');
+            },
+            
+            render() {
+                // Limpar tela
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#1a202c');
+                gradient.addColorStop(1, '#2d3748');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Se pausado, mostrar overlay de pausa
+                if (this.paused) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    ctx.font = 'bold 48px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = '#e91e63';
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 3;
+                    ctx.strokeText('JOGO PAUSADO', canvas.width / 2, canvas.height / 2 - 50);
+                    ctx.fillText('JOGO PAUSADO', canvas.width / 2, canvas.height / 2 - 50);
+                    
+                    ctx.font = '24px Arial';
+                    ctx.fillStyle = 'white';
+                    ctx.fillText('Pressione ESC ou clique em PAUSAR para continuar', canvas.width / 2, canvas.height / 2 + 20);
+                    
+                    ctx.textAlign = 'left';
+                    return;
+                }
+                
+                // Desenhar plataformas
+                for (const platform of this.platforms) {
+                    ctx.fillStyle = platform.color;
+                    ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                    
+                    ctx.strokeStyle = '#718096';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(platform.x, platform.y, platform.width, platform.height);
+                }
+                
+                // Desenhar enemies
+                for (const enemy of this.enemies) {
+                    ctx.fillStyle = enemy.color;
+                    ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                }
+                
+                // Desenhar Vega
+                const player = this.player;
+                ctx.fillStyle = player.color;
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+                
+                // Olhos da Vega
+                ctx.fillStyle = 'white';
+                const eyeY = player.y + 15;
+                const eyeSize = 4;
+                if (player.facing === 'right') {
+                    ctx.fillRect(player.x + 25, eyeY, eyeSize, eyeSize);
+                    ctx.fillRect(player.x + 32, eyeY, eyeSize, eyeSize);
+                } else {
+                    ctx.fillRect(player.x + 4, eyeY, eyeSize, eyeSize);
+                    ctx.fillRect(player.x + 11, eyeY, eyeSize, eyeSize);
+                }
+                
+                // Título
+                ctx.font = 'bold 28px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#e91e63';
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.strokeText('NOVA REMAINS - VEGA', canvas.width / 2, 50);
+                ctx.fillText('NOVA REMAINS - VEGA', canvas.width / 2, 50);
+                ctx.textAlign = 'left';
+            },
+            
+            gameLoop() {
+                this.update();
+                this.render();
+                requestAnimationFrame(() => this.gameLoop());
+            }
+        };
+        
+        // Função global para pausar
+        window.togglePause = () => {
+            game.togglePause();
+        };
+        
+        // Inicializar jogo
+        game.init();
+        console.log('✅ Jogo da Vega iniciado!');
+        
+        // Redimensionar canvas
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

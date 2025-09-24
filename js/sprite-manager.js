@@ -42,9 +42,29 @@ class SpriteManager {
             });
             
             this.loadingPromises.push(promise);
-            // Corrigir caminho do Kai que está na pasta juno
-            const heroPath = hero === 'kai' ? 'juno' : hero;
-            img.src = `assets/images/characters/heroes/${heroPath}/${hero}.png`;
+            // Corrigir caminhos específicos dos heróis
+            let heroPath, heroFile;
+            if (hero === 'kai') {
+                heroPath = 'juno';
+                heroFile = 'kai.png';
+            } else if (hero === 'vega') {
+                heroPath = 'vega';
+                heroFile = 'vegaT.png';
+            } else {
+                heroPath = hero;
+                heroFile = `${hero}.png`;
+            }
+            // Adicionar timestamp para evitar cache
+            const timestamp = Date.now();
+            const imagePath = `assets/images/characters/heroes/${heroPath}/${heroFile}`;
+            img.src = `${imagePath}?v=${timestamp}`;
+            console.log(`🖼️ Carregando imagem: ${imagePath}`);
+            
+            // Debug específico para Vega
+            if (hero === 'vega') {
+                console.log(`🔍 DEBUG VEGA: Tentando carregar ${imagePath}`);
+                console.log(`🔍 DEBUG VEGA: URL completa: ${img.src}`);
+            }
         });
     }
     
@@ -736,4 +756,15 @@ class SpriteManager {
 // Inicializar sprite manager
 window.SpriteManager = SpriteManager;
 window.spriteManager = new SpriteManager();
-window.spriteManager.generateBasicSprites();
+
+// Aguardar o DOM estar pronto antes de inicializar
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('🚀 Inicializando sprite manager após DOM carregado...');
+        window.spriteManager.generateBasicSprites();
+    });
+} else {
+    // DOM já está pronto
+    console.log('🚀 Inicializando sprite manager imediatamente...');
+    window.spriteManager.generateBasicSprites();
+}
