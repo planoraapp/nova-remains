@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Remains - Jogo Completo Funcional</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        #gameCanvas {
+            border: 2px solid #4ecdc4;
+            border-radius: 10px;
+            background: #0f0f23;
+            box-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .loading-content {
+            text-align: center;
+            background: rgba(26, 26, 46, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #4ecdc4;
+            box-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+        }
+        
+        .loading-title {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #4ecdc4;
+            text-shadow: 0 0 10px #4ecdc4;
+        }
+        
+        .loading-subtitle {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #00d4ff;
+        }
+        
+        .loading-bar {
+            width: 300px;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px auto;
+        }
+        
+        .loading-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #00d4ff);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .loading-text {
+            color: #4ecdc4;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .game-controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            display: none;
+            gap: 10px;
+            z-index: 9999;
+        }
+        
+        .control-btn {
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #4ecdc4;
+            border: 1px solid #4ecdc4;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(78, 205, 196, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .combat-ui {
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            font-family: monospace;
+            z-index: 2000;
+            display: none;
+            gap: 20px;
+            border: 2px solid #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+        }
+        
+        .status-indicator {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #00ff00;
+            font-family: monospace;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Canvas do Jogo -->
+        <canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
+        
+        <!-- Tela de Loading -->
+        <div id="loadingScreen" class="loading-screen">
+            <div class="loading-content">
+                <h1 class="loading-title">NOVA REMAINS</h1>
+                <p class="loading-subtitle">Carregando Jogo Completo...</p>
+                <div class="loading-bar">
+                    <div id="loadingFill" class="loading-fill"></div>
+                </div>
+                <div id="loadingText" class="loading-text">Inicializando sistemas...</div>
+            </div>
+        </div>
+        
+        <!-- Controles do Jogo -->
+        <div id="gameControls" class="game-controls">
+            <button id="menuBtn" class="control-btn">🏠 Menu</button>
+            <button id="addEnemyBtn" class="control-btn">👹 +Inimigo</button>
+            <button id="healBtn" class="control-btn">❤️ Curar</button>
+            <button id="debugBtn" class="control-btn">🔧 Debug</button>
+        </div>
+        
+        <!-- UI de Combate -->
+        <div id="combatUI" class="combat-ui">
+            <div>
+                <div>HP: <span id="playerHP">100/100</span></div>
+                <div style="background: red; width: 120px; height: 12px; border-radius: 6px;">
+                    <div id="playerHPBar" style="background: lime; width: 100%; height: 100%; border-radius: 6px;"></div>
+                </div>
+            </div>
+            <div>
+                <div>MP: <span id="playerMP">50/50</span></div>
+                <div style="background: blue; width: 120px; height: 12px; border-radius: 6px;">
+                    <div id="playerMPBar" style="background: cyan; width: 100%; height: 100%; border-radius: 6px;"></div>
+                </div>
+            </div>
+            <div>
+                <div>Inimigos: <span id="enemyCount">0</span></div>
+                <div>Score: <span id="gameScore">0</span></div>
+            </div>
+        </div>
+        
+        <!-- Indicador de Status -->
+        <div id="statusIndicator" class="status-indicator">🟢 Carregando...</div>
+    </div>
+
+    <!-- Scripts Essenciais -->
+    <script src="js/sprite-manager.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/combat.js"></script>
+    <script src="js/shop-system.js"></script>
+    <script src="js/inventory-system.js"></script>
+    <script src="js/game.js"></script>
+
+    <script>
+        // 🎮 NOVA REMAINS - INICIALIZAÇÃO AUTOMÁTICA COMPLETA
+        
+        class NovaRemainsAutoInit {
+            constructor() {
+                this.loadingProgress = 0;
+                this.loadingSteps = [
+                    'Carregando sistemas...',
+                    'Inicializando jogador...',
+                    'Criando inimigos...',
+                    'Configurando controles...',
+                    'Iniciando gameplay...',
+                    'Pronto para jogar!'
+                ];
+                this.currentStep = 0;
+                
+                this.init();
+            }
+            
+            init() {
+                console.log('🎮 Nova Remains - Inicialização Automática Iniciada');
+                this.startLoading();
+            }
+            
+            startLoading() {
+                const loadingFill = document.getElementById('loadingFill');
+                const loadingText = document.getElementById('loadingText');
+                
+                const loadingInterval = setInterval(() => {
+                    this.loadingProgress += 2;
+                    loadingFill.style.width = this.loadingProgress + '%';
+                    
+                    if (this.loadingProgress >= 100) {
+                        clearInterval(loadingInterval);
+                        this.completeLoading();
+                    } else if (this.loadingProgress % 20 === 0 && this.currentStep < this.loadingSteps.length - 1) {
+                        this.currentStep++;
+                        loadingText.textContent = this.loadingSteps[this.currentStep];
+                    }
+                }, 50);
+            }
+            
+            completeLoading() {
+                console.log('✅ Carregamento completo!');
+                
+                // Esconder tela de loading
+                const loadingScreen = document.getElementById('loadingScreen');
+                loadingScreen.style.display = 'none';
+                
+                // Inicializar jogo
+                this.initializeGame();
+            }
+            
+            initializeGame() {
+                console.log('🎮 Inicializando jogo...');
+                
+                try {
+                    // 1. Criar instância do jogo
+                    if (!window.game) {
+                        window.game = new Game();
+                    }
+                    
+                    // 2. FORÇAR estado de jogo
+                    window.game.gameState = 'playing';
+                    console.log('✅ Estado do jogo: playing');
+                    
+                    // 3. Mostrar canvas
+                    const canvas = document.getElementById('gameCanvas');
+                    if (canvas) {
+                        canvas.style.display = 'block';
+                        console.log('✅ Canvas visível');
+                    }
+                    
+                    // 4. Criar jogador
+                    if (!window.game.player) {
+                        window.game.player = new Player(400, 450, 'vega');
+                        console.log('✅ Jogador criado');
+                    }
+                    
+                    // 5. Criar inimigos
+                    if (!window.game.enemies || window.game.enemies.length === 0) {
+                        window.game.enemies = [
+                            new Enemy(200, 500, 'goblin'),
+                            new Enemy(600, 500, 'skeleton'),
+                            new Enemy(800, 500, 'orc')
+                        ];
+                        console.log('✅ Inimigos criados');
+                    }
+                    
+                    // 6. Configurar câmera
+                    window.game.camera.x = window.game.player.x - window.game.width / 2;
+                    window.game.camera.y = window.game.player.y - window.game.height / 2;
+                    console.log('✅ Câmera configurada');
+                    
+                    // 7. Bloquear métodos problemáticos
+                    this.blockProblematicMethods();
+                    
+                    // 8. Configurar controles
+                    this.setupControls();
+                    
+                    // 9. Iniciar loop do jogo
+                    this.startGameLoop();
+                    
+                    // 10. Mostrar UI
+                    this.showUI();
+                    
+                    // 11. Atualizar status
+                    document.getElementById('statusIndicator').textContent = '🟢 Jogando';
+                    
+                    console.log('🎮 JOGO INICIADO COM SUCESSO!');
+                    console.log('🎮 Controles: WASD para mover, Z para atacar, X para defender, C para agarrar');
+                    
+                } catch (error) {
+                    console.error('❌ Erro ao inicializar jogo:', error);
+                    document.getElementById('statusIndicator').textContent = '❌ Erro';
+                }
+            }
+            
+            blockProblematicMethods() {
+                // Salvar métodos originais
+                this.originalMethods = {
+                    startGame: window.game.startGame,
+                    showCharacterSelection: window.game.showCharacterSelection,
+                    showMainMenu: window.game.showMainMenu
+                };
+                
+                // Bloquear métodos que causam problemas
+                window.game.startGame = () => {
+                    console.log('⚠️ startGame bloqueado - mantendo gameplay');
+                    window.game.gameState = 'playing';
+                };
+                
+                window.game.showCharacterSelection = () => {
+                    console.log('⚠️ showCharacterSelection bloqueado - mantendo gameplay');
+                    window.game.gameState = 'playing';
+                };
+                
+                window.game.showMainMenu = () => {
+                    console.log('⚠️ showMainMenu bloqueado - mantendo gameplay');
+                    window.game.gameState = 'playing';
+                };
+                
+                console.log('✅ Métodos problemáticos bloqueados');
+            }
+            
+            setupControls() {
+                // Configurar controles de teclado
+                this.setupKeyboardControls();
+                
+                // Configurar botões
+                this.setupButtons();
+                
+                console.log('✅ Controles configurados');
+            }
+            
+            setupKeyboardControls() {
+                // Garantir que o objeto keys existe
+                if (!window.game.keys) {
+                    window.game.keys = {};
+                }
+                
+                document.addEventListener('keydown', (e) => {
+                    // Mapear WASD para controles
+                    if (e.code === 'KeyW') window.game.keys['ArrowUp'] = true;
+                    if (e.code === 'KeyA') window.game.keys['ArrowLeft'] = true;
+                    if (e.code === 'KeyS') window.game.keys['ArrowDown'] = true;
+                    if (e.code === 'KeyD') window.game.keys['ArrowRight'] = true;
+                    if (e.code === 'KeyZ') window.game.keys['KeyZ'] = true;
+                    if (e.code === 'KeyX') window.game.keys['KeyX'] = true;
+                    if (e.code === 'KeyC') window.game.keys['KeyC'] = true;
+                    
+                    // Controles originais também
+                    if (e.code === 'ArrowUp') window.game.keys['ArrowUp'] = true;
+                    if (e.code === 'ArrowLeft') window.game.keys['ArrowLeft'] = true;
+                    if (e.code === 'ArrowDown') window.game.keys['ArrowDown'] = true;
+                    if (e.code === 'ArrowRight') window.game.keys['ArrowRight'] = true;
+                    
+                    e.preventDefault();
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    if (e.code === 'KeyW') window.game.keys['ArrowUp'] = false;
+                    if (e.code === 'KeyA') window.game.keys['ArrowLeft'] = false;
+                    if (e.code === 'KeyS') window.game.keys['ArrowDown'] = false;
+                    if (e.code === 'KeyD') window.game.keys['ArrowRight'] = false;
+                    if (e.code === 'KeyZ') window.game.keys['KeyZ'] = false;
+                    if (e.code === 'KeyX') window.game.keys['KeyX'] = false;
+                    if (e.code === 'KeyC') window.game.keys['KeyC'] = false;
+                    
+                    // Controles originais também
+                    if (e.code === 'ArrowUp') window.game.keys['ArrowUp'] = false;
+                    if (e.code === 'ArrowLeft') window.game.keys['ArrowLeft'] = false;
+                    if (e.code === 'ArrowDown') window.game.keys['ArrowDown'] = false;
+                    if (e.code === 'ArrowRight') window.game.keys['ArrowRight'] = false;
+                });
+                
+                console.log('✅ Controles de teclado configurados');
+            }
+            
+            setupButtons() {
+                // Botão Menu
+                document.getElementById('menuBtn').addEventListener('click', () => {
+                    this.showMainMenu();
+                });
+                
+                // Botão Adicionar Inimigo
+                document.getElementById('addEnemyBtn').addEventListener('click', () => {
+                    this.addEnemy();
+                });
+                
+                // Botão Curar
+                document.getElementById('healBtn').addEventListener('click', () => {
+                    this.healPlayer();
+                });
+                
+                // Botão Debug
+                document.getElementById('debugBtn').addEventListener('click', () => {
+                    this.debugGame();
+                });
+                
+                console.log('✅ Botões configurados');
+            }
+            
+            startGameLoop() {
+                if (window.game.gameLoopRunning) {
+                    console.log('⚠️ Loop já está rodando');
+                    return;
+                }
+                
+                window.game.gameLoopRunning = true;
+                
+                const gameLoop = () => {
+                    if (window.game.gameState === 'playing') {
+                        // Forçar estado
+                        window.game.gameState = 'playing';
+                        
+                        // Atualizar e renderizar
+                        window.game.update(16);
+                        window.game.render();
+                        
+                        requestAnimationFrame(gameLoop);
+                    } else {
+                        // Se não estiver playing, forçar
+                        window.game.gameState = 'playing';
+                        requestAnimationFrame(gameLoop);
+                    }
+                };
+                
+                requestAnimationFrame(gameLoop);
+                console.log('🎬 Loop do jogo iniciado');
+            }
+            
+            showUI() {
+                // Mostrar controles
+                document.getElementById('gameControls').style.display = 'flex';
+                
+                // Mostrar UI de combate
+                document.getElementById('combatUI').style.display = 'flex';
+                
+                // Iniciar atualização da UI
+                this.startUIUpdate();
+                
+                console.log('✅ UI exibida');
+            }
+            
+            startUIUpdate() {
+                setInterval(() => {
+                    this.updateCombatUI();
+                }, 100);
+            }
+            
+            updateCombatUI() {
+                if (!window.game.player) return;
+                
+                const player = window.game.player;
+                const hpElement = document.getElementById('playerHP');
+                const hpBar = document.getElementById('playerHPBar');
+                const mpElement = document.getElementById('playerMP');
+                const mpBar = document.getElementById('playerMPBar');
+                const enemyCount = document.getElementById('enemyCount');
+                const gameScore = document.getElementById('gameScore');
+                
+                if (hpElement) hpElement.textContent = `${Math.round(player.health)}/${player.maxHealth}`;
+                if (hpBar) hpBar.style.width = `${(player.health / player.maxHealth) * 100}%`;
+                if (mpElement) mpElement.textContent = `${Math.round(player.mana)}/${player.maxMana}`;
+                if (mpBar) mpBar.style.width = `${(player.mana / player.maxMana) * 100}%`;
+                if (enemyCount) enemyCount.textContent = window.game.enemies.length;
+                if (gameScore) gameScore.textContent = window.game.score || 0;
+            }
+            
+            // Métodos de controle
+            showMainMenu() {
+                window.game.gameState = 'menu';
+                document.getElementById('loadingScreen').style.display = 'flex';
+                document.getElementById('gameCanvas').style.display = 'none';
+                document.getElementById('gameControls').style.display = 'none';
+                document.getElementById('combatUI').style.display = 'none';
+                document.getElementById('statusIndicator').textContent = '🟢 Menu';
+                console.log('🏠 Menu principal exibido');
+            }
+            
+            addEnemy() {
+                if (window.game && window.game.enemies) {
+                    const x = 100 + Math.random() * 600;
+                    const y = 500;
+                    const types = ['goblin', 'skeleton', 'orc'];
+                    const type = types[Math.floor(Math.random() * types.length)];
+                    window.game.enemies.push(new Enemy(x, y, type));
+                    console.log(`👹 ${type} adicionado!`);
+                }
+            }
+            
+            healPlayer() {
+                if (window.game && window.game.player) {
+                    window.game.player.health = window.game.player.maxHealth;
+                    console.log('❤️ Jogador curado!');
+                }
+            }
+            
+            debugGame() {
+                if (window.game) {
+                    console.log('🔍 Estado do Jogo:');
+                    console.log('- Estado:', window.game.gameState);
+                    console.log('- Jogador:', window.game.player ? 'Criado' : 'Não criado');
+                    console.log('- Posição do jogador:', window.game.player ? `(${window.game.player.x}, ${window.game.player.y})` : 'N/A');
+                    console.log('- Inimigos:', window.game.enemies ? window.game.enemies.length : 0);
+                    console.log('- Loop rodando:', window.game.gameLoopRunning ? 'Sim' : 'Não');
+                } else {
+                    console.log('❌ Jogo não inicializado');
+                }
+            }
+        }
+        
+        // Inicializar automaticamente quando a página carregar
+        window.addEventListener('load', () => {
+            new NovaRemainsAutoInit();
+        });
+        
+        // Funções globais para debug
+        window.debugGame = () => {
+            if (window.novaRemainsAutoInit) {
+                window.novaRemainsAutoInit.debugGame();
+            }
+        };
+        
+        window.addEnemy = () => {
+            if (window.novaRemainsAutoInit) {
+                window.novaRemainsAutoInit.addEnemy();
+            }
+        };
+        
+        window.healPlayer = () => {
+            if (window.novaRemainsAutoInit) {
+                window.novaRemainsAutoInit.healPlayer();
+            }
+        };
+        
+        console.log('🎮 Nova Remains - Sistema de Inicialização Automática Carregado!');
+    </script>
+</body>
+</html>
