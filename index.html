@@ -5973,22 +5973,127 @@ npm
     <script src="js/advanced-world-map-generator.js"></script>
     <script src="js/advanced-background-generator.js"></script>
     <script src="js/master-visual-generator.js"></script>
-    <script src="js/character-debug-fix.js"></script>
     
     <!-- Scripts existentes limpos -->
-    <script src="js/vega-sprites-simple.js"></script>
-    <script src="js/player-vega-simple.js"></script>
-    <script src="js/vega-debug.js"></script>
-    <script src="js/init-fix.js"></script>
-    <script src="js/vega-preview.js"></script>
-    <script src="js/character-debug.js"></script>
     <script src="js/character-images.js"></script>
-    <script src="js/vega-card-image.js"></script>
     
     <!-- Script principal -->
     <script src="js/main.js"></script>
     
     <script>
+        // Debug do sistema de missões
+        function debugMissionSystem() {
+            console.log('🔍 Debug do Sistema de Missões:');
+            console.log('- MissionSystem class:', typeof MissionSystem);
+            console.log('- window.missionSystem:', window.missionSystem);
+            console.log('- window.game:', window.game);
+            console.log('- window.game.gameState:', window.game ? window.game.gameState : 'undefined');
+            
+            if (window.missionSystem) {
+                console.log('- Missões disponíveis:', window.missionSystem.missions.size);
+                console.log('- Sala atual:', window.missionSystem.currentRoom);
+            }
+        }
+
+        // Inicializar sistema de missões
+        function initializeMissionSystem() {
+            if (typeof MissionSystem !== 'undefined' && !window.missionSystem) {
+                window.missionSystem = new MissionSystem();
+                console.log('✅ Sistema de Missões inicializado com sucesso!');
+                console.log('- Missões disponíveis:', window.missionSystem.missions.size);
+            }
+        }
+
+        // Forçar inicialização do jogo
+        function forceGameInitialization() {
+            console.log('🚀 Forçando inicialização do jogo...');
+            
+            // Verificar elementos DOM
+            const gameCanvas = document.getElementById('gameCanvas');
+            const worldMap = document.getElementById('worldMap');
+            console.log('🎮 Canvas encontrado:', !!gameCanvas);
+            console.log('🗺️ Mapa encontrado:', !!worldMap);
+            
+            // Verificar classes disponíveis
+            console.log('📋 Classes disponíveis:');
+            console.log('- Game:', typeof Game);
+            console.log('- Player:', typeof Player);
+            console.log('- Enemy:', typeof Enemy);
+            console.log('- MissionSystem:', typeof MissionSystem);
+            
+            // Verificar instâncias existentes
+            console.log('🔍 Instâncias existentes:');
+            console.log('- window.game:', !!window.game);
+            console.log('- window.player:', !!window.player);
+            console.log('- window.enemy:', !!window.enemy);
+            console.log('- window.missionSystem:', !!window.missionSystem);
+            
+            // Criar instâncias se não existirem
+            if (typeof Game !== 'undefined' && !window.game) {
+                try {
+                    window.game = new Game();
+                    console.log('✅ Jogo inicializado!');
+                } catch (error) {
+                    console.error('❌ Erro ao inicializar jogo:', error);
+                }
+            }
+            
+            if (typeof Player !== 'undefined' && !window.player) {
+                try {
+                    window.player = new Player(100, 100);
+                    console.log('✅ Player criado!');
+                } catch (error) {
+                    console.error('❌ Erro ao criar player:', error);
+                }
+            }
+            
+            if (typeof Enemy !== 'undefined' && !window.enemy) {
+                try {
+                    window.enemy = new Enemy(200, 100);
+                    console.log('✅ Enemy criado!');
+                } catch (error) {
+                    console.error('❌ Erro ao criar enemy:', error);
+                }
+            }
+            
+            // Forçar estado de jogo
+            if (window.game) {
+                window.game.gameState = 'playing';
+                console.log('✅ Estado do jogo definido como "playing"');
+                
+                // Verificar se o canvas está visível
+                if (gameCanvas) {
+                    gameCanvas.style.display = 'block';
+                    gameCanvas.style.visibility = 'visible';
+                    console.log('✅ Canvas tornado visível!');
+                }
+                
+                // Iniciar loop do jogo
+                if (!window.game.gameLoopRunning) {
+                    try {
+                        window.game.gameLoop();
+                        console.log('✅ Loop do jogo iniciado!');
+                    } catch (error) {
+                        console.error('❌ Erro ao iniciar loop:', error);
+                    }
+                }
+            }
+            
+            // Mostrar mapa de missões
+            if (worldMap) {
+                worldMap.style.display = 'block';
+                console.log('✅ Mapa de missões exibido!');
+            }
+            
+            // Debug final
+            console.log('🎯 Status final:');
+            console.log('- Jogo:', window.game ? 'OK' : 'FALHOU');
+            console.log('- Player:', window.player ? 'OK' : 'FALHOU');
+            console.log('- Enemy:', window.enemy ? 'OK' : 'FALHOU');
+            console.log('- Canvas:', gameCanvas ? 'OK' : 'FALHOU');
+            console.log('- Mapa:', worldMap ? 'OK' : 'FALHOU');
+        }
+
         // Método initializeUI que estava faltando
         function initializeUI() {
             // Inicializar elementos de UI se necessário
@@ -10234,6 +10339,14 @@ npm
             }
             
             console.log('✅ Todos os sistemas inicializados');
+            
+            // Inicializar sistema de missões
+            initializeMissionSystem();
+            
+            // Forçar inicialização do jogo após um delay
+            setTimeout(() => {
+                forceGameInitialization();
+            }, 2000);
         });
     </script>
 </body>

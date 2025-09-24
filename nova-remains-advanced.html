@@ -98,50 +98,30 @@
             left: -3px;
             right: -3px;
             bottom: -3px;
-            background: linear-gradient(45deg, #60a5fa, #34d399, #f59e0b);
+            background: linear-gradient(45deg, #7c3aed, #4c1d95);
             border-radius: 25px;
             z-index: -1;
-            animation: elementBorder 4s infinite linear;
         }
 
-        @keyframes elementBorder {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-
-        /* Botões Ultra Avançados com Efeito 3D */
+        /* Botões com Cor Sólida */
         .ui-button {
-            background: 
-                linear-gradient(145deg, 
-                    #1e3a8a 0%,
-                    #3b82f6 15%,
-                    #60a5fa 35%,
-                    #93c5fd 55%,
-                    #dbeafe 75%,
-                    #60a5fa 85%,
-                    #3b82f6 95%,
-                    #1e3a8a 100%);
-            border: 3px solid transparent;
+            background: #4c1d95; /* Roxo sólido */
+            border: 3px solid #7c3aed;
             border-radius: 18px;
             color: #fff;
             cursor: pointer;
             font-weight: 900;
             text-shadow: 
-                0 2px 4px rgba(0, 0, 0, 0.8),
-                0 0 10px rgba(96, 165, 250, 0.5),
-                0 0 20px rgba(96, 165, 250, 0.3);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                0 2px 4px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
             box-shadow: 
-                0 15px 35px rgba(96, 165, 250, 0.4),
-                inset 0 2px 0 rgba(255, 255, 255, 0.3),
-                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
-                inset 2px 0 0 rgba(255, 255, 255, 0.1),
-                inset -2px 0 0 rgba(0, 0, 0, 0.1);
+                0 8px 20px rgba(76, 29, 149, 0.4),
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.2);
             position: relative;
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 2px;
-            transform-style: preserve-3d;
         }
 
         .ui-button::before {
@@ -151,10 +131,9 @@
             left: -3px;
             right: -3px;
             bottom: -3px;
-            background: linear-gradient(45deg, #60a5fa, #34d399, #f59e0b, #ef4444);
+            background: #7c3aed; /* Borda sólida roxa */
             border-radius: 18px;
             z-index: -1;
-            animation: buttonBorder 2s infinite linear;
         }
 
         .ui-button::after {
@@ -172,9 +151,9 @@
             pointer-events: none;
         }
 
-        @keyframes buttonBorder {
-            0% { filter: hue-rotate(0deg) brightness(1.2); }
-            100% { filter: hue-rotate(360deg) brightness(1.5); }
+        @keyframes elementBorder {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
         }
 
         .ui-button .shine {
@@ -195,26 +174,51 @@
         }
 
         .ui-button:hover {
-            transform: translateY(-5px) rotateX(10deg) scale(1.05);
+            transform: translateY(-3px) scale(1.02);
             box-shadow: 
-                0 25px 50px rgba(96, 165, 250, 0.7),
-                inset 0 3px 0 rgba(255, 255, 255, 0.4),
-                inset 0 -3px 0 rgba(0, 0, 0, 0.4),
-                0 0 30px rgba(96, 165, 250, 0.8);
-            background: 
-                linear-gradient(145deg, 
-                    #3b82f6 0%,
-                    #60a5fa 25%,
-                    #93c5fd 50%,
-                    #dbeafe 75%,
-                    #60a5fa 100%);
+                0 12px 25px rgba(76, 29, 149, 0.6),
+                inset 0 3px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -3px 0 rgba(0, 0, 0, 0.3);
+            background: #5b21b6; /* Roxo mais claro no hover */
         }
 
         .ui-button:active {
-            transform: translateY(-2px) rotateX(5deg) scale(0.98);
+            transform: translateY(-1px) scale(0.98);
             box-shadow: 
-                0 10px 25px rgba(96, 165, 250, 0.5),
+                0 6px 15px rgba(76, 29, 149, 0.5),
                 inset 0 4px 8px rgba(0, 0, 0, 0.4);
+            background: #3730a3; /* Roxo mais escuro quando pressionado */
+        }
+
+        /* Botões Brancos (alternativa) */
+        .ui-button.white {
+            background: #ffffff;
+            border: 3px solid #e5e7eb;
+            color: #374151;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.1),
+                inset 0 2px 0 rgba(255, 255, 255, 0.8),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .ui-button.white::before {
+            background: #e5e7eb;
+        }
+
+        .ui-button.white:hover {
+            background: #f9fafb;
+            box-shadow: 
+                0 12px 25px rgba(0, 0, 0, 0.15),
+                inset 0 3px 0 rgba(255, 255, 255, 0.9),
+                inset 0 -3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .ui-button.white:active {
+            background: #f3f4f6;
+            box-shadow: 
+                0 6px 15px rgba(0, 0, 0, 0.2),
+                inset 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         /* Botões de Menu com Efeitos Especiais */
@@ -249,20 +253,25 @@
 
         /* Botões de Controle Ultra Compactos */
         .control-button {
-            width: 38px;
-            height: 38px;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            position: relative;
+            width: 32px !important;
+            height: 32px !important;
+            font-size: 14px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 8px !important;
+            position: relative !important;
+            flex-shrink: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #4c1d95 !important;
+            border: 3px solid #7c3aed !important;
         }
 
         .control-button .icon {
             position: relative;
             z-index: 2;
-            filter: drop-shadow(0 0 5px rgba(96, 165, 250, 0.8));
+            filter: drop-shadow(0 0 3px rgba(76, 29, 149, 0.6));
         }
 
         /* Menu Principal Estilizado */
@@ -303,14 +312,97 @@
             }
         }
 
-        /* Botões de Controle Organizados */
+        /* Botões de Controle no Topo Direito - Fora do Menu */
         .control-buttons {
-            bottom: 25px;
-            left: 25px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            max-width: 170px;
+            position: fixed !important;
+            top: 25px !important;
+            right: 25px !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+            max-width: 300px !important;
+            justify-content: flex-end !important;
+            z-index: 1001 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        /* Painéis de Conteúdo */
+        .content-panel {
+            position: absolute;
+            top: 25px;
+            left: 350px; /* À direita do menu principal */
+            width: 600px;
+            height: calc(100vh - 50px);
+            background: 
+                linear-gradient(135deg, 
+                    rgba(76, 29, 149, 0.95) 0%,
+                    rgba(124, 58, 237, 0.9) 50%,
+                    rgba(76, 29, 149, 0.95) 100%);
+            border: 3px solid #7c3aed;
+            border-radius: 25px;
+            backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 
+                0 25px 50px rgba(76, 29, 149, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .content-panel::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #7c3aed, #4c1d95);
+            border-radius: 25px;
+            z-index: -1;
+        }
+
+        /* Painel de Missões */
+        .missions-panel {
+            display: none;
+        }
+
+        .missions-panel.visible {
+            display: block;
+            animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Painel de Inventário */
+        .inventory-panel {
+            display: none;
+        }
+
+        .inventory-panel.visible {
+            display: block;
+            animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Painel de Loja */
+        .shop-panel {
+            display: none;
+        }
+
+        .shop-panel.visible {
+            display: block;
+            animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Painel de Opções */
+        .options-panel {
+            display: none;
+        }
+
+        .options-panel.visible {
+            display: block;
+            animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         /* Estados dos painéis */
@@ -332,6 +424,500 @@
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
+        }
+
+        @keyframes slideInRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Títulos dos Painéis */
+        .panel-title {
+            font-size: 2.5em;
+            color: #60a5fa;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 
+                0 0 20px #60a5fa,
+                0 0 40px #60a5fa;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        /* Botão de Fechar */
+        .close-panel {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: #ef4444;
+            border: 2px solid #dc2626;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-panel:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        /* Estilos dos Painéis de Conteúdo */
+        .missions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .mission-card {
+            background: rgba(76, 29, 149, 0.3);
+            border: 2px solid #7c3aed;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .mission-card:hover {
+            background: rgba(76, 29, 149, 0.5);
+            transform: scale(1.05);
+        }
+
+        .mission-card h3 {
+            color: #60a5fa;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .mission-card p {
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .difficulty {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .difficulty.easy { background: #10b981; color: white; }
+        .difficulty.medium { background: #f59e0b; color: white; }
+        .difficulty.hard { background: #ef4444; color: white; }
+        .difficulty.extreme { background: #8b5cf6; color: white; }
+
+        /* Inventário */
+        .inventory-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .character-info h3 {
+            color: #60a5fa;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .stats {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat span {
+            min-width: 80px;
+            color: #ccc;
+        }
+
+        .stat-bar {
+            flex: 1;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .stat-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .stat-fill.hp { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .stat-fill.mp { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .item-slot {
+            background: rgba(76, 29, 149, 0.3);
+            border: 2px solid #7c3aed;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            color: #ccc;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Loja */
+        .shop-categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .shop-category {
+            padding: 10px 20px;
+            background: rgba(76, 29, 149, 0.3);
+            border: 2px solid #7c3aed;
+            border-radius: 10px;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .shop-category.active,
+        .shop-category:hover {
+            background: rgba(76, 29, 149, 0.5);
+            color: #60a5fa;
+        }
+
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .shop-item {
+            background: rgba(76, 29, 149, 0.3);
+            border: 2px solid #7c3aed;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .shop-item h4 {
+            color: #60a5fa;
+            margin-bottom: 10px;
+        }
+
+        .shop-item p {
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            display: block;
+            color: #f59e0b;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .buy-btn {
+            background: #10b981;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .buy-btn:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        /* Opções */
+        .options-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .option-group h3 {
+            color: #60a5fa;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .option-group label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .option-group input,
+        .option-group select {
+            background: rgba(76, 29, 149, 0.3);
+            border: 2px solid #7c3aed;
+            border-radius: 8px;
+            padding: 8px;
+            color: #ccc;
+        }
+
+        /* Animações de Heróis */
+        .heroes-animation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .hero-animation-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #7c3aed;
+            transition: all 0.3s ease;
+        }
+
+        .hero-animation-card:hover {
+            border-color: #a855f7;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .hero-animation-card h3 {
+            color: #a855f7;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .hero-sprite {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            border: 2px solid #7c3aed;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-sprite img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .animation-controls {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .animation-controls .btn {
+            padding: 5px 10px;
+            font-size: 0.8em;
+            width: auto;
+            margin: 0;
+        }
+
+        .animation-status {
+            font-size: 0.9em;
+            color: #a855f7;
+            font-weight: 600;
+        }
+
+        .global-animation-controls {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border: 2px solid #10b981;
+        }
+
+        .global-animation-controls h3 {
+            color: #10b981;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .global-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .global-buttons .btn {
+            width: auto;
+            margin: 0;
+        }
+
+        /* Animações CSS */
+        @keyframes heroBreathing {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes heroGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(168, 85, 247, 0.8); }
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .hero-sprite.breathing {
+            animation: heroBreathing 2s ease-in-out infinite;
+        }
+
+        .hero-sprite.glow {
+            animation: heroGlow 3s ease-in-out infinite;
+        }
+
+        .hero-sprite.float {
+            animation: heroFloat 3s ease-in-out infinite;
+        }
+
+        /* Layout de Duas Colunas para Animações */
+        .animations-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            padding: 20px;
+            min-height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            .animations-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .animations-right {
+                order: -1;
+                margin-bottom: 20px;
+            }
+        }
+
+        .animations-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .animations-right {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border: 2px solid #7c3aed;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-preview {
+            width: 100%;
+            max-width: 250px;
+            height: 300px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            border: 2px solid #a855f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .hero-info {
+            text-align: center;
+            color: #a855f7;
+        }
+
+        .hero-info h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #a855f7;
+        }
+
+        .hero-info p {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin: 5px 0;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(124, 58, 237, 0.2);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        .stat-item .stat-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .hero-animation-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hero-animation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
+        }
+
+        .hero-animation-card.selected {
+            border-color: #10b981;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
         }
     </style>
 </head>
@@ -365,10 +951,20 @@
                     <div class="bg-effect"></div>
                     <span class="text">SHOP</span>
                 </button>
-                <button class="ui-button menu-button" onclick="showOptions()">
+                <button class="ui-button menu-button white" onclick="showOptions()">
                     <div class="shine"></div>
                     <div class="bg-effect"></div>
-                    <span class="text">OPTIONS</span>
+                    <span class="text">OPTIONS (WHITE)</span>
+                </button>
+                <button class="ui-button menu-button" onclick="showHeroAnimations()" style="background: linear-gradient(135deg, #ec4899, #f472b6);">
+                    <div class="shine"></div>
+                    <div class="bg-effect"></div>
+                    <span class="text">🎭 ANIMAÇÕES</span>
+                </button>
+                <button class="ui-button menu-button" onclick="checkGameStatus()" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">
+                    <div class="shine"></div>
+                    <div class="bg-effect"></div>
+                    <span class="text">🔍 DIAGNÓSTICO</span>
                 </button>
                 <button class="ui-button menu-button" onclick="showExitDialog()">
                     <div class="shine"></div>
@@ -376,9 +972,10 @@
                     <span class="text">EXIT</span>
                 </button>
             </div>
+        </div>
 
-            <!-- Botões de Controle -->
-            <div class="control-buttons" id="controlButtons">
+        <!-- Botões de Controle Separados -->
+        <div class="control-buttons" id="controlButtons">
                 <!-- Primeira linha - Direcionais -->
                 <button class="ui-button control-button" onclick="moveUp()">
                     <div class="shine"></div>
@@ -470,6 +1067,234 @@
                 </button>
             </div>
         </div>
+
+        <!-- Painéis de Conteúdo -->
+        <!-- Painel de Missões -->
+        <div class="content-panel missions-panel" id="missionsPanel">
+            <button class="close-panel" onclick="closePanel('missionsPanel')">✕</button>
+            <h2 class="panel-title">MISSÕES</h2>
+            <div class="missions-grid">
+                <div class="mission-card" onclick="startMission('tutorial')">
+                    <h3>Tutorial</h3>
+                    <p>Aprenda os controles básicos</p>
+                    <span class="difficulty easy">Fácil</span>
+                </div>
+                <div class="mission-card" onclick="startMission('forest')">
+                    <h3>Floresta Sombria</h3>
+                    <p>Explore a floresta misteriosa</p>
+                    <span class="difficulty medium">Médio</span>
+                </div>
+                <div class="mission-card" onclick="startMission('dungeon')">
+                    <h3>Masmorra Antiga</h3>
+                    <p>Desça nas profundezas</p>
+                    <span class="difficulty hard">Difícil</span>
+                </div>
+                <div class="mission-card" onclick="startMission('boss')">
+                    <h3>Chefe Final</h3>
+                    <p>Enfrente o boss supremo</p>
+                    <span class="difficulty extreme">Extremo</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de Inventário -->
+        <div class="content-panel inventory-panel" id="inventoryPanel">
+            <button class="close-panel" onclick="closePanel('inventoryPanel')">✕</button>
+            <h2 class="panel-title">INVENTÁRIO</h2>
+            <div class="inventory-content">
+                <div class="character-info">
+                    <h3>Personagem Padrão</h3>
+                    <div class="stats">
+                        <div class="stat">
+                            <span>Vida:</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill hp" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <span>Mana:</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill mp" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="items-grid">
+                    <div class="item-slot">Espada</div>
+                    <div class="item-slot">Escudo</div>
+                    <div class="item-slot">Poção</div>
+                    <div class="item-slot">Chave</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de Loja -->
+        <div class="content-panel shop-panel" id="shopPanel">
+            <button class="close-panel" onclick="closePanel('shopPanel')">✕</button>
+            <h2 class="panel-title">LOJA</h2>
+            <div class="shop-content">
+                <div class="shop-categories">
+                    <button class="shop-category active" onclick="showShopCategory('weapons')">Armas</button>
+                    <button class="shop-category" onclick="showShopCategory('armor')">Armaduras</button>
+                    <button class="shop-category" onclick="showShopCategory('items')">Itens</button>
+                </div>
+                <div class="shop-items">
+                    <div class="shop-item">
+                        <h4>Espada de Ferro</h4>
+                        <p>Dano: +10</p>
+                        <span class="price">100 moedas</span>
+                        <button class="buy-btn">Comprar</button>
+                    </div>
+                    <div class="shop-item">
+                        <h4>Escudo de Madeira</h4>
+                        <p>Defesa: +5</p>
+                        <span class="price">50 moedas</span>
+                        <button class="buy-btn">Comprar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de Opções -->
+        <div class="content-panel options-panel" id="optionsPanel">
+            <button class="close-panel" onclick="closePanel('optionsPanel')">✕</button>
+            <h2 class="panel-title">OPÇÕES</h2>
+            <div class="options-content">
+                <div class="option-group">
+                    <h3>Áudio</h3>
+                    <label>
+                        <input type="range" min="0" max="100" value="80">
+                        Volume Geral
+                    </label>
+                    <label>
+                        <input type="range" min="0" max="100" value="60">
+                        Volume da Música
+                    </label>
+                </div>
+                <div class="option-group">
+                    <h3>Gráficos</h3>
+                    <label>
+                        <select>
+                            <option>Baixo</option>
+                            <option selected>Médio</option>
+                            <option>Alto</option>
+                        </select>
+                        Qualidade
+                    </label>
+                </div>
+                <div class="option-group">
+                    <h3>Controles</h3>
+                    <label>
+                        <input type="checkbox" checked>
+                        Inverter Eixo Y
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de Animações de Heróis -->
+        <div class="content-panel animations-panel" id="animationsPanel">
+            <button class="close-panel" onclick="closePanel('animationsPanel')">✕</button>
+            <h2 class="panel-title">ANIMAÇÕES DE HERÓIS</h2>
+            <div class="animations-content">
+                <div class="animations-left">
+                    <div class="heroes-animation-grid">
+                    <!-- Hero Vega -->
+                    <div class="hero-animation-card" onclick="selectHero('vega')">
+                        <h3>⚔️ Vega</h3>
+                        <div class="hero-sprite" id="vegaSprite">
+                            <img src="assets/images/characters/heroes/vega/vega.png" alt="Vega" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjN2MzYTdlIi8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlZFR0E8L3RleHQ+Cjwvc3ZnPgo='">
+                        </div>
+                        <div class="animation-controls" onclick="event.stopPropagation()">
+                            <button class="btn" onclick="startHeroAnimation('vega', 'breathing')">🫁</button>
+                            <button class="btn" onclick="startHeroAnimation('vega', 'glow')">✨</button>
+                            <button class="btn" onclick="startHeroAnimation('vega', 'float')">🎈</button>
+                            <button class="btn danger" onclick="stopHeroAnimation('vega')">⏹️</button>
+                        </div>
+                        <div class="animation-status">
+                            <span id="vegaStatus">Parado</span>
+                        </div>
+                    </div>
+
+                    <!-- Hero Atlas -->
+                    <div class="hero-animation-card" onclick="selectHero('atlas')">
+                        <h3>🛡️ Atlas</h3>
+                        <div class="hero-sprite" id="atlasSprite">
+                            <img src="assets/images/characters/heroes/atlas/atlas.png" alt="Atlas" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjMTA2NDkzIi8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkFUTEFTPC90ZXh0Pgo8L3N2Zz4K'">
+                        </div>
+                        <div class="animation-controls" onclick="event.stopPropagation()">
+                            <button class="btn" onclick="startHeroAnimation('atlas', 'breathing')">🫁</button>
+                            <button class="btn" onclick="startHeroAnimation('atlas', 'glow')">✨</button>
+                            <button class="btn" onclick="startHeroAnimation('atlas', 'float')">🎈</button>
+                            <button class="btn danger" onclick="stopHeroAnimation('atlas')">⏹️</button>
+                        </div>
+                        <div class="animation-status">
+                            <span id="atlasStatus">Parado</span>
+                        </div>
+                    </div>
+
+                    <!-- Hero Juno -->
+                    <div class="hero-animation-card" onclick="selectHero('juno')">
+                        <h3>🏹 Juno</h3>
+                        <div class="hero-sprite" id="junoSprite">
+                            <img src="assets/images/characters/heroes/juno/juno.png" alt="Juno" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjZGM2MjI2Ii8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkpVTk88L3RleHQ+Cjwvc3ZnPgo='">
+                        </div>
+                        <div class="animation-controls" onclick="event.stopPropagation()">
+                            <button class="btn" onclick="startHeroAnimation('juno', 'breathing')">🫁</button>
+                            <button class="btn" onclick="startHeroAnimation('juno', 'glow')">✨</button>
+                            <button class="btn" onclick="startHeroAnimation('juno', 'float')">🎈</button>
+                            <button class="btn danger" onclick="stopHeroAnimation('juno')">⏹️</button>
+                        </div>
+                        <div class="animation-status">
+                            <span id="junoStatus">Parado</span>
+                        </div>
+                    </div>
+
+                    <!-- Hero Kai -->
+                    <div class="hero-animation-card" onclick="selectHero('kai')">
+                        <h3>⚡ Kai</h3>
+                        <div class="hero-sprite" id="kaiSprite">
+                            <img src="assets/images/characters/heroes/juno/kai.png" alt="Kai" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjZjU5ZTBiIi8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPktBSTwvdGV4dD4KPC9zdmc+Cg=='">
+                        </div>
+                        <div class="animation-controls" onclick="event.stopPropagation()">
+                            <button class="btn" onclick="startHeroAnimation('kai', 'breathing')">🫁</button>
+                            <button class="btn" onclick="startHeroAnimation('kai', 'glow')">✨</button>
+                            <button class="btn" onclick="startHeroAnimation('kai', 'float')">🎈</button>
+                            <button class="btn danger" onclick="stopHeroAnimation('kai')">⏹️</button>
+                        </div>
+                        <div class="animation-status">
+                            <span id="kaiStatus">Parado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controles Globais -->
+                <div class="global-animation-controls">
+                    <h3>Controles Globais</h3>
+                    <div class="global-buttons">
+                        <button class="btn success" onclick="startAllHeroAnimations('breathing'); event.stopPropagation();">🫁 Todos Respirando</button>
+                        <button class="btn success" onclick="startAllHeroAnimations('glow'); event.stopPropagation();">✨ Todos Brilhando</button>
+                        <button class="btn success" onclick="startAllHeroAnimations('float'); event.stopPropagation();">🎈 Todos Flutuando</button>
+                        <button class="btn danger" onclick="stopAllHeroAnimations(); event.stopPropagation();">⏹️ Parar Todos</button>
+                    </div>
+                </div>
+                </div>
+
+                <!-- Área de Visualização do Herói -->
+                <div class="animations-right">
+                    <div class="hero-preview" id="heroPreview">
+                        <img id="heroPreviewImage" src="" alt="Selecione um herói" style="opacity: 0.3;">
+                    </div>
+                    <div class="hero-info" id="heroInfo">
+                        <h3 id="heroName">Selecione um Herói</h3>
+                        <p id="heroDescription">Clique em um card de herói para ver detalhes</p>
+                        <div class="hero-stats" id="heroStats">
+                            <!-- Stats serão preenchidos dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- JavaScript Ultra Avançado -->
@@ -533,32 +1358,523 @@
 
         // Funções Globais Ultra Avançadas
         function startGame() {
-            console.log('🎮 Iniciando jogo com efeitos especiais...');
+            console.log('🎮 Iniciando jogo com personagem padrão...');
+            
+            try {
+                // Verificar se o arquivo index.html existe
+                console.log('🔍 Verificando arquivos do jogo...');
+                
+                // Mostrar mensagem de carregamento
+                const loadingMessage = document.createElement('div');
+                loadingMessage.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(124, 58, 237, 0.9);
+                    color: white;
+                    padding: 30px;
+                    border-radius: 15px;
+                    font-family: Orbitron, sans-serif;
+                    font-size: 18px;
+                    z-index: 9999;
+                    backdrop-filter: blur(10px);
+                    border: 2px solid #7c3aed;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                    text-align: center;
+                `;
+                loadingMessage.innerHTML = `
+                    <div style="margin-bottom: 15px;">🎮 INICIANDO JOGO</div>
+                    <div style="font-size: 14px; opacity: 0.8;">Carregando recursos...</div>
+                `;
+                document.body.appendChild(loadingMessage);
+                
+                // Delay para mostrar a mensagem e depois redirecionar
+                setTimeout(() => {
+                    console.log('🚀 Redirecionando para o jogo...');
+                    
+                    // Tentar diferentes URLs caso uma falhe
+                    const gameUrls = [
+                        'index.html?character=default&mission=tutorial',
+                        'index.html',
+                        'nova-remains-auto.html',
+                        window.location.href.replace('nova-remains-advanced.html', 'index.html')
+                    ];
+                    
+                    let urlIndex = 0;
+                    function tryNextUrl() {
+                        if (urlIndex < gameUrls.length) {
+                            const url = gameUrls[urlIndex];
+                            console.log(`🎯 Tentando URL ${urlIndex + 1}: ${url}`);
+                            
+                            // Remover mensagem de carregamento
+                            document.body.removeChild(loadingMessage);
+                            
+                            // Redirecionar
+                            window.location.href = url;
+                        } else {
+                            // Se todas as URLs falharam, mostrar erro
+                            loadingMessage.innerHTML = `
+                                <div style="color: #ef4444; margin-bottom: 15px;">❌ ERRO</div>
+                                <div style="font-size: 14px; margin-bottom: 15px;">Não foi possível carregar o jogo.</div>
+                                <button onclick="this.parentElement.parentElement.remove(); location.reload();" 
+                                        style="background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                                    Tentar Novamente
+                                </button>
+                            `;
+                        }
+                        urlIndex++;
+                    }
+                    
+                    tryNextUrl();
+                    
+                }, 1000);
+                
+            } catch (error) {
+                console.error('❌ Erro ao iniciar jogo:', error);
+                alert('Erro ao iniciar o jogo: ' + error.message + '\n\nVerifique se o servidor está rodando em http://localhost:8001');
+            }
         }
 
         function showMissions() {
-            console.log('🎯 Mostrando missões...');
+            console.log('🎯 Mostrando painel de missões...');
+            closeAllPanels();
+            document.getElementById('missionsPanel').classList.add('visible');
         }
 
         function showInventory() {
-            console.log('📦 Mostrando inventário...');
+            console.log('📦 Mostrando painel de inventário...');
+            closeAllPanels();
+            document.getElementById('inventoryPanel').classList.add('visible');
         }
 
         function showShop() {
-            console.log('🛒 Mostrando loja...');
+            console.log('🛒 Mostrando painel de loja...');
+            closeAllPanels();
+            document.getElementById('shopPanel').classList.add('visible');
         }
 
         function showOptions() {
-            console.log('⚙️ Mostrando opções...');
+            console.log('⚙️ Mostrando painel de opções...');
+            closeAllPanels();
+            document.getElementById('optionsPanel').classList.add('visible');
+        }
+
+        function showHeroAnimations() {
+            console.log('🎭 Mostrando painel de animações de heróis...');
+            closeAllPanels();
+            document.getElementById('animationsPanel').classList.add('visible');
+            
+            // Inicializar sistema de animações se não existir
+            if (!window.heroAnimationSystem) {
+                window.heroAnimationSystem = new HeroAnimationSystem();
+            }
+        }
+
+        // Sistema de Animações de Heróis
+        class HeroAnimationSystem {
+            constructor() {
+                this.heroes = ['vega', 'atlas', 'juno', 'kai'];
+                this.activeAnimations = new Map();
+                this.init();
+            }
+
+            init() {
+                console.log('🎭 Sistema de Animações de Heróis Iniciado');
+                
+                // Auto-start breathing animation for all heroes after 2 seconds
+                setTimeout(() => {
+                    this.startAllAnimations('breathing');
+                }, 2000);
+            }
+
+            startAnimation(hero, animationType) {
+                const sprite = document.getElementById(hero + 'Sprite');
+                const statusElement = document.getElementById(hero + 'Status');
+                
+                if (!sprite) return;
+                
+                // Stop current animation
+                this.stopAnimation(hero);
+                
+                // Start new animation
+                sprite.classList.add(animationType);
+                
+                // Update status
+                statusElement.textContent = this.getAnimationName(animationType);
+                
+                // Store active animation
+                this.activeAnimations.set(hero, animationType);
+                
+                console.log(`🎬 ${hero} iniciou animação: ${animationType}`);
+            }
+
+            stopAnimation(hero) {
+                const sprite = document.getElementById(hero + 'Sprite');
+                const statusElement = document.getElementById(hero + 'Status');
+                
+                if (!sprite) return;
+                
+                // Remove all animation classes
+                sprite.classList.remove('breathing', 'glow', 'float');
+                
+                // Update status
+                statusElement.textContent = 'Parado';
+                
+                // Remove from active animations
+                this.activeAnimations.delete(hero);
+                
+                console.log(`⏹️ ${hero} parou animação`);
+            }
+
+            startAllAnimations(animationType) {
+                this.heroes.forEach(hero => {
+                    this.startAnimation(hero, animationType);
+                });
+                console.log(`🎭 Todos os heróis iniciaram: ${animationType}`);
+            }
+
+            stopAllAnimations() {
+                this.heroes.forEach(hero => {
+                    this.stopAnimation(hero);
+                });
+                console.log('⏹️ Todas as animações pararam');
+            }
+
+            getAnimationName(animationType) {
+                const names = {
+                    breathing: 'Respirando',
+                    glow: 'Brilhando',
+                    float: 'Flutuando'
+                };
+                return names[animationType] || animationType;
+            }
+        }
+
+        // Funções globais para animações
+        function startHeroAnimation(hero, animationType) {
+            console.log(`🎬 Iniciando animação: ${hero} - ${animationType}`);
+            if (window.heroAnimationSystem) {
+                window.heroAnimationSystem.startAnimation(hero, animationType);
+            } else {
+                console.error('❌ Sistema de animações não inicializado!');
+            }
+        }
+
+        function stopHeroAnimation(hero) {
+            console.log(`⏹️ Parando animação: ${hero}`);
+            if (window.heroAnimationSystem) {
+                window.heroAnimationSystem.stopAnimation(hero);
+            } else {
+                console.error('❌ Sistema de animações não inicializado!');
+            }
+        }
+
+        function startAllHeroAnimations(animationType) {
+            if (window.heroAnimationSystem) {
+                window.heroAnimationSystem.startAllAnimations(animationType);
+            }
+        }
+
+        function stopAllHeroAnimations() {
+            if (window.heroAnimationSystem) {
+                window.heroAnimationSystem.stopAllAnimations();
+            }
+        }
+
+        // Função para selecionar herói e mostrar visualização
+        function selectHero(heroName) {
+            console.log(`🎯 Herói selecionado: ${heroName}`);
+            
+            // Evitar conflito se clicou em um botão de animação
+            if (event && event.target.tagName === 'BUTTON') {
+                return;
+            }
+            
+            // Remover seleção anterior
+            document.querySelectorAll('.hero-animation-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Adicionar seleção ao card clicado
+            event.currentTarget.classList.add('selected');
+            
+            // Dados dos heróis
+            const heroData = {
+                vega: {
+                    name: '⚔️ Vega',
+                    description: 'Guerreiro destemido com espada mágica',
+                    image: 'assets/images/characters/heroes/vega/vega.png',
+                    stats: {
+                        attack: 95,
+                        defense: 80,
+                        speed: 85,
+                        magic: 70
+                    }
+                },
+                atlas: {
+                    name: '🛡️ Atlas',
+                    description: 'Defensor com escudo indestrutível',
+                    image: 'assets/images/characters/heroes/atlas/atlas.png',
+                    stats: {
+                        attack: 75,
+                        defense: 95,
+                        speed: 70,
+                        magic: 60
+                    }
+                },
+                juno: {
+                    name: '🏹 Juno',
+                    description: 'Arqueira ágil com precisão mortal',
+                    image: 'assets/images/characters/heroes/juno/juno.png',
+                    stats: {
+                        attack: 90,
+                        defense: 65,
+                        speed: 95,
+                        magic: 80
+                    }
+                },
+                kai: {
+                    name: '⚡ Kai',
+                    description: 'Mago elemental com poderes destrutivos',
+                    image: 'assets/images/characters/heroes/juno/kai.png',
+                    stats: {
+                        attack: 70,
+                        defense: 60,
+                        speed: 80,
+                        magic: 95
+                    }
+                }
+            };
+            
+            const hero = heroData[heroName];
+            if (!hero) return;
+            
+            // Atualizar imagem do herói
+            const previewImage = document.getElementById('heroPreviewImage');
+            previewImage.src = hero.image;
+            previewImage.alt = hero.name;
+            previewImage.style.opacity = '1';
+            previewImage.onerror = function() {
+                // Fallback SVG se a imagem não carregar
+                this.src = `data:image/svg+xml;base64,${btoa(`
+                    <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="200" height="200" fill="#7c3aed"/>
+                        <text x="100" y="100" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">${hero.name.replace(/[^\w\s]/g, '')}</text>
+                    </svg>
+                `)}`;
+            };
+            
+            // Atualizar informações do herói
+            document.getElementById('heroName').textContent = hero.name;
+            document.getElementById('heroDescription').textContent = hero.description;
+            
+            // Atualizar stats
+            const statsContainer = document.getElementById('heroStats');
+            statsContainer.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-label">Ataque</div>
+                    <div class="stat-value">${hero.stats.attack}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Defesa</div>
+                    <div class="stat-value">${hero.stats.defense}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Velocidade</div>
+                    <div class="stat-value">${hero.stats.speed}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Magia</div>
+                    <div class="stat-value">${hero.stats.magic}</div>
+                </div>
+            `;
         }
 
         function showExitDialog() {
             console.log('🚪 Mostrando diálogo de saída...');
+            if (confirm('Tem certeza que deseja sair do jogo?')) {
+                window.close();
+            }
+        }
+
+        // Função para verificar status do servidor e arquivos
+        function checkGameStatus() {
+            console.log('🔍 Verificando status do jogo...');
+            
+            const statusModal = document.createElement('div');
+            statusModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            statusModal.innerHTML = `
+                <div style="
+                    background: rgba(26, 26, 46, 0.95);
+                    border-radius: 15px;
+                    padding: 30px;
+                    max-width: 500px;
+                    width: 90%;
+                    border: 2px solid #7c3aed;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                    color: white;
+                    font-family: Orbitron, sans-serif;
+                ">
+                    <h3 style="color: #a855f7; margin-bottom: 20px; text-align: center;">🔍 Status do Jogo</h3>
+                    <div id="statusContent">
+                        <div style="text-align: center; margin: 20px 0;">
+                            <div style="font-size: 2em;">⏳</div>
+                            <div>Verificando arquivos...</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button onclick="this.closest('div').parentElement.remove()" 
+                                style="background: #6b7280; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin: 5px;">
+                            Fechar
+                        </button>
+                        <button onclick="location.reload()" 
+                                style="background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin: 5px;">
+                            Recarregar Página
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(statusModal);
+            
+            // Verificar arquivos
+            const filesToCheck = [
+                'index.html',
+                'nova-remains-auto.html',
+                'js/main.js',
+                'js/game.js',
+                'js/player.js'
+            ];
+            
+            let results = [];
+            let checked = 0;
+            
+            filesToCheck.forEach(file => {
+                fetch(file, { method: 'HEAD' })
+                    .then(response => {
+                        results.push(`✅ ${file} - OK (${response.status})`);
+                    })
+                    .catch(error => {
+                        results.push(`❌ ${file} - ERRO: ${error.message}`);
+                    })
+                    .finally(() => {
+                        checked++;
+                        if (checked === filesToCheck.length) {
+                            updateStatusContent();
+                        }
+                    });
+            });
+            
+            function updateStatusContent() {
+                const content = document.getElementById('statusContent');
+                if (content) {
+                    const serverStatus = window.location.protocol === 'file:' ? 
+                        '❌ Servidor: Executando via file:// (use http://localhost:8001)' :
+                        '✅ Servidor: HTTP OK';
+                    
+                    content.innerHTML = `
+                        <div style="margin-bottom: 15px;">${serverStatus}</div>
+                        <div style="font-size: 14px; text-align: left;">
+                            ${results.join('<br>')}
+                        </div>
+                        ${window.location.protocol === 'file:' ? `
+                            <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 6px; padding: 15px; margin: 15px 0;">
+                                <strong>⚠️ AVISO:</strong> Execute o comando:<br>
+                                <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; display: block; margin: 5px 0;">npx http-server -p 8001</code>
+                                E acesse: <code>http://localhost:8001/nova-remains-advanced.html</code>
+                            </div>
+                        ` : ''}
+                    `;
+                }
+            }
         }
 
         function showMainMenu() {
             console.log('🏠 Voltando ao menu principal...');
-            navigation.showPanel('mainMenu');
+            closeAllPanels();
+        }
+
+        // Funções dos Painéis
+        function closeAllPanels() {
+            const panels = document.querySelectorAll('.content-panel');
+            panels.forEach(panel => {
+                panel.classList.remove('visible');
+            });
+        }
+
+        function closePanel(panelId) {
+            document.getElementById(panelId).classList.remove('visible');
+        }
+
+        // Sistema de Missões
+        function startMission(missionType) {
+            console.log(`🚀 Iniciando missão: ${missionType}`);
+            
+            // Configurar missão baseada no tipo
+            const missionConfig = {
+                tutorial: {
+                    map: 'tutorial',
+                    character: 'default',
+                    difficulty: 'easy'
+                },
+                forest: {
+                    map: 'forest',
+                    character: 'default',
+                    difficulty: 'medium'
+                },
+                dungeon: {
+                    map: 'dungeon',
+                    character: 'default',
+                    difficulty: 'hard'
+                },
+                boss: {
+                    map: 'boss',
+                    character: 'default',
+                    difficulty: 'extreme'
+                }
+            };
+
+            const config = missionConfig[missionType];
+            if (config) {
+                // Redirecionar para o jogo com configurações da missão
+                const params = new URLSearchParams({
+                    character: config.character,
+                    mission: missionType,
+                    map: config.map,
+                    difficulty: config.difficulty
+                });
+                
+                window.location.href = `index.html?${params.toString()}`;
+            }
+        }
+
+        // Sistema de Loja
+        function showShopCategory(category) {
+            console.log(`🛒 Mostrando categoria: ${category}`);
+            
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.shop-category').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Adicionar classe active ao botão clicado
+            event.target.classList.add('active');
+            
+            // Aqui você pode implementar a lógica para mostrar itens diferentes
+            // baseado na categoria selecionada
         }
 
         // Funções dos botões de controle

@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Remains - Rigging & Animation Tool</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a1a, #1a1a2e, #16213e, #0f172a);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #4c1d95, #7c3aed, #a855f7);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            height: calc(100vh - 120px);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .panel {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            overflow-y: auto;
+        }
+
+        .panel h2 {
+            color: #a855f7;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            text-align: center;
+            border-bottom: 2px solid #7c3aed;
+            padding-bottom: 10px;
+        }
+
+        .canvas-container {
+            position: relative;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #7c3aed;
+        }
+
+        #rigCanvas {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+            margin: 5px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn.success {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn.danger {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, #6b7280, #9ca3af);
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #6b7280, #9ca3af);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            text-decoration: none;
+            z-index: 1001;
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
+        }
+
+        .control-group {
+            margin: 15px 0;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #a855f7;
+            font-weight: 600;
+        }
+
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #374151;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9em;
+        }
+
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+        }
+
+        .bone-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .bone-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            margin: 5px 0;
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bone-item:hover {
+            background: rgba(124, 58, 237, 0.2);
+        }
+
+        .bone-item.selected {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+        }
+
+        .playback-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .playback-controls button {
+            padding: 10px 15px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.8);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            border-top: 1px solid #374151;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        .export-section {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid #10b981;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .export-section h3 {
+            color: #10b981;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .code-output {
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d1d5db;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 250px 1fr 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+            
+            .panel {
+                max-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="nova-remains-advanced.html" class="back-btn">← Voltar ao Menu</a>
+
+    <div class="header">
+        <h1>🎭 Nova Remains - Rigging & Animation Tool</h1>
+        <p>Ferramenta profissional de rigging e animação de personagens</p>
+    </div>
+
+    <div class="main-container">
+        <!-- Painel Esquerdo - Controles de Rigging -->
+        <div class="panel">
+            <h2>🦴 Rigging</h2>
+            
+            <div class="control-group">
+                <label for="characterSelect">Personagem:</label>
+                <select id="characterSelect">
+                    <option value="vega">Vega</option>
+                    <option value="atlas">Atlas</option>
+                    <option value="juno">Juno</option>
+                    <option value="kai">Kai</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="rigMode">Modo:</label>
+                <select id="rigMode">
+                    <option value="edit">Editar Rig</option>
+                    <option value="animate">Animar</option>
+                    <option value="pose">Posar</option>
+                </select>
+            </div>
+
+            <button class="btn" onclick="createNewRig()">🆕 Novo Rig</button>
+            <button class="btn secondary" onclick="loadRig()">📁 Carregar Rig</button>
+            <button class="btn success" onclick="saveRig()">💾 Salvar Rig</button>
+
+            <h3 style="color: #a855f7; margin: 20px 0 10px 0;">Ossos:</h3>
+            <div class="bone-list" id="boneList">
+                <!-- Lista de ossos será inserida aqui -->
+            </div>
+
+            <div class="control-group">
+                <label for="boneName">Nome do Osso:</label>
+                <input type="text" id="boneName" placeholder="ex: head, arm_left">
+            </div>
+
+            <button class="btn" onclick="addBone()">➕ Adicionar Osso</button>
+            <button class="btn danger" onclick="removeBone()">🗑️ Remover Osso</button>
+        </div>
+
+        <!-- Canvas Central - Área de Trabalho -->
+        <div class="canvas-container">
+            <canvas id="rigCanvas" width="800" height="600"></canvas>
+        </div>
+
+        <!-- Painel Direito - Controles de Animação -->
+        <div class="panel">
+            <h2>🎬 Animação</h2>
+            
+            <div class="control-group">
+                <label for="animationName">Nome da Animação:</label>
+                <input type="text" id="animationName" placeholder="ex: idle, walk, attack">
+            </div>
+
+            <div class="control-group">
+                <label for="frameRate">FPS:</label>
+                <input type="number" id="frameRate" value="24" min="1" max="60">
+            </div>
+
+            <div class="control-group">
+                <label for="duration">Duração (segundos):</label>
+                <input type="number" id="duration" value="2" min="0.1" max="10" step="0.1">
+            </div>
+
+            <div class="playback-controls">
+                <button class="btn" onclick="playAnimation()" title="Play">▶️</button>
+                <button class="btn secondary" onclick="pauseAnimation()" title="Pause">⏸️</button>
+                <button class="btn secondary" onclick="stopAnimation()" title="Stop">⏹️</button>
+                <button class="btn" onclick="recordKeyframe()" title="Record">🔴</button>
+            </div>
+
+            <h3 style="color: #a855f7; margin: 20px 0 10px 0;">Timeline:</h3>
+            <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px; margin: 15px 0; min-height: 100px;">
+                <div style="color: #6b7280; text-align: center;">Timeline de animação aparecerá aqui</div>
+            </div>
+
+            <div class="export-section">
+                <h3>📤 Exportar</h3>
+                <button class="btn success" onclick="exportAnimation()">📤 Exportar Animação</button>
+                <button class="btn" onclick="previewAnimation()">👁️ Preview</button>
+            </div>
+
+            <div class="export-section">
+                <h3>🎯 Código Gerado</h3>
+                <div class="code-output" id="codeOutput">
+                    // Código JavaScript será gerado aqui
+                </div>
+                <button class="btn" onclick="copyCode()">📋 Copiar Código</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-item">
+            <div class="indicator"></div>
+            <span>Rig: Carregado</span>
+        </div>
+        <div class="status-item">
+            <div class="indicator"></div>
+            <span>Ossos: <span id="boneCount">14</span></span>
+        </div>
+        <div class="status-item">
+            <div class="indicator"></div>
+            <span>FPS: <span id="currentFPS">24</span></span>
+        </div>
+        <div class="status-item">
+            <div class="indicator"></div>
+            <span>Frames: <span id="frameCount">0</span></span>
+        </div>
+    </div>
+
+    <script>
+        class RiggingTool {
+            constructor() {
+                this.canvas = document.getElementById('rigCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.bones = [];
+                this.selectedBone = null;
+                this.animationFrames = [];
+                this.currentFrame = 0;
+                this.isPlaying = false;
+                this.animationInterval = null;
+                this.mousePos = { x: 0, y: 0 };
+                this.dragStart = null;
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.createDefaultRig();
+                this.updateBoneList();
+                this.draw();
+                this.updateCodeOutput();
+            }
+
+            setupEventListeners() {
+                this.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
+                this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
+                this.canvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
+                
+                document.getElementById('frameRate').addEventListener('input', () => {
+                    document.getElementById('currentFPS').textContent = document.getElementById('frameRate').value;
+                });
+            }
+
+            createDefaultRig() {
+                this.bones = [
+                    { id: 'root', name: 'Root', x: 400, y: 500, parent: null, length: 0, angle: 0, color: '#ff6b6b' },
+                    { id: 'spine', name: 'Spine', x: 400, y: 450, parent: 'root', length: 50, angle: 0, color: '#4ecdc4' },
+                    { id: 'chest', name: 'Chest', x: 400, y: 400, parent: 'spine', length: 50, angle: 0, color: '#45b7d1' },
+                    { id: 'head', name: 'Head', x: 400, y: 350, parent: 'chest', length: 30, angle: 0, color: '#96ceb4' },
+                    { id: 'arm_left', name: 'Left Arm', x: 350, y: 400, parent: 'chest', length: 40, angle: -45, color: '#feca57' },
+                    { id: 'forearm_left', name: 'Left Forearm', x: 320, y: 440, parent: 'arm_left', length: 35, angle: 0, color: '#ff9ff3' },
+                    { id: 'hand_left', name: 'Left Hand', x: 300, y: 470, parent: 'forearm_left', length: 15, angle: 0, color: '#54a0ff' },
+                    { id: 'arm_right', name: 'Right Arm', x: 450, y: 400, parent: 'chest', length: 40, angle: 45, color: '#5f27cd' },
+                    { id: 'forearm_right', name: 'Right Forearm', x: 480, y: 440, parent: 'arm_right', length: 35, angle: 0, color: '#00d2d3' },
+                    { id: 'hand_right', name: 'Right Hand', x: 500, y: 470, parent: 'forearm_right', length: 15, angle: 0, color: '#ff6348' },
+                    { id: 'leg_left', name: 'Left Leg', x: 380, y: 500, parent: 'root', length: 45, angle: 0, color: '#2ed573' },
+                    { id: 'foot_left', name: 'Left Foot', x: 380, y: 545, parent: 'leg_left', length: 20, angle: 0, color: '#ffa502' },
+                    { id: 'leg_right', name: 'Right Leg', x: 420, y: 500, parent: 'root', length: 45, angle: 0, color: '#ff3838' },
+                    { id: 'foot_right', name: 'Right Foot', x: 420, y: 545, parent: 'leg_right', length: 20, angle: 0, color: '#ff9f1a' }
+                ];
+                
+                this.updateBonePositions();
+            }
+
+            updateBonePositions() {
+                this.bones.forEach(bone => {
+                    if (bone.parent) {
+                        const parent = this.bones.find(b => b.id === bone.parent);
+                        if (parent) {
+                            const radians = (bone.angle * Math.PI) / 180;
+                            bone.x = parent.x + Math.cos(radians) * bone.length;
+                            bone.y = parent.y + Math.sin(radians) * bone.length;
+                        }
+                    }
+                });
+            }
+
+            onMouseDown(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                this.mousePos.x = e.clientX - rect.left;
+                this.mousePos.y = e.clientY - rect.top;
+                
+                const clickedBone = this.getBoneAt(this.mousePos.x, this.mousePos.y);
+                if (clickedBone) {
+                    this.selectedBone = clickedBone;
+                    this.dragStart = { x: this.mousePos.x, y: this.mousePos.y };
+                }
+                
+                this.updateBoneList();
+                this.draw();
+            }
+
+            onMouseMove(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                this.mousePos.x = e.clientX - rect.left;
+                this.mousePos.y = e.clientY - rect.top;
+                
+                if (this.selectedBone && this.dragStart) {
+                    const dx = this.mousePos.x - this.dragStart.x;
+                    const dy = this.mousePos.y - this.dragStart.y;
+                    
+                    const parent = this.bones.find(b => b.id === this.selectedBone.parent);
+                    if (parent) {
+                        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+                        this.selectedBone.angle = angle;
+                        this.updateBonePositions();
+                    }
+                }
+                
+                this.draw();
+            }
+
+            onMouseUp(e) {
+                this.dragStart = null;
+            }
+
+            getBoneAt(x, y) {
+                for (let i = this.bones.length - 1; i >= 0; i--) {
+                    const bone = this.bones[i];
+                    const distance = Math.sqrt((x - bone.x) ** 2 + (y - bone.y) ** 2);
+                    if (distance < 15) {
+                        return bone;
+                    }
+                }
+                return null;
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.drawGrid();
+                
+                this.bones.forEach(bone => {
+                    this.drawBone(bone);
+                });
+                
+                if (this.selectedBone) {
+                    this.drawSelection(this.selectedBone);
+                }
+            }
+
+            drawGrid() {
+                this.ctx.strokeStyle = 'rgba(124, 58, 237, 0.2)';
+                this.ctx.lineWidth = 1;
+                
+                for (let x = 0; x < this.canvas.width; x += 50) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(x, 0);
+                    this.ctx.lineTo(x, this.canvas.height);
+                    this.ctx.stroke();
+                }
+                
+                for (let y = 0; y < this.canvas.height; y += 50) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(0, y);
+                    this.ctx.lineTo(this.canvas.width, y);
+                    this.ctx.stroke();
+                }
+            }
+
+            drawBone(bone) {
+                if (bone.parent) {
+                    const parent = this.bones.find(b => b.id === bone.parent);
+                    if (parent) {
+                        this.ctx.strokeStyle = bone.color;
+                        this.ctx.lineWidth = 3;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(parent.x, parent.y);
+                        this.ctx.lineTo(bone.x, bone.y);
+                        this.ctx.stroke();
+                    }
+                }
+                
+                this.ctx.fillStyle = bone.color;
+                this.ctx.beginPath();
+                this.ctx.arc(bone.x, bone.y, 8, 0, 2 * Math.PI);
+                this.ctx.fill();
+                
+                this.ctx.fillStyle = '#fff';
+                this.ctx.font = '12px Orbitron';
+                this.ctx.fillText(bone.name, bone.x + 12, bone.y - 5);
+            }
+
+            drawSelection(bone) {
+                this.ctx.strokeStyle = '#10b981';
+                this.ctx.lineWidth = 3;
+                this.ctx.beginPath();
+                this.ctx.arc(bone.x, bone.y, 12, 0, 2 * Math.PI);
+                this.ctx.stroke();
+            }
+
+            updateBoneList() {
+                const boneList = document.getElementById('boneList');
+                boneList.innerHTML = '';
+                
+                this.bones.forEach(bone => {
+                    const boneItem = document.createElement('div');
+                    boneItem.className = `bone-item ${bone === this.selectedBone ? 'selected' : ''}`;
+                    boneItem.innerHTML = `
+                        <span class="bone-name">${bone.name}</span>
+                        <button class="btn danger" onclick="riggingTool.removeBone('${bone.id}')" style="padding: 2px 6px; font-size: 0.7em; width: auto;">🗑️</button>
+                    `;
+                    boneItem.addEventListener('click', () => {
+                        this.selectedBone = bone;
+                        this.updateBoneList();
+                        this.draw();
+                    });
+                    boneList.appendChild(boneItem);
+                });
+                
+                document.getElementById('boneCount').textContent = this.bones.length;
+            }
+
+            addBone() {
+                const name = document.getElementById('boneName').value || 'New Bone';
+                const parent = this.selectedBone ? this.selectedBone.id : 'root';
+                
+                const newBone = {
+                    id: `bone_${Date.now()}`,
+                    name: name,
+                    x: 400,
+                    y: 300,
+                    parent: parent,
+                    length: 30,
+                    angle: 0,
+                    color: this.getRandomColor()
+                };
+                
+                this.bones.push(newBone);
+                this.updateBonePositions();
+                this.updateBoneList();
+                this.draw();
+                this.updateCodeOutput();
+                
+                document.getElementById('boneName').value = '';
+            }
+
+            removeBone(boneId) {
+                if (confirm('Tem certeza que deseja remover este osso?')) {
+                    this.bones = this.bones.filter(b => b.id !== boneId);
+                    this.bones = this.bones.filter(b => b.parent !== boneId);
+                    
+                    if (this.selectedBone && this.selectedBone.id === boneId) {
+                        this.selectedBone = null;
+                    }
+                    
+                    this.updateBonePositions();
+                    this.updateBoneList();
+                    this.draw();
+                    this.updateCodeOutput();
+                }
+            }
+
+            getRandomColor() {
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            recordKeyframe() {
+                const keyframe = {
+                    frame: this.animationFrames.length,
+                    time: this.currentFrame,
+                    bones: this.bones.map(bone => ({
+                        id: bone.id,
+                        angle: bone.angle,
+                        x: bone.x,
+                        y: bone.y
+                    }))
+                };
+                
+                this.animationFrames.push(keyframe);
+                document.getElementById('frameCount').textContent = this.animationFrames.length;
+                this.updateCodeOutput();
+                
+                console.log('🔴 Keyframe gravado:', keyframe);
+            }
+
+            playAnimation() {
+                if (this.animationFrames.length === 0) {
+                    alert('Grave alguns keyframes primeiro!');
+                    return;
+                }
+                
+                this.isPlaying = true;
+                const fps = parseInt(document.getElementById('frameRate').value);
+                const duration = parseFloat(document.getElementById('duration').value);
+                
+                this.currentFrame = 0;
+                this.animationInterval = setInterval(() => {
+                    this.currentFrame += (1000 / fps) / 1000; // Converter para segundos
+                    
+                    if (this.currentFrame >= duration) {
+                        this.currentFrame = 0;
+                    }
+                    
+                    this.interpolateFrame();
+                    this.draw();
+                }, 1000 / fps);
+                
+                console.log('▶️ Animação iniciada');
+            }
+
+            pauseAnimation() {
+                this.isPlaying = false;
+                if (this.animationInterval) {
+                    clearInterval(this.animationInterval);
+                    this.animationInterval = null;
+                }
+                console.log('⏸️ Animação pausada');
+            }
+
+            stopAnimation() {
+                this.pauseAnimation();
+                this.currentFrame = 0;
+                this.draw();
+                console.log('⏹️ Animação parada');
+            }
+
+            interpolateFrame() {
+                if (this.animationFrames.length < 2) return;
+                
+                const frameIndex = this.currentFrame / parseFloat(document.getElementById('duration').value) * this.animationFrames.length;
+                const frame1Index = Math.floor(frameIndex);
+                const frame2Index = Math.min(frame1Index + 1, this.animationFrames.length - 1);
+                
+                if (frame1Index === frame2Index) return;
+                
+                const frame1 = this.animationFrames[frame1Index];
+                const frame2 = this.animationFrames[frame2Index];
+                const t = frameIndex - frame1Index;
+                
+                this.bones.forEach(bone => {
+                    const bone1 = frame1.bones.find(b => b.id === bone.id);
+                    const bone2 = frame2.bones.find(b => b.id === bone.id);
+                    
+                    if (bone1 && bone2) {
+                        bone.angle = bone1.angle + (bone2.angle - bone1.angle) * t;
+                        this.updateBonePositions();
+                    }
+                });
+            }
+
+            updateCodeOutput() {
+                const animationName = document.getElementById('animationName').value || 'animation';
+                const fps = parseInt(document.getElementById('frameRate').value);
+                const duration = parseFloat(document.getElementById('duration').value);
+                
+                let code = `// Animação: ${animationName}\n`;
+                code += `class ${animationName.charAt(0).toUpperCase() + animationName.slice(1)}Animation {\n`;
+                code += `    constructor() {\n`;
+                code += `        this.frames = ${JSON.stringify(this.animationFrames, null, 8)};\n`;
+                code += `        this.fps = ${fps};\n`;
+                code += `        this.duration = ${duration};\n`;
+                code += `        this.currentFrame = 0;\n`;
+                code += `        this.isPlaying = false;\n`;
+                code += `        this.animationInterval = null;\n`;
+                code += `    }\n\n`;
+                code += `    play() {\n`;
+                code += `        if (this.isPlaying) return;\n`;
+                code += `        this.isPlaying = true;\n`;
+                code += `        this.animationInterval = setInterval(() => {\n`;
+                code += `            this.nextFrame();\n`;
+                code += `        }, 1000 / this.fps);\n`;
+                code += `    }\n\n`;
+                code += `    pause() {\n`;
+                code += `        this.isPlaying = false;\n`;
+                code += `        if (this.animationInterval) {\n`;
+                code += `            clearInterval(this.animationInterval);\n`;
+                code += `        }\n`;
+                code += `    }\n\n`;
+                code += `    nextFrame() {\n`;
+                code += `        this.currentFrame += (1000 / this.fps) / 1000;\n`;
+                code += `        if (this.currentFrame >= this.duration) {\n`;
+                code += `            this.currentFrame = 0;\n`;
+                code += `        }\n`;
+                code += `    }\n`;
+                code += `}\n\n`;
+                code += `// Uso:\n`;
+                code += `const ${animationName}Anim = new ${animationName.charAt(0).toUpperCase() + animationName.slice(1)}Animation();\n`;
+                code += `${animationName}Anim.play();\n`;
+                
+                document.getElementById('codeOutput').textContent = code;
+            }
+
+            exportAnimation() {
+                const animationName = document.getElementById('animationName').value || 'animation';
+                const data = {
+                    name: animationName,
+                    frames: this.animationFrames,
+                    fps: parseInt(document.getElementById('frameRate').value),
+                    duration: parseFloat(document.getElementById('duration').value),
+                    bones: this.bones,
+                    timestamp: new Date().toISOString()
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${animationName}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                console.log('📤 Animação exportada:', data);
+            }
+
+            previewAnimation() {
+                console.log('👁️ Preview da animação');
+                if (this.animationFrames.length > 0) {
+                    this.playAnimation();
+                    setTimeout(() => this.stopAnimation(), 3000);
+                } else {
+                    alert('Grave alguns keyframes primeiro!');
+                }
+            }
+        }
+
+        // Funções globais
+        let riggingTool;
+
+        function createNewRig() {
+            if (confirm('Criar um novo rig? Isso apagará o rig atual.')) {
+                riggingTool.bones = [];
+                riggingTool.createDefaultRig();
+                riggingTool.updateBoneList();
+                riggingTool.draw();
+                riggingTool.updateCodeOutput();
+            }
+        }
+
+        function loadRig() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            riggingTool.bones = data.bones || [];
+                            riggingTool.updateBonePositions();
+                            riggingTool.updateBoneList();
+                            riggingTool.draw();
+                            riggingTool.updateCodeOutput();
+                        } catch (error) {
+                            alert('Erro ao carregar o arquivo: ' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function saveRig() {
+            const data = {
+                bones: riggingTool.bones,
+                timestamp: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'rig.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function addBone() {
+            riggingTool.addBone();
+        }
+
+        function removeBone() {
+            if (riggingTool.selectedBone) {
+                riggingTool.removeBone(riggingTool.selectedBone.id);
+            } else {
+                alert('Selecione um osso primeiro!');
+            }
+        }
+
+        function playAnimation() {
+            riggingTool.playAnimation();
+        }
+
+        function pauseAnimation() {
+            riggingTool.pauseAnimation();
+        }
+
+        function stopAnimation() {
+            riggingTool.stopAnimation();
+        }
+
+        function recordKeyframe() {
+            riggingTool.recordKeyframe();
+        }
+
+        function exportAnimation() {
+            riggingTool.exportAnimation();
+        }
+
+        function previewAnimation() {
+            riggingTool.previewAnimation();
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeOutput').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copiado!';
+                btn.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Erro ao copiar:', err);
+                alert('Erro ao copiar para a área de transferência');
+            });
+        }
+
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            riggingTool = new RiggingTool();
+        });
+    </script>
+</body>
+</html>
